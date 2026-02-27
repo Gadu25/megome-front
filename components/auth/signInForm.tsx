@@ -10,7 +10,7 @@ export default function SignInForm() {
   return (
     <>
       <div>
-        <div className="py-4 text-center">
+        <div className="py-2 lg:py-4 text-center">
           <h2 className="text-3xl">Welcome Back</h2>
           <p className="text-gray-500">Access your dashboard</p>
         </div>
@@ -44,7 +44,7 @@ export default function SignInForm() {
             )}
           </button>
 
-          <div className="flex justify-between items-center mt-14">
+          <div className="flex justify-between items-center mt-6 lg:mt-14">
             <a href="#" className="border-b text-gray-500">Forgot password?</a>
             <button className="border border-gray-600 py-2 px-4 bg-linear-to-r from-slate-900 to-gray-900 rounded-md font-bold flex items-center gap-2 cursor-pointer">
               Sign In <ArrowRightIcon className="size-5"/>

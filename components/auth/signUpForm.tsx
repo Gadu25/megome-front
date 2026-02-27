@@ -10,7 +10,7 @@ export default function SignUpForm() {
   return (
     <>
       <div>
-        <div className="py-4 text-center">
+        <div className="py-2 lg:py-4 text-center">
           <h2 className="text-3xl">Get Started</h2>
           <p className="text-gray-500">Create your account to continue.</p>
         </div>
@@ -44,7 +44,7 @@ export default function SignUpForm() {
             )}
           </button>
 
-          <div className="flex justify-between items-center mt-14">
+          <div className="flex justify-between items-center mt-6 lg:mt-14">
             <button className="border border-gray-600 py-2 px-4 bg-linear-to-r from-slate-900 to-gray-900 rounded-md font-bold flex items-center gap-2 cursor-pointer">
               Sign Up <ArrowRightIcon className="size-5"/>
             </button>
