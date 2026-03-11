@@ -7,7 +7,8 @@ let refreshPromise: Promise<boolean> | null = null;
 
 export async function apiFetch<T>(
   path: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  retry = true
 ): Promise<T> {
   const token = useAuthStore.getState().accessToken;
 
@@ -15,23 +16,23 @@ export async function apiFetch<T>(
     ...options,
     credentials: "include",
     headers: {
+      ...(options.headers || {}),
       "Content-Type": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...options.headers,
-    },
+    }
   });
 
   // Access token expired
-  if (res.status === 401) {
+  if (res.status === 401 && retry) {
     const refreshed = await handleRefresh();
-
+    
     if (!refreshed) {
       logout();
       throw new Error("Session expired");
     }
 
     // retry original request
-    return apiFetch<T>(path, options);
+    return apiFetch<T>(path, options, false);
   }
 
   if (!res.ok) {
@@ -42,9 +43,7 @@ export async function apiFetch<T>(
 }
 
 async function handleRefresh(): Promise<boolean> {
-  if (!isRefreshing) {
-    isRefreshing = true;
-
+  if (!refreshPromise) {
     refreshPromise = fetch(`${API_URL}/api/v1/auth/refresh`, {
       method: "POST",
       credentials: "include",
@@ -53,18 +52,17 @@ async function handleRefresh(): Promise<boolean> {
         if (!res.ok) return false;
 
         const data = await res.json();
-
-        useAuthStore.getState().setAccessToken(data['access-token']);
+        useAuthStore.getState().setAccessToken(data["access-token"]);
 
         return true;
       })
       .catch(() => false)
       .finally(() => {
-        isRefreshing = false;
+        refreshPromise = null;
       });
   }
 
-  return refreshPromise!;
+  return refreshPromise;
 }
 
 function logout() {
