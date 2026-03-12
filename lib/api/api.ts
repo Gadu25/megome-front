@@ -1,8 +1,6 @@
-import { useAuthStore } from "./auth-store";
+import { useAuthStore } from "../store/auth-store";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-let isRefreshing = false;
 let refreshPromise: Promise<boolean> | null = null;
 
 export async function apiFetch<T>(
@@ -27,7 +25,7 @@ export async function apiFetch<T>(
     const refreshed = await handleRefresh();
     
     if (!refreshed) {
-      logout();
+      // logout();
       throw new Error("Session expired");
     }
 
