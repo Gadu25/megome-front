@@ -37,7 +37,7 @@ export default function Auth() {
                   <div className="tracking-[4px]">•••</div>
                 </div>
                 <div className="p-2 bg-neutral rounded-br-lg rounded-bl-lg">
-                  <pre className="text-start text-base-content font-mono p-6 text-xs lg:text-sm font-semibold">
+                  <pre className="text-start text-neutral-content font-mono p-6 text-xs lg:text-sm font-semibold">
                     {"{"}
                       <div className="ms-4 mt-2 mb-2">
                         <span className="text-blue-400">"name"</span>: <span className="text-green-400">"John Doe"</span>,
