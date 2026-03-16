@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api/api";
 import { logout } from "@/lib/api/auth";
 import { useAuthStore } from "@/lib/store/auth-store";
+import {LogoFull, LogoSmall} from "@/components/common/logo";
 import ThemeToggle from "@/components/themeToggle";
 
 type Project = {
@@ -239,6 +240,13 @@ export default function DashboardPage() {
       <div className="drawer-side is-drawer-close:overflow-visible">
         <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
         <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64">
+          <div className="is-drawer-close:hidden w-full px-4 py-2">
+            <LogoFull/>
+          </div>
+          <div className="is-drawer-open:hidden w-full py-2 text-center">
+            <LogoSmall/>
+          </div>
+
           <ul className="menu w-full grow">
             <li>
               <button className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Homepage">
