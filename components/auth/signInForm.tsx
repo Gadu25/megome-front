@@ -37,11 +37,11 @@ export default function SignInForm() {
   }
 
   return (
-    <div className="max-w-md mx-auto p-6 lg:p-12 bg-surface-elevated rounded-xl shadow-subtle">
+    <div>
       {/* Header */}
       <div className="py-4 text-center">
-        <h2 className="text-3xl font-bold text-text-primary">Welcome Back</h2>
-        <p className="text-gray-400 mt-2">Access your dashboard</p>
+        <h2 className="text-3xl font-bold text-primary">Welcome Back</h2>
+        <p className="mt-2 text-base-content">Access your dashboard</p>
       </div>
 
       {/* Error */}
@@ -55,54 +55,53 @@ export default function SignInForm() {
       <form onSubmit={handleLogin} className="space-y-6">
         {/* Email */}
         <div className="form-group flex flex-col">
-          <label htmlFor="email" className="text-text-secondary font-medium mb-1">
+          <label htmlFor="email" className="text-base-content font-medium mb-1">
             Email
           </label>
-          <input
-            type="email"
+          <input 
             id="email"
-            name="email"
+            type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
+            className="input w-full"
+            onChange={(e) => setEmail(e.target.value)}
             required
-            className="bg-background-subtle border border-border-DEFAULT rounded-md px-4 py-2 text-text-primary focus:outline-none focus:ring-2 focus:ring-accent hover:border-accent transition"
           />
         </div>
 
         {/* Password */}
         <div className="form-group relative flex flex-col">
-          <label htmlFor="password" className="text-text-secondary font-medium mb-1">
+          <label htmlFor="password" className="text-base-content font-medium mb-1">
             Password
           </label>
-          <input
-            type={showPass ? "text" : "password"}
+          <input 
             id="password"
+            type={showPass ? "text" : "password"}
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
+            className="input w-full relative"
             required
-            className="bg-background-subtle border border-border-DEFAULT rounded-md px-4 py-2 text-text-primary focus:outline-none focus:ring-2 focus:ring-accent hover:border-accent transition"
           />
           <button
             type="button"
             onClick={() => setShowPass((prev) => !prev)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 transition"
+            className="absolute right-3 top-[50%] -translate-y-[-2px] text-base-content hover:text-secondary transition cursor-pointer"
           >
             {showPass ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
           </button>
         </div>
 
         {/* Forgot / Submit */}
-        <div className="flex justify-between items-center mt-2">
-          <a href="#" className="text-gray-400 text-sm border-b border-gray-500">
+        <div className="flex justify-between items-center mt-10">
+          <a href="#" className="text-sm text-accent">
             Forgot password?
           </a>
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center gap-2 bg-accent hover:bg-accent-hover text-background py-2 px-4 rounded-md font-bold transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 bg-primary text-primary-content py-2 px-4 rounded-md font-bold transition cursor-pointer"
           >
             {loading ? "Signing in..." : "Sign In"}
             <ArrowRightIcon className="h-5 w-5" />
