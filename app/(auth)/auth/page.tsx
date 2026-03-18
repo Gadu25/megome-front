@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { BoltIcon, ShieldCheckIcon, PuzzlePieceIcon } from '@heroicons/react/24/outline'
-import { LogoFull } from '@/components/common/logo';
-import ThemeToggle from '@/components/themeToggle';
-import SignInForm from '@/components/auth/signInForm';
-import SignUpForm from '@/components/auth/signUpForm';
+import { LogoFull } from '@/components/common/Logo';
+import ThemeToggle from '@/components/common/ThemeToggle';
+import SignInForm from '@/components/auth/SignInForm';
+import SignUpForm from '@/components/auth/SignUpForm';
 
 export default function Auth() {
   const [isSignUp, setIsSignUp] = useState<boolean>(false);
