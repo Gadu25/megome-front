@@ -8,7 +8,7 @@ export function LogoFull() {
 
 export function LogoSmall() {
   return (
-    <div className="font-bold text-xl tracking-widest">
+    <div className="font-bold text-2xl">
       m
     </div>
   )
