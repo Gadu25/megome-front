@@ -22,6 +22,7 @@ export default async function AppLayout({ children }: Readonly<{children: React.
       </div>
     )
   } catch (error) {
+    console.log(error, 'error test')
     return <ServerError error={error} />
   }
 } 

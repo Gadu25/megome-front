@@ -40,18 +40,46 @@ export const authApi = (): AuthApi => {
   }
 }
 
+// 🔧 helper
+const toPlainHeaders = (headers?: Headers) => {
+  return headers ? Object.fromEntries(headers.entries()) : undefined;
+};
+
 const login = (email: string, password: string) => {
-  return xiorClient.post<Response>(`${API_URL}/api/v1/auth/login`, { email, password });
-}
+  return xiorClient.post<Response>(
+    `${API_URL}/api/v1/auth/login`,
+    { email, password }
+  );
+};
 
 const logout = (headers?: Headers) => {
-  return xiorClient.post<Response>(`${API_URL}/api/v1/auth/logout`, { headers });
-}
+  return xiorClient.post<Response>(
+    `${API_URL}/api/v1/auth/logout`,
+    null,
+    {
+      headers: toPlainHeaders(headers),
+    }
+  );
+};
 
 const verifyAccessToken = (headers?: Headers) => {
-  return xiorClient.post<Response>(`${API_URL}/api/v1/auth/verify`, { headers });
-}
+  const plainHeaders = headers
+    ? Object.fromEntries(headers.entries())
+    : undefined;
+
+  return xiorClient.post<Response>(
+    `${API_URL}/api/v1/auth/verify`,
+    null,
+    { headers: plainHeaders } // <- this ensures Xior sends the cookies
+  );
+};
 
 const refreshAccessToken = (headers?: Headers) => {
-  return xiorClient.post<Response>(`${API_URL}/api/v1/auth/refresh`, { headers });
-}
+  return xiorClient.post<Response>(
+    `${API_URL}/api/v1/auth/refresh`,
+    null,
+    {
+      headers: toPlainHeaders(headers),
+    }
+  );
+};

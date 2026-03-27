@@ -40,8 +40,7 @@ export default function SignInForm() {
     e.preventDefault();
     const { login } = authApi();
     await login(email, password);
-    console.log('test handled')
-    router.push("/dashboard");
+    router.push("/protected/server");
   }
 
   return (
