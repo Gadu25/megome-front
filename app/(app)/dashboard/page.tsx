@@ -1,5 +1,5 @@
 import { apiFetch } from "@/lib/api/api";
-import { logout } from "@/lib/api/auth";
+import { logout } from "@/lib/api/authApi";
 import { useAuthStore } from "@/lib/store/auth-store";
 import AppLayout from "../layout";
 

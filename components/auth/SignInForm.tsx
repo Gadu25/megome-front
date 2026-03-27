@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/auth-store";
-import { login } from "@/lib/api/auth";
+import { authApi } from "@/lib/api/authApi";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/16/solid";
 
@@ -18,22 +18,30 @@ export default function SignInForm() {
 
   const setAccessToken = useAuthStore((state) => state.setAccessToken);
 
-  async function handleLogin(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
+  // async function handleLogin(e: React.FormEvent) {
+  //   e.preventDefault();
+  //   setError(null);
+  //   setLoading(true);
 
-    try {
-      const data = await login({ email, password });
-      console.log(data, 'data')
-      setAccessToken(data['access-token']);
-      router.push("/dashboard"); // redirect to dashboard on success
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message || "Invalid credentials");
-    } finally {
-      setLoading(false);
-    }
+  //   try {
+  //     const data = await login({ email, password });
+  //     console.log(data, 'data')
+  //     setAccessToken(data['access-token']);
+  //     router.push("/dashboard"); // redirect to dashboard on success
+  //   } catch (err: any) {
+  //     console.error(err);
+  //     setError(err.message || "Invalid credentials");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const { login } = authApi();
+    await login(email, password);
+    console.log('test handled')
+    router.push("/dashboard");
   }
 
   return (
