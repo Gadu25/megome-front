@@ -18,29 +18,11 @@ export default function SignInForm() {
 
   const setAccessToken = useAuthStore((state) => state.setAccessToken);
 
-  // async function handleLogin(e: React.FormEvent) {
-  //   e.preventDefault();
-  //   setError(null);
-  //   setLoading(true);
-
-  //   try {
-  //     const data = await login({ email, password });
-  //     console.log(data, 'data')
-  //     setAccessToken(data['access-token']);
-  //     router.push("/dashboard"); // redirect to dashboard on success
-  //   } catch (err: any) {
-  //     console.error(err);
-  //     setError(err.message || "Invalid credentials");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
-
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     const { login } = authApi();
-    await login(email, password);
-    router.push("/protected/server");
+    await login(email, password)
+    router.push("/dashboard");
   }
 
   return (
