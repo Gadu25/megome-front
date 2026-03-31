@@ -1,7 +1,8 @@
 import { apiFetch } from "@/lib/api/api";
-import { logout } from "@/lib/api/auth";
+// import { logout } from "@/lib/api/authApi";
 import { useAuthStore } from "@/lib/store/auth-store";
 import AppLayout from "../layout";
+import LogoutButton from "@/components/auth/LogoutButton";
 
 type Project = {
   id: string;
@@ -45,7 +46,10 @@ export default async function DashboardPage() {
 
   return (
     <>
-      Just a Dashboard
+      <div className="mb-2">
+        Just a Dashboard
+      </div>
+      <LogoutButton/>
     </>
   );
 }
