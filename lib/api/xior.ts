@@ -11,7 +11,6 @@ let isRefreshing = false;
 let failedQueue: Array<{ resolve: (value?: unknown) => void; reject: (reason?: unknown) => void; config: XiorRequestConfig }> = [];
 
 const processQueue = (error: XiorError | null) => {
-  console.log("processQueue")
   failedQueue.forEach((promise) => {
     if (!error) {
       promise.resolve(xiorClient.request(promise.config));
@@ -27,14 +26,12 @@ xiorClient.interceptors.response.use(
   (response) => response,
   async (error: XiorError) => {
     const originalRequest = error.config;
-    console.log("interceptorz", error)
     if (
       error.response?.status === 401 &&
       isClientSide() &&
       !originalRequest?.url?.includes("/login") &&
       !error.response?.request.url.includes("/refresh")
     ) {
-      console.log('isRefreshing', isRefreshing)
       if (!isRefreshing) {
         isRefreshing = true;
 
@@ -53,16 +50,22 @@ xiorClient.interceptors.response.use(
           return Promise.reject(refreshError);
         }
       }
+
+      return new Promise((resolve, reject) => {
+        if (originalRequest) {
+          failedQueue.push({ resolve, reject, config: originalRequest });
+        } else {
+          reject(error);
+        }
+      });
     }
-    console.log('not client', originalRequest)
-    return new Promise((resolve, reject) => {
-      if (originalRequest) {
-        failedQueue.push({ resolve, reject, config: originalRequest });
-      } else {
-        reject(error);
-      }
-    })
+
+    if (isClientSide() && error.response?.status === 401) {
+      window.location.reload();
+    }
+
+    return Promise.reject(error);
   }
-)
+);
 
 export default xiorClient;

@@ -6,7 +6,6 @@ type Props = {
 };
 
 export const createAuthHeaders = (headers: Headers, { accessToken, refreshToken }: Props) => {
-  console.log('createAuthHeaders')
   const cookies: string[] = [];
 
   if (accessToken) {
@@ -21,6 +20,5 @@ export const createAuthHeaders = (headers: Headers, { accessToken, refreshToken 
     ...headers,
     Cookie: cookies.length ? cookies.join("; ") : headers.get("Cookie"),
   };
-  console.log('newHeaders', newHeaders)
   return new Headers(newHeaders);
 };

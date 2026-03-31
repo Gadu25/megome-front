@@ -7,7 +7,7 @@ export const refreshAccessToken = async (response: NextResponse, headers: Header
   const { refreshAccessToken } = authApi();
   const refreshAccessTokenResponse = await refreshAccessToken(headers);
   const setCookieHeader = refreshAccessTokenResponse.headers.getSetCookie().join("; ");
-  const refreshedAuthCookies = extractAndParseCookies(setCookieHeader, ["Authentication", "Refresh"]);
+  const refreshedAuthCookies = extractAndParseCookies(setCookieHeader, ["Authentication", "refresh_token"]);
   const newResponse = appendCookiesToNextResponse(response, refreshedAuthCookies);
   return newResponse;
 };
