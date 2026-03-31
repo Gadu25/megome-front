@@ -35,7 +35,7 @@ const login = (email: string, password: string) => {
 };
 
 const logout = (headers?: Headers) => {
-  return xiorClient.get<Response>(`${BACKEND_URL}/api/v1/auth/logout`, { headers });
+  return xiorClient.post<Response>(`${BACKEND_URL}/api/v1/auth/logout`, { headers });
 };
 
 const verifyAccessToken = (headers?: Headers) => {
