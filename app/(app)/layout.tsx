@@ -3,14 +3,19 @@ import Navbar from "@/components/app/Navbar";
 import Sidebar from "@/components/app/Sidebar";
 import { authApi } from "@/lib/api/authApi";
 import ServerError from "@/components/ServerError";
+import { cookies } from "next/headers";
+import { createAuthHeaders } from "@/functions/createAuthHeaders";
 
 export default async function AppLayout({ children }: Readonly<{children: React.ReactNode;}>) {
   try {
+    const cookieStore = await cookies(); 
+    const accessToken = cookieStore.get("Authentication");
+    const refreshToken = cookieStore.get("refresh_token");
+    const headers = createAuthHeaders(new Headers(), { accessToken, refreshToken });
+
     const { verifyAccessToken } = authApi();
-    await verifyAccessToken();
-
-    console.log(verifyAccessToken, 'test')
-
+    const res = await verifyAccessToken(headers);
+    console.log('res', res)
     return (
       <div className="drawer lg:drawer-open">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
@@ -22,7 +27,6 @@ export default async function AppLayout({ children }: Readonly<{children: React.
       </div>
     )
   } catch (error) {
-    console.log(error, 'error test')
     return <ServerError error={error} />
   }
 } 
