@@ -6,6 +6,7 @@ import { useAuthStore } from "@/lib/store/auth-store";
 import { authApi } from "@/lib/api/authApi";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/16/solid";
+import { InitApi } from "@/lib/api/initApi";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -21,7 +22,14 @@ export default function SignInForm() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     const { login } = authApi();
+    const { getInit } = InitApi();
+
     await login(email, password)
+    const initData = await getInit()
+    console.log('just initDAta', initData)
+    if(initData.data.profile) {
+      return router.push("/profile-setup")
+    }
     router.push("/dashboard");
   }
 

@@ -37,7 +37,7 @@ export default function ProfileForm({ initialData }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("handled")
+    // console.log("handled")
     // setLoading(true)
 
     // try {
@@ -71,14 +71,7 @@ export default function ProfileForm({ initialData }: Props) {
             <div className="size-20 rounded-full bg-surface flex items-center justify-center text-lg">
               JD
             </div>
-            <input
-              type="text"
-              name="profileImage"
-              value={form.profileImage || ""}
-              onChange={handleChange}
-              placeholder="Image URL"
-              className="input input-bordered text-sm"
-            />
+            <input type="file" className="file-input file-input-md" value={form.profileImage || ""} />
           </div>
 
           {/* Fields */}
