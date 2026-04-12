@@ -5,6 +5,8 @@ import { authApi } from "@/lib/api/authApi";
 import ServerError from "@/components/ServerError";
 import { cookies } from "next/headers";
 import { createAuthHeaders } from "@/functions/createAuthHeaders";
+import { InitApi } from "@/lib/api/initApi";
+import { redirect } from "next/navigation";
 
 export default async function AppLayout({ children }: Readonly<{children: React.ReactNode;}>) {
   try {
@@ -14,8 +16,15 @@ export default async function AppLayout({ children }: Readonly<{children: React.
     const headers = createAuthHeaders(new Headers(), { accessToken, refreshToken });
 
     const { verifyAccessToken } = authApi();
-    const res = await verifyAccessToken(headers);
-    console.log('res', res)
+    await verifyAccessToken(headers);
+
+    const { getInit } = InitApi();
+    const initData = await getInit(headers);
+
+    if(!initData.data.profile) {
+      redirect("/profile-setup")
+    }
+
     return (
       <div className="drawer lg:drawer-open">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />

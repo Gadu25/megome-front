@@ -1,14 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { authApi } from "@/lib/api/authApi";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/16/solid";
+import { InitApi } from "@/lib/api/initApi";
 
-export default function SignInForm() {
+const SIGNUP = "signup";
+const SIGNIN = "signin";
+
+type MODE = typeof SIGNUP | typeof SIGNIN;
+
+export default function AuthForm({ mode }: { mode: MODE }) {
   const router = useRouter();
+
+  const { login } = authApi();
+  const { register } = authApi();
+  const { getInit } = InitApi();
 
   const [showPass, setShowPass] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
@@ -18,19 +28,56 @@ export default function SignInForm() {
 
   const setAccessToken = useAuthStore((state) => state.setAccessToken);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const { login } = authApi();
+  const handleLogin = async () => {
     await login(email, password)
+    const initData = await getInit();
+
+    if (!initData.data.profile) {
+      router.push("/profile-setup")
+    }
     router.push("/dashboard");
   }
+
+  const handleRegister = async () => {
+    await register(email, password)
+    const initData = await getInit();
+
+    if (!initData.data.profile) {
+      router.push("/profile-setup")
+    }
+    router.push("/dashboard");
+  }
+
+  const handleAction = async (e: React.FormEvent) => {
+    e.preventDefault();
+    switch (mode) {
+      case SIGNIN:
+        handleLogin();
+        break;
+      case SIGNUP:
+        handleRegister();
+        break;
+      default:
+        console.error("Invalid action");
+    }
+  }
+
+  const formDisplay = useMemo(() => {
+    const isSignin = mode === SIGNIN;
+
+    return {
+      title: isSignin ? "Welcome Back" : "Create an Account",
+      subtitle: isSignin ? "Access your dashboard" : "Start your journey",
+      buttonLabel: isSignin ? "Sign In" : "Sign Up",
+    };
+  }, [mode]);
 
   return (
     <div>
       {/* Header */}
       <div className="py-4 text-center">
-        <h2 className="text-3xl font-bold text-primary">Welcome Back</h2>
-        <p className="mt-2 text-base-content">Access your dashboard</p>
+        <h2 className="text-3xl font-bold text-primary">{formDisplay.title}</h2>
+        <p className="mt-2 text-base-content">{formDisplay.subtitle}</p>
       </div>
 
       {/* Error */}
@@ -41,7 +88,7 @@ export default function SignInForm() {
       )}
 
       {/* Form */}
-      <form onSubmit={handleLogin} className="space-y-6">
+      <form onSubmit={handleAction} className="space-y-6">
         {/* Email */}
         <div className="form-group flex flex-col">
           <label htmlFor="email" className="text-base-content font-medium mb-1">
@@ -92,11 +139,11 @@ export default function SignInForm() {
             disabled={loading}
             className="flex items-center gap-2 bg-primary text-primary-content py-2 px-4 rounded-md font-bold transition cursor-pointer"
           >
-            {loading ? "Signing in..." : "Sign In"}
+            {loading ? "Signing in..." : formDisplay.buttonLabel }
             <ArrowRightIcon className="h-5 w-5" />
           </button>
         </div>
       </form>
     </div>
-  );
+  )
 }

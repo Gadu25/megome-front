@@ -9,13 +9,7 @@ interface Response {
 
 interface AuthApi {
   login: (email: string, password: string) => Promise<XiorResponse<Response>>;
-  logout: (headers?: Headers) => Promise<XiorResponse<Response>>;
-  verifyAccessToken: (headers?: Headers) => Promise<XiorResponse<Response>>;
-  refreshAccessToken: (headers?: Headers) => Promise<XiorResponse<Response>>;
-}
-
-interface AuthApi {
-  login: (email: string, password: string) => Promise<XiorResponse<Response>>;
+  register: (email: string, password: string) => Promise<XiorResponse<Response>>;
   logout: (headers?: Headers) => Promise<XiorResponse<Response>>;
   verifyAccessToken: (headers?: Headers) => Promise<XiorResponse<Response>>;
   refreshAccessToken: (headers?: Headers) => Promise<XiorResponse<Response>>;
@@ -24,6 +18,7 @@ interface AuthApi {
 export const authApi = (): AuthApi => {
   return {
     login,
+    register,
     logout,
     verifyAccessToken,
     refreshAccessToken,
@@ -33,6 +28,10 @@ export const authApi = (): AuthApi => {
 const login = (email: string, password: string) => {
   return xiorClient.post<Response>(`${BACKEND_URL}/api/v1/auth/login`, { email, password });
 };
+
+const register = (email: string, password: string) => {
+  return xiorClient.post<Response>(`${BACKEND_URL}/api/v1/auth/register`, { email, password });
+}
 
 const logout = (headers?: Headers) => {
   return xiorClient.post<Response>(`${BACKEND_URL}/api/v1/auth/logout`, { headers });
