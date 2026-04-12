@@ -7,6 +7,7 @@ import { authApi } from "@/lib/api/authApi";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/16/solid";
 import { InitApi } from "@/lib/api/initApi";
+import { authSchema } from "@/features/auth/schema";
 
 const SIGNUP = "signup";
 const SIGNIN = "signin";
@@ -16,8 +17,7 @@ type MODE = typeof SIGNUP | typeof SIGNIN;
 export default function AuthForm({ mode }: { mode: MODE }) {
   const router = useRouter();
 
-  const { login } = authApi();
-  const { register } = authApi();
+  const { login, register } = authApi();
   const { getInit } = InitApi();
 
   const [showPass, setShowPass] = useState<boolean>(false);
@@ -25,6 +25,7 @@ export default function AuthForm({ mode }: { mode: MODE }) {
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Record<string, string[]>>({})
 
   const setAccessToken = useAuthStore((state) => state.setAccessToken);
 
@@ -50,15 +51,33 @@ export default function AuthForm({ mode }: { mode: MODE }) {
 
   const handleAction = async (e: React.FormEvent) => {
     e.preventDefault();
-    switch (mode) {
-      case SIGNIN:
-        handleLogin();
-        break;
-      case SIGNUP:
-        handleRegister();
-        break;
-      default:
-        console.error("Invalid action");
+    setError(null);
+    setErrors({});
+    setLoading(true);
+
+    try {
+      const result = authSchema.safeParse({ email, password });
+  
+      if (!result.success) {
+        setErrors(result.error.flatten().fieldErrors);
+        setLoading(false);
+        return;
+      }
+  
+      switch (mode) {
+        case SIGNIN:
+          handleLogin();
+          break;
+        case SIGNUP:
+          handleRegister();
+          break;
+        default:
+          console.error("Invalid action");
+      }
+    } catch (err: any) {
+      setError(err.message || "An error occurred");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -99,7 +118,7 @@ export default function AuthForm({ mode }: { mode: MODE }) {
             type="email"
             value={email}
             placeholder="Enter your email"
-            className="input w-full"
+            className={`input w-full ${errors.email ? "input-error" : ""}`}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
@@ -117,7 +136,7 @@ export default function AuthForm({ mode }: { mode: MODE }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
-            className="input w-full relative"
+            className={`input w-full ${errors.password ? "input-error" : ""}`}
             required
           />
           <button
