@@ -26,8 +26,7 @@ export default function SignInForm() {
 
     await login(email, password)
     const initData = await getInit()
-    console.log('just initDAta', initData)
-    if(initData.data.profile) {
+    if(!initData.data.profile) {
       return router.push("/profile-setup")
     }
     router.push("/dashboard");
