@@ -1,20 +1,8 @@
 import { XiorResponse } from "xior";
 import xiorClient from "./xior";
+import type { Profile } from "@/types/types";
 
 const BACKEND_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
-interface Profile {
-  id: number;
-  userId: number;
-  firstName: string;
-  lastName: string;
-  bio: string;
-  phone: string;
-  website: string;
-  location: string;
-  profileImage: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
 interface Response {
   success: boolean;

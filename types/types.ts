@@ -13,15 +13,15 @@ export type LogoutResponse = {
 }
 
 export type Profile = {
-  id: number
-  userId: number
-  firstName: string
-  lastName: string
-  bio: string
-  phone: string
-  website: string
-  location: string
-  profileImage: string
-  createdAt: string
-  updatedAt: string
+  id: number;
+  userId: number;
+  firstName: string;
+  lastName: string;
+  bio: string;
+  phone: string;
+  website: string;
+  location: string;
+  profileImage: string;
+  createdAt: string;
+  updatedAt: string;
 }
