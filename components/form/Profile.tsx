@@ -1,32 +1,32 @@
 "use client"
 
 import { useState } from "react"
-import type { Profile } from "@/types/types"
+import type { ProfileForm } from "@/types/types"
 import {
   UserIcon,
   MapPinIcon,
   GlobeAltIcon,
   PhoneIcon,
-  LinkIcon,
 } from "@heroicons/react/24/outline";
+import { profileApi } from "@/lib/api/profileApi";
+import { useRouter } from "next/navigation";
 
-type Props = {
-  initialData?: Partial<Profile>
-}
 
-export default function ProfileForm({ initialData }: Props) {
-  const [form, setForm] = useState<Partial<Profile>>({
+export default function ProfileForm() {
+  const { updateProfile } = profileApi();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const [form, setForm] = useState<ProfileForm>({
     firstName: "",
     lastName: "",
     bio: "",
     phone: "",
     website: "",
     location: "",
-    profileImage: "",
-    ...initialData,
+    profileImage: null,
   })
 
-  const [loading, setLoading] = useState(false)
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -37,24 +37,11 @@ export default function ProfileForm({ initialData }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // console.log("handled")
-    // setLoading(true)
-
-    // try {
-    //   const res = await fetch("/api/profile", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(form),
-    //   })
-
-    //   if (!res.ok) throw new Error("Failed to save")
-    // } finally {
-    //   setLoading(false)
-    // }
+    setLoading(true)
+    await updateProfile(form);
+    setLoading(false)
+    router.push("/dashboard");
   }
-
 
   return (
     <form
@@ -71,7 +58,15 @@ export default function ProfileForm({ initialData }: Props) {
             <div className="size-20 rounded-full bg-surface flex items-center justify-center text-lg">
               JD
             </div>
-            <input type="file" className="file-input file-input-md" value={form.profileImage || ""} />
+            <input
+              type="file"
+              accept="image/*"
+              className="file-input file-input-md"
+              onChange={(e) => {
+                const file = e.target.files?.[0] || null
+                setForm((prev) => ({ ...prev, profileImage: file }))
+              }}
+            />
           </div>
 
           {/* Fields */}
@@ -170,7 +165,7 @@ export default function ProfileForm({ initialData }: Props) {
       </div>
 
       {/* SOCIAL LINKS */}
-      <div className="bg-surfaceElevated border border-border p-6 rounded-xl space-y-4">
+      {/* <div className="bg-surfaceElevated border border-border p-6 rounded-xl space-y-4">
         <h3 className="text-lg font-semibold">Links</h3>
 
         <div>
@@ -186,13 +181,13 @@ export default function ProfileForm({ initialData }: Props) {
             className="input input-bordered w-full"
           />
         </div>
-      </div>
+      </div> */}
 
       {/* ACTIONS */}
       <div className="flex justify-end gap-4">
         <button
           type="button"
-          className="px-4 py-2 border border-border rounded-md text-textSecondary"
+          className="px-4 py-2 border border-border rounded-md text-textSecondary cursor-pointer"
         >
           Cancel
         </button>
@@ -200,7 +195,7 @@ export default function ProfileForm({ initialData }: Props) {
         <button
           type="submit"
           disabled={loading}
-          className="bg-accent hover:bg-accentHover text-black px-6 py-2 rounded-md font-semibold disabled:opacity-50"
+          className="bg-primary text-primary-content px-6 py-2 rounded-md font-semibold disabled:opacity-50 cursor-pointer"
         >
           {loading ? "Saving..." : "Save Profile"}
         </button>

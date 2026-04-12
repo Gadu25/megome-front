@@ -2,7 +2,7 @@ import ProfileForm from "@/components/form/Profile";
 
 export default function ProfilePage() {
   return (
-    <div className="min-h-screen bg-base-200 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-base-200 flex items-center justify-center p-4">
       <div className="w-full max-w-3xl">
 
         <div className="card bg-base-100 shadow-xl border border-base-300">
@@ -20,13 +20,13 @@ export default function ProfilePage() {
             </div>
 
             {/* Step indicator */}
-            <div>
+            {/* <div>
               <ul className="steps steps-horizontal w-full text-xs">
                 <li className="step step-primary">Account</li>
                 <li className="step step-primary">Profile</li>
                 <li className="step">Finish</li>
               </ul>
-            </div>
+            </div> */}
 
             <div className="divider" />
 
