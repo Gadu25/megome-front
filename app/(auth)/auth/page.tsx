@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { BoltIcon, ShieldCheckIcon, PuzzlePieceIcon } from '@heroicons/react/24/outline'
 import { LogoFull } from '@/components/common/Logo';
 import ThemeToggle from '@/components/common/ThemeToggle';
-import SignInForm from '@/components/auth/SignInForm';
-import SignUpForm from '@/components/auth/SignUpForm';
+import AuthForm from '@/components/auth/AuthForm';
 
 export default function Auth() {
   const [isSignUp, setIsSignUp] = useState<boolean>(false);
@@ -102,7 +101,7 @@ export default function Auth() {
                 />
               </div>
               <div className="min-h-[300px] py-2 lg:py-4">
-                {isSignUp ? <SignUpForm/> : <SignInForm/>}
+                <AuthForm mode={isSignUp ? "signup": "signin"} />
               </div>
             </div>
           </div>
