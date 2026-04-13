@@ -107,14 +107,11 @@ export default function AuthForm({ mode }: { mode: MODE }) {
       )}
 
       {/* Form */}
-      <form onSubmit={handleAction} className="space-y-6">
+      <form onSubmit={handleAction} className="space-y-3 max-w-lg mx-auto">
         {/* Email */}
-        <div className="form-group flex flex-col">
-          <label htmlFor="email" className="text-base-content font-medium mb-1">
-            Email
-          </label>
-          <input 
-            id="email"
+        <fieldset className="fieldset relative">
+          <legend className="fieldset-legend">Email</legend>
+          <input id="email"
             type="email"
             value={email}
             placeholder="Enter your email"
@@ -122,15 +119,17 @@ export default function AuthForm({ mode }: { mode: MODE }) {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-        </div>
+          {errors.email && (
+            <span className="text-error text-sm absolute bottom-[-1rem] left-0">
+              {errors.email[0]}
+            </span>
+          )}
+        </fieldset>
 
         {/* Password */}
-        <div className="form-group relative flex flex-col">
-          <label htmlFor="password" className="text-base-content font-medium mb-1">
-            Password
-          </label>
-          <input 
-            id="password"
+        <fieldset className="fieldset relative">
+          <legend className="fieldset-legend">Password</legend>
+          <input id="password"
             type={showPass ? "text" : "password"}
             name="password"
             value={password}
@@ -142,11 +141,17 @@ export default function AuthForm({ mode }: { mode: MODE }) {
           <button
             type="button"
             onClick={() => setShowPass((prev) => !prev)}
-            className="absolute right-3 top-[50%] -translate-y-[-2px] text-base-content hover:text-secondary transition cursor-pointer"
+            className="absolute right-3 top-[50%] -translate-y-[50%] text-base-content hover:text-secondary transition cursor-pointer"
           >
-            {showPass ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+            {showPass ? <EyeSlashIcon className="h-4 w-5" /> : <EyeIcon className="h-5 w-5" />}
           </button>
-        </div>
+          {errors.password && (
+            <span className="text-error text-sm absolute bottom-[-1rem] left-0">
+              {errors.password[0]}
+            </span>
+          )}
+        </fieldset>
+
 
         {/* Forgot / Submit */}
         <div className="flex justify-between items-center mt-10">
