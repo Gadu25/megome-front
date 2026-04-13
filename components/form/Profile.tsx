@@ -2,20 +2,17 @@
 
 import { useState } from "react"
 import type { ProfileForm } from "@/types/types"
-import {
-  UserIcon,
-  MapPinIcon,
-  GlobeAltIcon,
-  PhoneIcon,
-} from "@heroicons/react/24/outline";
+import { UserIcon } from "@heroicons/react/24/outline";
 import { profileApi } from "@/lib/api/profileApi";
 import { useRouter } from "next/navigation";
+import { profileSchema } from "@/features/profile/schema";
 
 
 export default function ProfileForm() {
   const { updateProfile } = profileApi();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string[]>>({});
 
   const [form, setForm] = useState<ProfileForm>({
     firstName: "",
@@ -37,10 +34,24 @@ export default function ProfileForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setErrors({});
     setLoading(true)
-    await updateProfile(form);
-    setLoading(false)
-    router.push("/dashboard");
+    
+    try {
+      const result = profileSchema.safeParse(form);
+
+      if (!result.success) {
+        setErrors(result.error.flatten().fieldErrors);
+        setLoading(false);
+        return;
+      }
+
+      await updateProfile(form);
+      router.push("/dashboard");
+      
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -50,18 +61,23 @@ export default function ProfileForm() {
     >
       {/* BASIC INFO */}
       <div className="bg-surfaceElevated border border-border p-6 rounded-xl space-y-6">
-        <h3 className="text-lg font-semibold">Basic Information</h3>
+        <div className="flex gap-2 items-center">
+          <span>
+            <UserIcon className="size-6" />
+          </span>
+          <h3 className="text-lg font-semibold">Basic Information</h3>
+        </div>
 
         <div className="flex flex-col md:flex-row gap-6">
           {/* Avatar */}
-          <div className="flex flex-col items-center gap-2">
-            <div className="size-20 rounded-full bg-surface flex items-center justify-center text-lg">
+          <div className="flex flex-col items-center gap-4 p-2">
+            <div className="size-40 rounded-full bg-base-300 flex items-center justify-center text-lg">
               JD
             </div>
             <input
               type="file"
               accept="image/*"
-              className="file-input file-input-md"
+              className="file-input file-input-sm"
               onChange={(e) => {
                 const file = e.target.files?.[0] || null
                 setForm((prev) => ({ ...prev, profileImage: file }))
@@ -72,96 +88,82 @@ export default function ProfileForm() {
           {/* Fields */}
           <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* First Name */}
-            <div>
-              <label className="text-sm text-textSecondary flex items-center gap-2">
-                <UserIcon className="size-4" />
-                First Name
-              </label>
-              <input
+            <fieldset className="fieldset">
+              <label className="label">First Name</label>
+              <input 
                 type="text"
                 name="firstName"
                 value={form.firstName || ""}
                 onChange={handleChange}
-                className="input input-bordered w-full"
-                required
+                className={`input input-bordered w-full ${errors.firstName ? "input-error" : ""}`}
               />
-            </div>
-
+            </fieldset>
             {/* Last Name */}
-            <div>
-              <label className="text-sm text-textSecondary flex items-center gap-2">
-                <UserIcon className="size-4" />
-                Last Name
-              </label>
+            <fieldset className="fieldset">
+              <label className="label">Last Name</label>
               <input
                 type="text"
                 name="lastName"
                 value={form.lastName || ""}
                 onChange={handleChange}
-                className="input input-bordered w-full"
-                required
+                className={`input input-bordered w-full ${errors.lastName ? "input-error" : ""}`}
               />
-            </div>
+            </fieldset>
 
             {/* Location */}
-            <div>
-              <label className="text-sm text-textSecondary flex items-center gap-2">
-                <MapPinIcon className="size-4" />
-                Location
-              </label>
-              <input
+            <fieldset className="fieldset">
+              <label className="label">Location</label>
+              <input 
                 type="text"
                 name="location"
                 value={form.location || ""}
                 onChange={handleChange}
-                className="input input-bordered w-full"
+                className={`input input-bordered w-full ${errors.location ? "input-error" : ""}`}
               />
-            </div>
+            </fieldset>
 
             {/* Phone */}
-            <div>
-              <label className="text-sm text-textSecondary flex items-center gap-2">
-                <PhoneIcon className="size-4" />
-                Phone
-              </label>
-              <input
+            <fieldset className="fieldset">
+              <label className="label">Phone</label>
+              <input 
                 type="tel"
                 name="phone"
                 value={form.phone || ""}
                 onChange={handleChange}
-                className="input input-bordered w-full"
+                className={`input input-bordered w-full ${errors.phone ? "input-error" : ""}`}
               />
-            </div>
+            </fieldset>
 
             {/* Website */}
-            <div className="md:col-span-2">
-              <label className="text-sm text-textSecondary flex items-center gap-2">
-                <GlobeAltIcon className="size-4" />
-                Website
-              </label>
-              <input
+            <fieldset className="fieldset md:col-span-2">
+              <label className="label">Website</label>
+              <input 
                 type="url"
                 name="website"
                 value={form.website || ""}
                 onChange={handleChange}
-                className="input input-bordered w-full"
+                className={`input input-bordered w-full ${errors.website ? "input-error" : ""}`}
               />
-            </div>
+            </fieldset>
           </div>
         </div>
       </div>
 
       {/* BIO */}
+      
       <div className="bg-surfaceElevated border border-border p-6 rounded-xl space-y-4">
-        <h3 className="text-lg font-semibold">Bio</h3>
-        <textarea
-          name="bio"
-          value={form.bio || ""}
-          onChange={handleChange}
-          rows={4}
-          className="textarea textarea-bordered w-full"
-          placeholder="Write something about yourself..."
-        />
+        <fieldset className="fieldset">
+          <legend className="fieldset-legend">Your bio</legend>
+          <textarea
+            name="bio"
+            value={form.bio || ""}
+            onChange={handleChange}
+            rows={4}
+            className={`textarea textarea-bordered w-full ${errors.bio ? "textarea-error" : ""}`}
+            placeholder="Write something about yourself..."
+          />
+          <div className="label">You can edit bio later on from settings</div>
+        </fieldset>
       </div>
 
       {/* SOCIAL LINKS */}
