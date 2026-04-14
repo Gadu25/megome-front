@@ -8,6 +8,7 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/16/solid";
 import { InitApi } from "@/lib/api/initApi";
 import { authSchema } from "@/features/auth/schema";
+import { useToast } from "../toast/useToast";
 
 const SIGNUP = "signup";
 const SIGNIN = "signin";
@@ -16,6 +17,7 @@ type MODE = typeof SIGNUP | typeof SIGNIN;
 
 export default function AuthForm({ mode }: { mode: MODE }) {
   const router = useRouter();
+  const { showToast } = useToast();
 
   const { login, register } = authApi();
   const { getInit } = InitApi();
@@ -30,23 +32,37 @@ export default function AuthForm({ mode }: { mode: MODE }) {
   const setAccessToken = useAuthStore((state) => state.setAccessToken);
 
   const handleLogin = async () => {
-    await login(email, password)
-    const initData = await getInit();
+    try {
+      const res = await login(email, password);
+      showToast(res.data.message, "success");
 
-    if (!initData.data.profile) {
-      router.push("/profile-setup")
+      const initData = await getInit();
+
+      if (!initData.data.profile) {
+        router.push("/profile-setup");
+        return;
+      }
+
+      router.push("/dashboard");
+    } catch (err: any) {
+      showToast(err.response?.data?.error, "error");
     }
-    router.push("/dashboard");
-  }
+  };
 
   const handleRegister = async () => {
-    await register(email, password)
-    const initData = await getInit();
-
-    if (!initData.data.profile) {
-      router.push("/profile-setup")
+    try {
+      const res = await register(email, password);
+      showToast(res.data.message, "success");
+      
+      const initData = await getInit();
+  
+      if (!initData.data.profile) {
+        router.push("/profile-setup")
+      }
+      router.push("/dashboard");
+    } catch (err: any) {
+      showToast(err.response?.data?.error, "error");
     }
-    router.push("/dashboard");
   }
 
   const handleAction = async (e: React.FormEvent) => {
@@ -107,7 +123,7 @@ export default function AuthForm({ mode }: { mode: MODE }) {
       )}
 
       {/* Form */}
-      <form onSubmit={handleAction} className="space-y-3 max-w-lg mx-auto">
+      <form onSubmit={handleAction} className="space-y-3 mx-auto">
         {/* Email */}
         <fieldset className="fieldset relative">
           <legend className="fieldset-legend">Email</legend>

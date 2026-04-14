@@ -77,7 +77,7 @@ export default function Auth() {
         </div>
 
         <div className="flex-1 bg-base-300 p-2 lg:p-24 flex justify-center items-center w-full">
-          <div className="card card-border bg-base-100 w-full lg:mx-16">
+          <div className="card card-border bg-base-100 w-full lg:mx-16 max-w-lg">
             <div className="card-body">
               <div className="flex relative pb-2 text-sm lg:text-xl text-base-content">
                 <button 
