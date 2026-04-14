@@ -1,8 +1,8 @@
 "use client";
 import ThemeToggle from "../common/ThemeToggle";
+import Avatar from "../common/Avatar";
 import { usePathname } from "next/navigation";
 import { Bars3BottomLeftIcon } from "@heroicons/react/24/outline";
-import Avatar from "../common/Avatar";
 import { Profile } from "@/types/types";
 
 const routeTitles: Record<string, string> = {
@@ -14,7 +14,6 @@ const routeTitles: Record<string, string> = {
 type Props = {
   profile: Profile;
 };
-
 
 export default function Navbar({ profile }: Props) {
   const pathname = usePathname() || "/";
