@@ -1,7 +1,9 @@
 "use client";
 import ThemeToggle from "../common/ThemeToggle";
+import Avatar from "../common/Avatar";
 import { usePathname } from "next/navigation";
 import { Bars3BottomLeftIcon } from "@heroicons/react/24/outline";
+import { Profile } from "@/types/types";
 
 const routeTitles: Record<string, string> = {
   "/dashboard": "Dashboard",
@@ -9,7 +11,11 @@ const routeTitles: Record<string, string> = {
   "/settings": "Settings",
 };
 
-export default function Navbar() {
+type Props = {
+  profile: Profile;
+};
+
+export default function Navbar({ profile }: Props) {
   const pathname = usePathname() || "/";
   const title = routeTitles[pathname] || "App";
 
@@ -20,7 +26,10 @@ export default function Navbar() {
       </label>
       <div className="w-full flex justify-between px-4">
         <div className="font-semibold">{title}</div>
+        <div className="flex justify-end gap-2">
           <ThemeToggle/>
+          <Avatar profile={profile}/>
+        </div>
       </div>
     </nav>
   )

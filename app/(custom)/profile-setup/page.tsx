@@ -15,7 +15,7 @@ export default function ProfilePage() {
               </h1>
 
               <p className="text-sm opacity-70">
-                Set up your profile to unlock the full experience.
+                To proceed, you need to complete the required details below.
               </p>
             </div>
 
@@ -28,7 +28,7 @@ export default function ProfilePage() {
               </ul>
             </div> */}
 
-            <div className="divider" />
+            {/* <div className="divider" /> */}
 
             {/* Form container */}
             <div className="rounded-lg bg-base-200 p-4 sm:p-6 border border-base-300">
