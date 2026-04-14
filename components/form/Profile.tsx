@@ -72,7 +72,7 @@ export default function ProfileForm() {
           {/* Avatar */}
           <div className="flex flex-col items-center gap-4 p-2">
             <div className="size-40 rounded-full bg-base-300 flex items-center justify-center text-lg">
-              JD
+              profile
             </div>
             <input
               type="file"
@@ -86,9 +86,9 @@ export default function ProfileForm() {
           </div>
 
           {/* Fields */}
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3">
             {/* First Name */}
-            <fieldset className="fieldset">
+            <fieldset className="fieldset relative">
               <label className="label">First Name</label>
               <input 
                 type="text"
@@ -97,9 +97,12 @@ export default function ProfileForm() {
                 onChange={handleChange}
                 className={`input input-bordered w-full ${errors.firstName ? "input-error" : ""}`}
               />
+              {errors.firstName && (
+                <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.firstName }</span>
+              )}
             </fieldset>
             {/* Last Name */}
-            <fieldset className="fieldset">
+            <fieldset className="fieldset relative">
               <label className="label">Last Name</label>
               <input
                 type="text"
@@ -108,10 +111,13 @@ export default function ProfileForm() {
                 onChange={handleChange}
                 className={`input input-bordered w-full ${errors.lastName ? "input-error" : ""}`}
               />
+              {errors.lastName && (
+                <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.lastName }</span>
+              )}
             </fieldset>
 
             {/* Location */}
-            <fieldset className="fieldset">
+            <fieldset className="fieldset md:col-span-2 relative">
               <label className="label">Location</label>
               <input 
                 type="text"
@@ -120,10 +126,13 @@ export default function ProfileForm() {
                 onChange={handleChange}
                 className={`input input-bordered w-full ${errors.location ? "input-error" : ""}`}
               />
+              {errors.location && (
+                <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.location }</span>
+              )}
             </fieldset>
 
             {/* Phone */}
-            <fieldset className="fieldset">
+            <fieldset className="fieldset md:col-span-2 relative">
               <label className="label">Phone</label>
               <input 
                 type="tel"
@@ -132,10 +141,13 @@ export default function ProfileForm() {
                 onChange={handleChange}
                 className={`input input-bordered w-full ${errors.phone ? "input-error" : ""}`}
               />
+              {errors.phone && (
+                <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.phone }</span>
+              )}
             </fieldset>
 
             {/* Website */}
-            <fieldset className="fieldset md:col-span-2">
+            <fieldset className="fieldset md:col-span-2 relative">
               <label className="label">Website</label>
               <input 
                 type="url"
@@ -144,6 +156,9 @@ export default function ProfileForm() {
                 onChange={handleChange}
                 className={`input input-bordered w-full ${errors.website ? "input-error" : ""}`}
               />
+              {errors.website && (
+                <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.website }</span>
+              )}
             </fieldset>
           </div>
         </div>
@@ -152,7 +167,7 @@ export default function ProfileForm() {
       {/* BIO */}
       
       <div className="bg-surfaceElevated border border-border p-6 rounded-xl space-y-4">
-        <fieldset className="fieldset">
+        <fieldset className="fieldset relative">
           <legend className="fieldset-legend">Your bio</legend>
           <textarea
             name="bio"
@@ -163,6 +178,9 @@ export default function ProfileForm() {
             placeholder="Write something about yourself..."
           />
           <div className="label">You can edit bio later on from settings</div>
+          {errors.bio && (
+            <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.bio }</span>
+          )}
         </fieldset>
       </div>
 
