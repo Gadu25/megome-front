@@ -15,7 +15,7 @@ export default function ProfileForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
-
+  const [preview, setPreview] = useState<string | null>(null)
   const [form, setForm] = useState<ProfileForm>({
     firstName: "",
     lastName: "",
@@ -64,7 +64,7 @@ export default function ProfileForm() {
       className="w-full space-y-6 text-textPrimary"
     >
       {/* BASIC INFO */}
-      <div className="bg-surfaceElevated border border-border p-6 rounded-xl space-y-6">
+      <div className="space-y-6">
         <div className="flex gap-2 items-center">
           <span>
             <UserIcon className="size-6" />
@@ -75,16 +75,28 @@ export default function ProfileForm() {
         <div className="flex flex-col md:flex-row gap-6">
           {/* Avatar */}
           <div className="flex flex-col items-center gap-4 p-2">
-            <div className="size-40 rounded-full bg-base-300 flex items-center justify-center text-lg">
-              profile
+            <div className="size-40 rounded-full bg-base-300 overflow-hidden flex items-center justify-center border-2 border-neutral">
+              {preview ? (
+                <img
+                  src={preview}
+                  alt="Profile preview"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-lg">profile</span>
+              )}
             </div>
             <input
               type="file"
               accept="image/*"
               className="file-input file-input-sm"
               onChange={(e) => {
-                const file = e.target.files?.[0] || null
-                setForm((prev) => ({ ...prev, profileImage: file }))
+                const file = e.target.files?.[0] || null;
+                setForm((prev) => ({ ...prev, profileImage: file }));
+                if (file) {
+                  const url = URL.createObjectURL(file)
+                  setPreview(url)
+                }
               }}
             />
           </div>
@@ -93,7 +105,7 @@ export default function ProfileForm() {
           <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3">
             {/* First Name */}
             <fieldset className="fieldset relative">
-              <label className="label">First Name</label>
+              <label className="label"><span className="text-error">*</span>First Name</label>
               <input 
                 type="text"
                 name="firstName"
@@ -107,7 +119,7 @@ export default function ProfileForm() {
             </fieldset>
             {/* Last Name */}
             <fieldset className="fieldset relative">
-              <label className="label">Last Name</label>
+              <label className="label"><span className="text-error">*</span>Last Name</label>
               <input
                 type="text"
                 name="lastName"
@@ -170,7 +182,7 @@ export default function ProfileForm() {
 
       {/* BIO */}
       
-      <div className="bg-surfaceElevated border border-border p-6 rounded-xl space-y-4">
+      <div className="space-y-4">
         <fieldset className="fieldset relative">
           <legend className="fieldset-legend">Your bio</legend>
           <textarea
