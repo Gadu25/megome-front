@@ -6,10 +6,12 @@ import { UserIcon } from "@heroicons/react/24/outline";
 import { profileApi } from "@/lib/api/profileApi";
 import { useRouter } from "next/navigation";
 import { profileSchema } from "@/features/profile/schema";
+import { useToast } from "../toast/useToast";
 
 
 export default function ProfileForm() {
   const { updateProfile } = profileApi();
+  const { showToast } = useToast();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
@@ -46,9 +48,11 @@ export default function ProfileForm() {
         return;
       }
 
-      await updateProfile(form);
+      const res = await updateProfile(form);
+      showToast(res.data.message, "success")
       router.push("/dashboard");
-      
+    } catch (err: any) {
+      showToast(err.response?.data?.error, "error")
     } finally {
       setLoading(false)
     }
