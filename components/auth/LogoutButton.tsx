@@ -11,7 +11,7 @@ const LogoutButton = () => {
     router.push("/auth");
   };
 
-  return <button className="btn" onClick={onLogout}>Logout</button>;
+  return <div onClick={onLogout}>Logout</div>;
 };
 
 export default LogoutButton;
