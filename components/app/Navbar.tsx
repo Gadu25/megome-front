@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import ThemeToggle from "../common/ThemeToggle";
 import Avatar from "../common/Avatar";
 import { usePathname } from "next/navigation";
@@ -36,12 +37,11 @@ export default function Navbar({ profile }: Props) {
             <ul
               tabIndex={-1}
               className="menu dropdown-content bg-base-200 rounded-md z-1 mt-1 w-40 p-2 shadow-sm">
-              <li><a><UserIcon className="size-4"/> Profile</a></li>
+              <li><Link href="/profile"><UserIcon className="size-4"/> Profile</Link></li>
               <li><a><Cog6ToothIcon className="size-4"/> Settings</a></li>
               <li><div><ArrowRightStartOnRectangleIcon className="size-4"/> <LogoutButton/></div></li>
             </ul>
           </div>
-          
         </div>
       </div>
     </nav>
