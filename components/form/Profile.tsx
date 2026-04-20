@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import type { ProfileForm } from "@/types/types"
+import { useEffect, useState } from "react"
+import type { Profile, ProfileForm } from "@/types/types"
 import { UserIcon } from "@heroicons/react/24/outline";
 import { profileApi } from "@/lib/api/profileApi";
 import { useRouter } from "next/navigation";
@@ -10,8 +10,11 @@ import { useToast } from "../toast/useToast";
 import Modal from "../modal/Modal";
 import { authApi } from "@/lib/api/authApi";
 
+type Props = {
+  profile?: Profile | null;
+}
 
-export default function ProfileForm() {
+export default function ProfileForm({ profile = null }: Props) {
   const { updateProfile } = profileApi();
   const { showToast } = useToast();
   const router = useRouter();
@@ -31,6 +34,28 @@ export default function ProfileForm() {
     profileImage: null,
   })
 
+  useEffect(()=> {
+    if (!profile) return
+
+    setForm({
+      firstName: profile.firstName ?? "",
+      lastName: profile.lastName ?? "",
+      title: profile.title ?? "",
+      birthday: profile.birthday
+        ? profile.birthday.split("T")[0]
+        : "",
+      bio: profile.bio ?? "",
+      phone: profile.phone ?? "",
+      website: profile.website ?? "",
+      location: profile.location ?? "",
+      profileImage: null,
+    });
+
+    // set preview if you have existing image
+    if (profile.profileImage) {
+      setPreview(profile.profileImage);
+    }
+  }, [profile])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

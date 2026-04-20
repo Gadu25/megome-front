@@ -11,11 +11,14 @@ import {
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import Avatar from "../common/Avatar";
+import RightModal from "../modal/RightModal";
+import ProfileForm from "../form/Profile";
 
 export default function TopProfile() {
   const { getProfile } = profileApi();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isEditOpen, setIsEditOpen] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -47,7 +50,7 @@ export default function TopProfile() {
             <h1 className="text-2xl font-bold">{profile.firstName} {profile.lastName}, { calculateAge(profile.birthday) }</h1>
             <p className="text-base-content/70"> {profile.title} • {profile.location} </p>
           </div>
-          <button className="btn btn-outline btn-sm"> Edit Profile </button>
+          <button className="btn btn-outline btn-sm" onClick={() => setIsEditOpen(true)}> Edit Profile </button>
         </div>
       
         <div className="flex flex-col text-sm gap-1 text-base-content/70">
@@ -66,6 +69,12 @@ export default function TopProfile() {
           </div>
         </div>
       </div>
+      <RightModal
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+      >
+        <ProfileForm profile={profile}/>
+      </RightModal>
     </>
   );
 }
