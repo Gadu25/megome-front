@@ -7,7 +7,7 @@ import {
   MapPinIcon,
   PhoneIcon,
   GlobeAltIcon,
-  LinkIcon,
+  PencilSquareIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import Avatar from "../common/Avatar";
@@ -52,7 +52,9 @@ export default function TopProfile() {
             </h1>
             <p className="text-base-content/70"> {profile.title} • {profile.location} </p>
           </div>
-          <button className="btn btn-outline btn-sm" onClick={() => setIsEditOpen(true)}> Edit Profile </button>
+          <button className="btn btn-sm" onClick={() => setIsEditOpen(true)}>
+            <PencilSquareIcon className="size-5"/>
+          </button>
         </div>
       
         <div className="flex flex-col text-sm gap-1 text-base-content/70">
