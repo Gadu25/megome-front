@@ -51,3 +51,17 @@ export type ProfilePayload = {
   location: string;
   profileImage: File | null;
 }
+
+export type Skill = {
+  id: number;
+  userId: number;
+  skillName: string;
+  proficiency: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type SkillForm = {
+  skillName: string;
+  proficiency: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
+}
