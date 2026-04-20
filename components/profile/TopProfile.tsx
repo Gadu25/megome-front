@@ -41,13 +41,15 @@ export default function TopProfile() {
   return (
     <>
       <div className="flex flex-col items-center gap-3">
-        <Avatar profile={profile} size="24"/>
+        <Avatar profile={profile} size="w-30" />
       </div>
 
       <div className="flex-1 space-y-3">
         <div className="flex justify-between items-start">
           <div>
-            <h1 className="text-2xl font-bold">{profile.firstName} {profile.lastName}, { calculateAge(profile.birthday) }</h1>
+            <h1 className="text-2xl font-bold">
+              {profile.firstName} {profile.lastName}, { calculateAge(profile.birthday) }
+            </h1>
             <p className="text-base-content/70"> {profile.title} • {profile.location} </p>
           </div>
           <button className="btn btn-outline btn-sm" onClick={() => setIsEditOpen(true)}> Edit Profile </button>
