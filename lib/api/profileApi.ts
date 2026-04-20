@@ -11,21 +11,24 @@ interface Response {
 
 interface ProfileApi {
   updateProfile: (profile:ProfilePayload, headers?: Headers) => Promise<XiorResponse<Response>>;
+  getProfile: (headers?: Headers) => Promise<XiorResponse<Response>>;
 }
 
 export const profileApi = (): ProfileApi => {
   return {
     updateProfile,
+    getProfile,
   }
 }
 
 const updateProfile = (profile: ProfilePayload, headers?: Headers) => {
-  console.log("Updating profile with data:", profile);
   const cookieHeader = headers?.get("cookie");
   const formData = new FormData();
 
   formData.append("firstName", profile.firstName);
   formData.append("lastName", profile.lastName);
+  formData.append("title", profile.title);
+  formData.append("birthday", profile.birthday);
   formData.append("bio", profile.bio);
   formData.append("phone", profile.phone);
   formData.append("website", profile.website);
@@ -45,3 +48,16 @@ const updateProfile = (profile: ProfilePayload, headers?: Headers) => {
     }
   );
 };
+
+const getProfile = (headers?: Headers) => {
+  const cookieHeader = headers?.get("cookie");
+
+  return xiorClient.get<Response>(
+    `${BACKEND_URL}/api/v1/profile`,
+    {
+      headers: {
+        cookie: cookieHeader || "",
+      }
+    }
+  )
+}

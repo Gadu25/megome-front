@@ -17,6 +17,8 @@ export type Profile = {
   userId: number;
   firstName: string;
   lastName: string;
+  title: string;
+  birthday: string;
   bio: string;
   phone: string;
   website: string;
@@ -29,6 +31,8 @@ export type Profile = {
 export type ProfileForm = {
   firstName: string;
   lastName: string;
+  title: string;
+  birthday: string;
   bio: string;
   phone: string;
   website: string;
@@ -39,6 +43,8 @@ export type ProfileForm = {
 export type ProfilePayload = {
   firstName: string;
   lastName: string;
+  title: string;
+  birthday: string;
   bio: string;
   phone: string;
   website: string;

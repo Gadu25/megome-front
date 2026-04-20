@@ -22,6 +22,8 @@ export default function ProfileForm() {
   const [form, setForm] = useState<ProfileForm>({
     firstName: "",
     lastName: "",
+    title: "",
+    birthday: "",
     bio: "",
     phone: "",
     website: "",
@@ -139,6 +141,37 @@ export default function ProfileForm() {
                 />
                 {errors.lastName && (
                   <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.lastName }</span>
+                )}
+              </fieldset>
+
+              {/* Title */}
+              <fieldset className="fieldset relative">
+                <label className="label"><span className="text-error">*</span>Title</label>
+                <input 
+                  type="text"
+                  name="title"
+                  value={form.title || ""}
+                  onChange={handleChange}
+                  placeholder="ex. Software Developer"
+                  className={`input input-bordered w-full ${errors.title ? "input-error" : ""}`}
+                />
+                {errors.title && (
+                  <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.title }</span>
+                )}
+              </fieldset>
+              
+              {/* Birthday */}
+              <fieldset className="fieldset relative">
+                <label className="label"><span className="text-error">*</span>Birthday</label>
+                <input 
+                  type="date"
+                  name="birthday"
+                  value={form.birthday || ""}
+                  onChange={handleChange}
+                  className={`input input-bordered w-full ${errors.birthday ? "input-error" : ""}`}
+                />
+                {errors.birthday && (
+                  <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.birthday }</span>
                 )}
               </fieldset>
 
