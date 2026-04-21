@@ -1,9 +1,11 @@
 "use client";
 
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { skillApi } from "@/lib/api/skillApi";
 import RightModal from "../modal/RightModal";
 import ProfileSkillForm from "../form/Skill";
+import { SkillForm } from "@/types/types";
 
 type Skill = {
   id: number
@@ -27,7 +29,26 @@ const PROFICIENCY_MAP: Record<Skill['proficiency'], number> = {
 }
 
 export default function ProfileSkill() {
+  const { getSkills } = skillApi();
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [skills, setSkills] = useState<SkillForm[] | []>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const res = await getSkills();
+        console.log('res test', res)
+        setSkills(res.data.skills);
+      } catch (err) {
+        console.error("Failed to fetch profile", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchSkills();
+  })
 
   return (
     <>

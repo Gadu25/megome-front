@@ -3,12 +3,7 @@
 import { profileApi } from "@/lib/api/profileApi";
 import { Profile } from "@/types/types";
 import { calculateAge } from "@/functions/calculateAge";
-import {
-  MapPinIcon,
-  PhoneIcon,
-  GlobeAltIcon,
-  PencilSquareIcon,
-} from "@heroicons/react/24/outline";
+import { MapPinIcon, PhoneIcon, GlobeAltIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import Avatar from "../common/Avatar";
 import RightModal from "../modal/RightModal";

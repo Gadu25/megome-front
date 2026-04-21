@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { skillApi } from '@/lib/api/skillApi'
 
 type Skill = {
   id: number
@@ -18,13 +19,13 @@ type Props = {
 }
 
 export default function ProfileSkillForm({ initialSkills }: Props) {
+  const { addSkill } = skillApi();
   const [skills, setSkills] = useState<Skill[]>(initialSkills)
   const [newSkill, setNewSkill] = useState({
     skillName: '',
     proficiency: 'Beginner' as Skill['proficiency'],
   })
 
-  // --- Handlers ---
   const updateSkill = (id: number, field: keyof Skill, value: any) => {
     setSkills((prev) =>
       prev.map((skill) =>
@@ -33,13 +34,16 @@ export default function ProfileSkillForm({ initialSkills }: Props) {
     )
   }
 
-  const addSkill = () => {
+  const handleAddSkill = async () => {
     if (!newSkill.skillName.trim()) return
+
+    const res = await addSkill(newSkill);
+    console.log("res add", res)
 
     setSkills((prev) => [
       ...prev,
       {
-        id: Date.now(), // temp id
+        id: Date.now(),
         ...newSkill,
       },
     ])
@@ -135,7 +139,7 @@ export default function ProfileSkillForm({ initialSkills }: Props) {
             ))}
           </select>
 
-          <button className="btn btn-primary" onClick={addSkill}>
+          <button className="btn btn-primary" onClick={handleAddSkill}>
             Add
           </button>
         </div>
