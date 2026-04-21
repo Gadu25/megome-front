@@ -1,17 +1,11 @@
 "use client";
 
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { skillApi } from "@/lib/api/skillApi";
 import RightModal from "../modal/RightModal";
 import ProfileSkillForm from "../form/Skill";
-import { SkillForm } from "@/types/types";
-
-type Skill = {
-  id: number
-  skillName: string
-  proficiency: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert'
-}
+import { Skill } from "@/types/types";
 
 const MOCK_SKILLS: Skill[] = [
   // { id: 1, skillName: 'JavaScript', proficiency: 'Advanced' },
@@ -31,24 +25,23 @@ const PROFICIENCY_MAP: Record<Skill['proficiency'], number> = {
 export default function ProfileSkill() {
   const { getSkills } = skillApi();
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [skills, setSkills] = useState<SkillForm[] | []>([]);
+  const [skills, setSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchSkills = async () => {
       try {
         const res = await getSkills();
-        console.log('res test', res)
         setSkills(res.data.skills);
       } catch (err) {
         console.error("Failed to fetch profile", err);
       } finally {
         setLoading(false);
       }
-    }
+    };
 
     fetchSkills();
-  })
+  }, []);
 
   return (
     <>
@@ -60,7 +53,7 @@ export default function ProfileSkill() {
           </button>
         </div>
         <div className="space-y-4">
-          {MOCK_SKILLS.length === 0 ? (
+          {skills.length === 0 ? (
             <div className="text-center py-6 px-4 border border-dashed rounded-lg">
               <p className="text-sm opacity-70 mb-3">
                 No skills added yet. Add your skills to showcase your expertise.
@@ -70,7 +63,7 @@ export default function ProfileSkill() {
               </button>
             </div>
           ) : (
-            MOCK_SKILLS.map((skill) => {
+            skills.map((skill) => {
               const value = PROFICIENCY_MAP[skill.proficiency]
 
               return (
@@ -96,7 +89,7 @@ export default function ProfileSkill() {
         onClose={() => setIsEditOpen(false)}
       >
         <h2 className="text-lg font-bold mb-4">Skills</h2>
-        <ProfileSkillForm initialSkills={MOCK_SKILLS} />
+        <ProfileSkillForm initialSkills={skills} setSkills={setSkills} />
       </RightModal>
     </>
   )

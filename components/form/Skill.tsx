@@ -1,11 +1,6 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { skillApi } from '@/lib/api/skillApi'
-
-type Skill = {
-  id: number
-  skillName: string
-  proficiency: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert'
-}
+import { Skill } from '@/types/types'
 
 const PROFICIENCY_OPTIONS: Skill['proficiency'][] = [
   'Beginner',
@@ -15,23 +10,41 @@ const PROFICIENCY_OPTIONS: Skill['proficiency'][] = [
 ]
 
 type Props = {
-  initialSkills: Skill[]
+  initialSkills: Skill[];
+  setSkills: React.Dispatch<React.SetStateAction<Skill[]>>;
 }
 
-export default function ProfileSkillForm({ initialSkills }: Props) {
-  const { addSkill } = skillApi();
-  const [skills, setSkills] = useState<Skill[]>(initialSkills)
+export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
+  const { addSkill, updateSkill } = skillApi();
+  const debounceRef = useRef<Record<number, NodeJS.Timeout>>({});
   const [newSkill, setNewSkill] = useState({
     skillName: '',
     proficiency: 'Beginner' as Skill['proficiency'],
   })
-
-  const updateSkill = (id: number, field: keyof Skill, value: any) => {
+  const handleUpdateSkill = (id: number, field: keyof Skill, value: any) => {
     setSkills((prev) =>
       prev.map((skill) =>
         skill.id === id ? { ...skill, [field]: value } : skill
       )
     )
+
+    console.log("update skill", id, field, value)
+
+    if (debounceRef.current[id]) {
+      clearTimeout(debounceRef.current[id]);
+    }
+
+    debounceRef.current[id] = setTimeout(() => {
+      // ⚠️ use latest state, not stale closure
+      setSkills((currentSkills) => {
+        const updatedSkill = currentSkills.find((s) => s.id === id);
+        if (!updatedSkill) return currentSkills;
+
+        updateSkill(id, updatedSkill); // API call
+
+        return currentSkills;
+      });
+    }, 500);
   }
 
   const handleAddSkill = async () => {
@@ -40,13 +53,7 @@ export default function ProfileSkillForm({ initialSkills }: Props) {
     const res = await addSkill(newSkill);
     console.log("res add", res)
 
-    setSkills((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        ...newSkill,
-      },
-    ])
+    setSkills(res.data.skills);
 
     setNewSkill({
       skillName: '',
@@ -62,7 +69,7 @@ export default function ProfileSkillForm({ initialSkills }: Props) {
     <div className="space-y-6">
       {/* Existing Skills */}
       <div className="space-y-4">
-        {skills.map((skill) => (
+        {initialSkills.map((skill) => (
           <div key={skill.id} className="flex gap-2 items-center">
             {/* Skill Name */}
             <input
@@ -70,7 +77,7 @@ export default function ProfileSkillForm({ initialSkills }: Props) {
               className="input input-bordered w-full"
               value={skill.skillName}
               onChange={(e) =>
-                updateSkill(skill.id, 'skillName', e.target.value)
+                handleUpdateSkill(skill.id, 'skillName', e.target.value)
               }
             />
 
@@ -79,7 +86,7 @@ export default function ProfileSkillForm({ initialSkills }: Props) {
               className="select select-bordered"
               value={skill.proficiency}
               onChange={(e) =>
-                updateSkill(
+                handleUpdateSkill(
                   skill.id,
                   'proficiency',
                   e.target.value as Skill['proficiency']

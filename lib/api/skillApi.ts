@@ -6,7 +6,7 @@ const BACKEND_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
 
 interface Response {
   message: string;
-  skills: Skill;
+  skills: Skill[];
 }
 
 interface SkillApi {
@@ -48,7 +48,7 @@ const updateSkill = (id: number, skill: SkillForm, headers?: Headers) => {
   formData.append("skillName", skill.skillName);
   formData.append("proficiency", skill.proficiency);
 
-  return xiorClient.post<Response>(
+  return xiorClient.put<Response>(
     `${BACKEND_URL}/api/v1/skill/${id}`,
     formData,
     {
