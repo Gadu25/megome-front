@@ -47,7 +47,7 @@ export default function TopProfile() {
             </h1>
             <p className="text-base-content/70"> {profile.title} • {profile.location} </p>
           </div>
-          <button className="btn btn-sm" onClick={() => setIsEditOpen(true)}>
+          <button className="btn btn-xs" onClick={() => setIsEditOpen(true)}>
             <PencilSquareIcon className="size-5"/>
           </button>
         </div>

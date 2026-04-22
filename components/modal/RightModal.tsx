@@ -26,7 +26,7 @@ export default function RightModal({ isOpen, onClose, children }: RightModalProp
       {/* Panel */}
       <div
         className={`
-          absolute right-0 top-0 h-screen w-full max-w-[600px]
+          absolute right-0 top-0 h-screen w-full max-w-[700px]
           bg-base-100 shadow-xl
           transform transition-transform duration-300
           ${isOpen ? "translate-x-0" : "translate-x-full"}

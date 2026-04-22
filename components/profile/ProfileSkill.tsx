@@ -48,7 +48,7 @@ export default function ProfileSkill() {
       <div className="card bg-base-100 shadow p-5">
         <div className="flex justify-between">
           <h2 className="font-semibold mb-4">Skills</h2>
-          <button className="btn btn-sm" onClick={() => setIsEditOpen(true)}>
+          <button className="btn btn-xs" onClick={() => setIsEditOpen(true)}>
             <PencilSquareIcon className="size-5"/>
           </button>
         </div>
