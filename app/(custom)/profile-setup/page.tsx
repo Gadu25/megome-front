@@ -32,7 +32,7 @@ export default function ProfilePage() {
 
             {/* Form container */}
             <div className="rounded-lg bg-base-200 p-4 sm:p-6 border border-base-300">
-              <ProfileForm />
+              <ProfileForm isOnboarding={true} />
             </div>
 
             {/* Footer note */}

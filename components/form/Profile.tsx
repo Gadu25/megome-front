@@ -12,9 +12,10 @@ import { authApi } from "@/lib/api/authApi";
 
 type Props = {
   profile?: Profile | null;
+  isOnboarding?: boolean;
 }
 
-export default function ProfileForm({ profile = null }: Props) {
+export default function ProfileForm({ profile = null, isOnboarding = false }: Props) {
   const { updateProfile } = profileApi();
   const { showToast } = useToast();
   const router = useRouter();
@@ -80,7 +81,7 @@ export default function ProfileForm({ profile = null }: Props) {
 
       const res = await updateProfile(form);
       showToast(res.data.message, "success")
-      router.push("/dashboard");
+      if (isOnboarding) router.push("/dashboard");
     } catch (err: any) {
       showToast(err.response?.data?.error, "error")
     } finally {
@@ -268,34 +269,17 @@ export default function ProfileForm({ profile = null }: Props) {
           </fieldset>
         </div>
 
-        {/* SOCIAL LINKS */}
-        {/* <div className="bg-surfaceElevated border border-border p-6 rounded-xl space-y-4">
-          <h3 className="text-lg font-semibold">Links</h3>
-
-          <div>
-            <label className="text-sm text-textSecondary flex items-center gap-2">
-              <LinkIcon className="size-4" />
-              Website / Portfolio
-            </label>
-            <input
-              type="url"
-              name="website"
-              value={form.website || ""}
-              onChange={handleChange}
-              className="input input-bordered w-full"
-            />
-          </div>
-        </div> */}
-
         {/* ACTIONS */}
         <div className="flex justify-end gap-4">
-          <button
-            type="button"
-            className="px-4 py-2 border border-border rounded-md text-textSecondary cursor-pointer"
-            onClick={() => setOpen(true)}
-          >
-            Cancel
-          </button>
+          {isOnboarding && (
+            <button
+              type="button"
+              className="px-4 py-2 border border-border rounded-md text-textSecondary cursor-pointer"
+              onClick={() => setOpen(true)}
+            >
+              Cancel
+            </button>
+          )}
 
           <button
             type="submit"
