@@ -13,6 +13,7 @@ interface SkillApi {
   addSkill: (skill: SkillForm, headers?: Headers) => Promise<XiorResponse<Response>>;
   getSkills: (headers?: Headers) => Promise<XiorResponse<{ skills: Skill[] }>>;
   updateSkill: (id: number, skill: SkillForm, headers?: Headers) => Promise<XiorResponse<Response>>;
+  deleteSkill: (id: number, headers?: Headers) => Promise<XiorResponse<Response>>;
 }
 
 export const skillApi = (): SkillApi => {
@@ -20,6 +21,7 @@ export const skillApi = (): SkillApi => {
     addSkill,
     updateSkill,
     getSkills,
+    deleteSkill,
   }
 }
 
@@ -64,6 +66,19 @@ const getSkills = (headers?: Headers) => {
 
   return xiorClient.get<{ skills: Skill[] }>(
     `${BACKEND_URL}/api/v1/skill`,
+    {
+      headers: {
+        cookie: cookieHeader || "",
+      },
+    }
+  );
+}
+
+const deleteSkill = (id: number, headers?: Headers) => {
+  const cookieHeader = headers?.get("cookie");
+
+  return xiorClient.delete<Response>(
+    `${BACKEND_URL}/api/v1/skill/${id}`,
     {
       headers: {
         cookie: cookieHeader || "",
