@@ -15,44 +15,47 @@ type Props = {
 }
 
 export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
-  const { addSkill, updateSkill } = skillApi();
+  const { addSkill, updateSkill, deleteSkill } = skillApi();
   const debounceRef = useRef<Record<number, NodeJS.Timeout>>({});
   const [newSkill, setNewSkill] = useState({
     skillName: '',
     proficiency: 'Beginner' as Skill['proficiency'],
   })
-  const handleUpdateSkill = (id: number, field: keyof Skill, value: any) => {
-    setSkills((prev) =>
-      prev.map((skill) =>
-        skill.id === id ? { ...skill, [field]: value } : skill
-      )
-    )
 
-    console.log("update skill", id, field, value)
+  const handleUpdateSkill = (id: number, field: keyof Skill, value: Skill[keyof Skill] ) => {
+    let updatedSkill: Skill | undefined;
+
+    setSkills((prev) => {
+      const next = prev.map((skill) => {
+        if (skill.id === id) {
+          updatedSkill = { ...skill, [field]: value };
+          return updatedSkill;
+        }
+        return skill;
+      });
+      return next;
+    });
 
     if (debounceRef.current[id]) {
       clearTimeout(debounceRef.current[id]);
     }
 
-    debounceRef.current[id] = setTimeout(() => {
-      // ⚠️ use latest state, not stale closure
-      setSkills((currentSkills) => {
-        const updatedSkill = currentSkills.find((s) => s.id === id);
-        if (!updatedSkill) return currentSkills;
+    debounceRef.current[id] = setTimeout(async () => {
+      if (!updatedSkill) return;
 
-        updateSkill(id, updatedSkill); // API call
-
-        return currentSkills;
-      });
+      try {
+        const res = await updateSkill(id, updatedSkill);
+        setSkills(res.data.skills);
+      } catch (err) {
+        console.error('Failed to update skill', err);
+      }
     }, 500);
-  }
+  };
 
   const handleAddSkill = async () => {
     if (!newSkill.skillName.trim()) return
 
     const res = await addSkill(newSkill);
-    console.log("res add", res)
-
     setSkills(res.data.skills);
 
     setNewSkill({
@@ -61,17 +64,16 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
     })
   }
 
-  const removeSkill = (id: number) => {
-    setSkills((prev) => prev.filter((skill) => skill.id !== id))
+  const handleDeleteSkill = async (id: number) => {
+    const res = await deleteSkill(id);
+    setSkills(res.data.skills);
   }
 
   return (
     <div className="space-y-6">
-      {/* Existing Skills */}
       <div className="space-y-4">
         {initialSkills.map((skill) => (
           <div key={skill.id} className="flex gap-2 items-center">
-            {/* Skill Name */}
             <input
               type="text"
               className="input input-bordered w-full"
@@ -81,17 +83,10 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
               }
             />
 
-            {/* Proficiency */}
             <select
               className="select select-bordered"
               value={skill.proficiency}
-              onChange={(e) =>
-                handleUpdateSkill(
-                  skill.id,
-                  'proficiency',
-                  e.target.value as Skill['proficiency']
-                )
-              }
+              onChange={(e) => handleUpdateSkill(skill.id, 'proficiency', e.target.value as Skill['proficiency'])}
             >
               {PROFICIENCY_OPTIONS.map((level) => (
                 <option key={level} value={level}>
@@ -100,10 +95,9 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
               ))}
             </select>
 
-            {/* Remove */}
             <button
               className="btn btn-error btn-sm"
-              onClick={() => removeSkill(skill.id)}
+              onClick={() => handleDeleteSkill(skill.id)}
             >
               ✕
             </button>
@@ -111,7 +105,6 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
         ))}
       </div>
 
-      {/* Add New Skill */}
       <div className="border-t pt-4 space-y-2">
         <h3 className="font-medium text-sm opacity-70">Add Skill</h3>
 
@@ -121,23 +114,13 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
             placeholder="Skill name"
             className="input input-bordered w-full"
             value={newSkill.skillName}
-            onChange={(e) =>
-              setNewSkill((prev) => ({
-                ...prev,
-                skillName: e.target.value,
-              }))
-            }
+            onChange={(e) => setNewSkill((prev) => ({ ...prev, skillName: e.target.value, }))}
           />
 
           <select
             className="select select-bordered"
             value={newSkill.proficiency}
-            onChange={(e) =>
-              setNewSkill((prev) => ({
-                ...prev,
-                proficiency: e.target.value as Skill['proficiency'],
-              }))
-            }
+            onChange={(e) => setNewSkill((prev) => ({ ...prev, proficiency: e.target.value as Skill['proficiency'], }))}
           >
             {PROFICIENCY_OPTIONS.map((level) => (
               <option key={level} value={level}>
