@@ -1,19 +1,11 @@
 "use client";
 
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { skillApi } from "@/lib/api/skillApi";
+import { Skill } from "@/types/types";
 import RightModal from "../modal/RightModal";
 import ProfileSkillForm from "../form/Skill";
-import { Skill } from "@/types/types";
-
-const MOCK_SKILLS: Skill[] = [
-  // { id: 1, skillName: 'JavaScript', proficiency: 'Advanced' },
-  // { id: 2, skillName: 'TypeScript', proficiency: 'Intermediate' },
-  // { id: 3, skillName: 'React', proficiency: 'Advanced' },
-  // { id: 4, skillName: 'Go', proficiency: 'Beginner' },
-  // { id: 5, skillName: 'PostgreSQL', proficiency: 'Intermediate' },
-]
 
 const PROFICIENCY_MAP: Record<Skill['proficiency'], number> = {
   Beginner: 25,
