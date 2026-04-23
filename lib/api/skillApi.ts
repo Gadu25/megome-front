@@ -10,9 +10,9 @@ interface Response {
 }
 
 interface SkillApi {
-  addSkill: (skill: SkillForm, headers?: Headers) => Promise<XiorResponse<Response>>;
   getSkills: (headers?: Headers) => Promise<XiorResponse<{ skills: Skill[] }>>;
-  updateSkill: (id: number, skill: SkillForm, headers?: Headers) => Promise<XiorResponse<Response>>;
+  addSkill: (skill: Skill, headers?: Headers) => Promise<XiorResponse<Response>>;
+  updateSkill: (id: number, skill: Skill, headers?: Headers) => Promise<XiorResponse<Response>>;
   deleteSkill: (id: number, headers?: Headers) => Promise<XiorResponse<Response>>;
 }
 
@@ -25,7 +25,20 @@ export const skillApi = (): SkillApi => {
   }
 }
 
-const addSkill = (skill: SkillForm, headers?: Headers) => {
+const getSkills = (headers?: Headers) => {
+  const cookieHeader = headers?.get("cookie");
+
+  return xiorClient.get<{ skills: Skill[] }>(
+    `${BACKEND_URL}/api/v1/skill`,
+    {
+      headers: {
+        cookie: cookieHeader || "",
+      },
+    }
+  );
+}
+
+const addSkill = (skill: Skill, headers?: Headers) => {
   const cookieHeader = headers?.get("cookie");
   const formData = new FormData();
   
@@ -43,7 +56,7 @@ const addSkill = (skill: SkillForm, headers?: Headers) => {
   );
 }
 
-const updateSkill = (id: number, skill: SkillForm, headers?: Headers) => {
+const updateSkill = (id: number, skill: Skill, headers?: Headers) => {
   const cookieHeader = headers?.get("cookie");
   const formData = new FormData();
 
@@ -53,19 +66,6 @@ const updateSkill = (id: number, skill: SkillForm, headers?: Headers) => {
   return xiorClient.put<Response>(
     `${BACKEND_URL}/api/v1/skill/${id}`,
     formData,
-    {
-      headers: {
-        cookie: cookieHeader || "",
-      },
-    }
-  );
-}
-
-const getSkills = (headers?: Headers) => {
-  const cookieHeader = headers?.get("cookie");
-
-  return xiorClient.get<{ skills: Skill[] }>(
-    `${BACKEND_URL}/api/v1/skill`,
     {
       headers: {
         cookie: cookieHeader || "",
