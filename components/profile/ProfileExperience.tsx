@@ -1,22 +1,28 @@
-type Experience = {
-  id: number;
-  role: string;
-  company: string;
-  duration: string;
-  description: string;
-};
-
-const mockExperiences: Experience[] = [
-  // {
-  //   id: 1,
-  //   role: "Full Stack Developer",
-  //   company: "CodeCrafters LLC",
-  //   duration: "Jun 2018 - Aug 2021",
-  //   description: "Developed scalable web applications using LAMP stack.",
-  // },
-];
+import { useEffect, useState } from "react";
+import { Experience } from "@/types/types";
+import { experienceApi } from "@/lib/api/experienceApi";
 
 export default function ProfileExperience() {
+  const { getExperience } = experienceApi();
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [experiences, setExperiences] = useState<Experience[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchExperience = async () => {
+      try {
+        const res = await getExperience();
+        setExperiences(res.data.experience);
+      } catch (error) {
+        console.error("Error fetching experience:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchExperience();
+  }, []);
+
   return (
     <div className="card bg-base-100 shadow p-5 space-y-4">
       <div className="flex justify-between">
@@ -24,7 +30,7 @@ export default function ProfileExperience() {
         <button className="btn btn-ghost btn-xs">Edit</button>
       </div>
 
-      {mockExperiences.length === 0 ? (
+      {experiences.length === 0 ? (
         <div className="text-center py-6 px-4 border border-dashed rounded-lg">
           <p className="text-sm opacity-70 mb-3">
             No work experience added yet.
@@ -34,11 +40,11 @@ export default function ProfileExperience() {
           </button>
         </div>
       ) : (
-        mockExperiences.map((exp) => (
+        experiences.map((exp) => (
           <div key={exp.id} className="p-4 border border-base-300 rounded-lg">
-            <h3 className="font-semibold">{exp.role}</h3>
+            <h3 className="font-semibold">{exp.title}</h3>
             <p className="text-sm text-base-content/70">
-              {exp.company} • {exp.duration}
+              {exp.company} • {exp.startDate} - {exp.endDate}
             </p>
             <p className="text-sm mt-2 text-base-content/70">
               {exp.description}
