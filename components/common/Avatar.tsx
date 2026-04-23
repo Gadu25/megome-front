@@ -3,9 +3,10 @@ import { Profile } from "@/types/types";
 type Props = {
   profile: Profile;
   size?: string;
+  fontSize?: string;
 }
 
-export default function Avatar({ profile, size = "w-8" }: Props) {
+export default function Avatar({ profile, size = "w-8", fontSize = "text-xs" }: Props) {
   const image = profile.profileImage;
   const initials = `${profile.firstName?.[0] ?? ""}${profile.lastName?.[0] ?? ""}`.toUpperCase();
 
@@ -15,7 +16,7 @@ export default function Avatar({ profile, size = "w-8" }: Props) {
         {image ? (
           <img src={image} alt="avatar" className="w-full h-full object-cover" />
         ) : (
-          <span className="text-xs text-accent-content font-semibold">
+          <span className={`${fontSize} text-accent-content font-semibold`}>
             {initials || "?"}
           </span>
         )}

@@ -36,7 +36,7 @@ export default function TopProfile() {
   return (
     <>
       <div className="flex flex-col items-center gap-3">
-        <Avatar profile={profile} size="w-30" />
+        <Avatar profile={profile} size="w-30" fontSize="text-3xl" />
       </div>
 
       <div className="flex-1 space-y-3">
