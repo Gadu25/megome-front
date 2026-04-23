@@ -65,3 +65,27 @@ export type SkillForm = {
   skillName: string;
   proficiency: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
 }
+
+export type Experience = {
+  id: number;
+  userId: number;
+  title: string;
+  company: string;
+  startDate: string;
+  endDate: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type Education = {
+  id: number;
+  userId: number;
+  school: string;
+  degree: string;
+  fieldOfStudy: string;
+  startDate: string;
+  endDate: string;
+  createdAt: string;
+  updatedAt: string;
+}
