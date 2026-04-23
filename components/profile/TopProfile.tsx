@@ -72,7 +72,7 @@ export default function TopProfile() {
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
       >
-        <ProfileForm profile={profile}/>
+        <ProfileForm profile={profile} setProfile={setProfile}/>
       </RightModal>
     </>
   );

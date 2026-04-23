@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import type { Profile, ProfileForm } from "@/types/types"
 import { UserIcon } from "@heroicons/react/24/outline";
 import { profileApi } from "@/lib/api/profileApi";
@@ -12,10 +12,11 @@ import { authApi } from "@/lib/api/authApi";
 
 type Props = {
   profile?: Profile | null;
+  setProfile?: React.Dispatch<React.SetStateAction<Profile | null>>;
   isOnboarding?: boolean;
 }
 
-export default function ProfileForm({ profile = null, isOnboarding = false }: Props) {
+export default function ProfileForm({ profile = null, isOnboarding = false, setProfile }: Props) {
   const { updateProfile } = profileApi();
   const { showToast } = useToast();
   const router = useRouter();
@@ -81,7 +82,12 @@ export default function ProfileForm({ profile = null, isOnboarding = false }: Pr
 
       const res = await updateProfile(form);
       showToast(res.data.message, "success")
-      if (isOnboarding) router.push("/dashboard");
+      if (setProfile) {
+        setProfile(res.data.profile)
+      }
+      if (isOnboarding) {
+        router.push("/dashboard");
+      }
     } catch (err: any) {
       showToast(err.response?.data?.error, "error")
     } finally {
