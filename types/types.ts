@@ -90,6 +90,14 @@ export type Education = {
   updatedAt: string;
 }
 
+export type EducationForm = {
+  school: string;
+  degree: string;
+  fieldOfStudy: string;
+  startDate: string;
+  endDate: string;
+}
+
 export type Project = {
   id: number;
   userId: number;

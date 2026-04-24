@@ -1,6 +1,6 @@
 import { XiorResponse } from "xior";
 import xiorClient from "./xior";
-import type { Education } from "@/types/types";
+import type { Education, EducationForm } from "@/types/types";
 
 const BACKEND_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
 
@@ -11,7 +11,7 @@ interface Response {
 
 interface EducationApi {
   getEducation: (headers?: Headers) => Promise<XiorResponse<{ education: Education[] }>>;
-  addEducation: (education: Education, headers?: Headers) => Promise<XiorResponse<Response>>;
+  addEducation: (education: EducationForm, headers?: Headers) => Promise<XiorResponse<Response>>;
   updateEducation: (id: number, education: Education, headers?: Headers) => Promise<XiorResponse<Response>>;
   deleteEducation: (id: number, headers?: Headers) => Promise<XiorResponse<Response>>;
 }
@@ -38,10 +38,10 @@ const getEducation = (headers?: Headers) => {
   );
 }
 
-const addEducation = (education: Education, headers?: Headers) => {
+const addEducation = (education: EducationForm, headers?: Headers) => {
   const cookieHeader = headers?.get("cookie");
   const formData = new FormData();
-
+  console.log("education", education)
   formData.append("school", education.school);
   formData.append("degree", education.degree);
   formData.append("fieldOfStudy", education.fieldOfStudy);
