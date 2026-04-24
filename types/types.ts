@@ -89,3 +89,21 @@ export type Education = {
   createdAt: string;
   updatedAt: string;
 }
+
+export type Project = {
+  id: number;
+  userId: number;
+  title: string;
+  description: string;
+  link: string;
+  githubLink: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type ProjectForm = {
+  title: string;
+  description: string;
+  link: string;
+  githubLink: string;
+}
