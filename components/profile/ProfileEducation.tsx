@@ -4,6 +4,7 @@ import { educationApi } from "@/lib/api/educationApi";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import RightModal from "../modal/RightModal";
 import ProfileEducationForm from "../form/Education";
+import { humanizeDate } from "@/functions/humanitizeDate";
 
 export default function ProfileEducation() {
   const { getEducation } = educationApi();
@@ -48,10 +49,19 @@ export default function ProfileEducation() {
         ) : (
           education.map((edu) => (
             <div key={edu.id} className="p-4 border border-base-300 rounded-lg">
-              <h3 className="font-semibold">{edu.degree}</h3>
+              <h3 className="font-semibold">
+                {edu.degree}
+                {edu.fieldOfStudy && (
+                  <span className="font-normal text-base-content/70">
+                    {" "}• {edu.fieldOfStudy}
+                  </span>
+                )}
+              </h3>
+
               <p className="text-sm text-base-content/70">
-                {edu.school} • {edu.startDate} - {edu.endDate}
+                {edu.school}
               </p>
+              <p className="text-xs text-base-content/70">{humanizeDate(edu.startDate)} - {humanizeDate(edu.endDate)}</p>
             </div>
           ))
         )}
