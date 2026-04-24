@@ -5,7 +5,7 @@ import ProfileProjects from "./ProfileProjects";
 import ProfileEducation from "./ProfileEducation";
 import ProfileExperience from "./ProfileExperience";
 
-type Tab = 'projects' | 'experience' | 'education';
+type Tab = 'projects' | 'experience' | 'education' | 'certificates';
 
 export default function RightContent() {
   const [activeTab, setActiveTab] = useState<Tab>('education');
@@ -31,6 +31,12 @@ export default function RightContent() {
           onClick={() => setActiveTab('projects')}
         >
           Projects
+        </button>
+
+        <button role="tab" className={`tab ${activeTab === 'projects' ? 'tab-active' : ''}`}
+          onClick={() => setActiveTab('certificates')}
+        >
+          Certificates
         </button>
       </div>
 
