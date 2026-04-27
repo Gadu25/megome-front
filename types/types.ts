@@ -78,6 +78,14 @@ export type Experience = {
   updatedAt: string;
 }
 
+export type ExperienceForm = {
+  title: string;
+  company: string;
+  startDate: string;
+  endDate: string;
+  description: string;
+}
+
 export type Education = {
   id: number;
   userId: number;

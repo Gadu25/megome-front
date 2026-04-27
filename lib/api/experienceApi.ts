@@ -1,6 +1,6 @@
 import { XiorResponse } from "xior";
 import xiorClient from "./xior";
-import type { Experience } from "@/types/types";
+import type { Experience, ExperienceForm } from "@/types/types";
 
 const BACKEND_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
 
@@ -11,8 +11,8 @@ interface Response {
 
 interface ExperienceApi {
   getExperience: (headers?: Headers) => Promise<XiorResponse<{ experience: Experience[] }>>;
-  addExperience: (experience: Experience, headers?: Headers) => Promise<XiorResponse<Response>>;
-  updateExperience: (id: number, experience: Experience, headers?: Headers) => Promise<XiorResponse<Response>>;
+  addExperience: (experience: ExperienceForm, headers?: Headers) => Promise<XiorResponse<Response>>;
+  updateExperience: (id: number, experience: ExperienceForm, headers?: Headers) => Promise<XiorResponse<Response>>;
   deleteExperience: (id: number, headers?: Headers) => Promise<XiorResponse<Response>>;
 }
 
@@ -38,7 +38,7 @@ const getExperience = (headers?: Headers) => {
   );
 }
 
-const addExperience = (experience: Experience, headers?: Headers) => {
+const addExperience = (experience: ExperienceForm, headers?: Headers) => {
   const cookieHeader = headers?.get("cookie");
   const formData = new FormData();
 
@@ -59,7 +59,7 @@ const addExperience = (experience: Experience, headers?: Headers) => {
   );
 }
 
-const updateExperience = (id: number, experience: Experience, headers?: Headers) => {
+const updateExperience = (id: number, experience: ExperienceForm, headers?: Headers) => {
   const cookieHeader = headers?.get("cookie");
   const formData = new FormData();
 
