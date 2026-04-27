@@ -38,33 +38,62 @@ export default function ProfileEducation() {
         </div>
 
         {education.length === 0 ? (
-          <div className="text-center py-6 px-4 border border-dashed rounded-lg">
-            <p className="text-sm opacity-70 mb-3">
-              No education details added yet.
+          <div className="flex flex-col items-center justify-center text-center py-12 px-6 border border-dashed border-base-300 rounded-xl bg-base-200/40">
+            <div className="mb-3 text-base-content/60">
+              🎓
+            </div>
+
+            <p className="text-sm text-base-content/70 mb-4">
+              You haven’t added any education yet
             </p>
-            <button className="btn btn-sm btn-primary" onClick={() => setIsEditOpen(true)}>
-              Add Education
+
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={() => setIsEditOpen(true)}
+            >
+              Add your first education
             </button>
           </div>
-        ) : (
-          education.map((edu) => (
-            <div key={edu.id} className="p-4 border border-base-300 rounded-lg">
-              <h3 className="font-semibold">
-                {edu.degree}
-                {edu.fieldOfStudy && (
-                  <span className="font-normal text-base-content/70">
-                    {" "}• {edu.fieldOfStudy}
-                  </span>
-                )}
-              </h3>
+          ) : (
+            <div className="space-y-4">
+              {education.map((edu) => (
+                <div
+                  key={edu.id}
+                  className="flex gap-4 p-4 rounded-xl border border-base-300 bg-base-100 hover:shadow-sm transition"
+                >
+                  {/* LEFT INDICATOR (timeline feel) */}
+                  <div className="flex flex-col items-center">
+                    <div className="w-3 h-3 rounded-full bg-primary mt-1" />
+                    <div className="flex-1 w-px bg-base-300 mt-1" />
+                  </div>
 
-              <p className="text-sm text-base-content/70">
-                {edu.school}
-              </p>
-              <p className="text-xs text-base-content/70">{humanizeDate(edu.startDate)} - {humanizeDate(edu.endDate)}</p>
+                  {/* CONTENT */}
+                  <div className="flex-1 space-y-1">
+                    {/* DEGREE */}
+                    <h3 className="font-semibold leading-tight">
+                      {edu.degree || "Untitled Degree"}
+                      {edu.fieldOfStudy && (
+                        <span className="ml-2 text-sm font-normal text-base-content/60">
+                          • {edu.fieldOfStudy}
+                        </span>
+                      )}
+                    </h3>
+
+                    {/* SCHOOL */}
+                    <p className="text-sm text-base-content/70">
+                      {edu.school}
+                    </p>
+
+                    {/* DATE */}
+                    <p className="text-xs text-base-content/50">
+                      {humanizeDate(edu.startDate)} —{" "}
+                      {edu.endDate ? humanizeDate(edu.endDate) : "Present"}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))
-        )}
+          )}
       </div>
       <RightModal
         isOpen={isEditOpen}
