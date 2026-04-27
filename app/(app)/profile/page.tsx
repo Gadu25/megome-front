@@ -8,7 +8,7 @@ export default function ProfilePage() {
     <div className="max-w-6xl mx-auto space-y-6">
 
       {/* TOP PROFILE */}
-      <div className="card bg-base-100 shadow-xl p-6 flex flex-col lg:flex-row gap-6">
+      <div className="card bg-base-100 shadow p-6 flex flex-col lg:flex-row gap-6">
         <TopProfile/>
       </div>
 
