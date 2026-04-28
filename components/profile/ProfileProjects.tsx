@@ -95,9 +95,9 @@ export default function ProfileProjects() {
                     </div>
 
                     {/* FOOTER */}
-                    <div className="text-xs text-base-content/50 pt-2">
+                    {/* <div className="text-xs text-base-content/50 pt-2">
                       Created {humanizeDate(project.createdAt)}
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               ))}
