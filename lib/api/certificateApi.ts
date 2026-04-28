@@ -30,7 +30,7 @@ const getCertificate = (headers?: Headers) => {
   const cookieHeader = headers?.get("cookie");
 
   return xiorClient.get<{ certificates: Certificate[] }>(
-    `${BACKEND_URL}/api/v1/certificate`,
+    `${BACKEND_URL}/api/v1/certification`,
     {
       headers: {
         cookie: cookieHeader || "",
@@ -51,7 +51,7 @@ const addCertificate = (certificate: CertificateForm, headers?: Headers) => {
   formData.append("credentialUrl", certificate.credentialUrl);
 
   return xiorClient.post<Response>(
-    `${BACKEND_URL}/api/v1/certificate`,
+    `${BACKEND_URL}/api/v1/certification`,
     formData,
     {
       headers: {
@@ -73,7 +73,7 @@ const updateCertificate = (id: number, certificate: CertificateForm, headers?: H
   formData.append("credentialUrl", certificate.credentialUrl);
 
   return xiorClient.post<Response>(
-    `${BACKEND_URL}/api/v1/certificate/${id}`,
+    `${BACKEND_URL}/api/v1/certification/${id}`,
     formData,
     {
       headers: {
@@ -87,7 +87,7 @@ const deleteCertificate = (id: number, headers?: Headers) => {
   const cookieHeader = headers?.get("cookie");
 
   return xiorClient.delete<Response>(
-    `${BACKEND_URL}/api/v1/certificate/${id}`,
+    `${BACKEND_URL}/api/v1/certification/${id}`,
     {
       headers: {
         cookie: cookieHeader || "",
