@@ -41,7 +41,7 @@ const getEducation = (headers?: Headers) => {
 const addEducation = (education: EducationForm, headers?: Headers) => {
   const cookieHeader = headers?.get("cookie");
   const formData = new FormData();
-  console.log("education", education)
+  
   formData.append("school", education.school);
   formData.append("degree", education.degree);
   formData.append("fieldOfStudy", education.fieldOfStudy);

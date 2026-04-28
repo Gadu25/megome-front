@@ -123,3 +123,25 @@ export type ProjectForm = {
   link: string;
   githubLink: string;
 }
+
+export type Certificate = {
+  id: number;
+  userId: number;
+  title: string;
+  issuer: string;
+  issueDate: string;
+  expirationDate: string | null;
+  credentialId: string | null;
+  credentialUrl: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type CertificateForm = {
+  title: string;
+  issuer: string;
+  issueDate: string;
+  expirationDate: string;
+  credentialId: string;
+  credentialUrl: string;
+}
