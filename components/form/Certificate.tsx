@@ -35,10 +35,12 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
 
   const handleUpdate = (id: number, field: keyof Certificate, value: Certificate[keyof Certificate]) => {
     let updatedItem: Certificate | undefined
-
+    let previousItem: Certificate | undefined
+    
     setCertificates((prev) =>
       prev.map((item) => {
         if (item.id === id) {
+          previousItem = item
           updatedItem = { ...item, [field]: value }
           return updatedItem
         }
@@ -69,9 +71,20 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
 
         if (!data) return;
 
-        setCertificates(data.certificates);
+        setCertificates((prev) =>
+          prev.map((item) =>
+            item.id === id ? { ...item, ...data.certificate } : item
+          )
+        );
       } catch (err) {
         console.error("Failed to update certificate", err)
+        if (previousItem) {
+          setCertificates((prev) =>
+            prev.map((item) =>
+              item.id === id ? previousItem! : item
+            )
+          )
+        }
       }
     }, 500)
   }
@@ -96,7 +109,7 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
 
     if (!data) return;
 
-    setCertificates(data.certificates);
+    setCertificates((prev) => [...prev, data.certificate]);
 
     setNewCert({
       title: "",
@@ -119,7 +132,9 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
     if (!data) return;
 
     setSelectedId(null)
-    setCertificates(data.certificates);
+    setCertificates((prev) =>
+      prev.filter((item) => item.id !== selectedId)
+    );
   }
 
   return (
