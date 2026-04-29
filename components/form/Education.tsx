@@ -4,6 +4,8 @@ import { useState, useRef } from "react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import { educationApi } from "@/lib/api/educationApi"
 import { formatDate } from "@/functions/formatDate"
+import { useToast } from "../toast/useToast";
+import { withRequest } from "@/functions/withRequest";
 import type { Education, EducationForm } from "@/types/types"
 import Modal from "../modal/Modal"
 
@@ -14,6 +16,7 @@ type Props = {
 
 export default function ProfileEducationForm({ initialEducation, setEducation }: Props) {
   const { addEducation, updateEducation, deleteEducation } = educationApi()
+  const { showToast } = useToast();
 
   const debounceRef = useRef<Record<number, NodeJS.Timeout>>({})
 
@@ -54,8 +57,15 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
           startDate: formatDate(updatedItem.startDate),
           endDate: formatDate(updatedItem.endDate),
         };
-        const res = await updateEducation(id, payload)
-        setEducation(res.data.education)
+
+        const data = await withRequest(
+          () => updateEducation(id, payload),
+          showToast
+        )
+
+        if (!data) return;
+
+        setEducation(data.education);
       } catch (err) {
         console.error("Failed to update education", err)
       }
@@ -71,8 +81,14 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
       endDate: formatDate(newEducation.endDate),
     }
 
-    const res = await addEducation(payload)
-    setEducation(res.data.education)
+    const data = await withRequest(
+      () => addEducation(payload),
+      showToast
+    )
+
+    if (!data) return;
+
+    setEducation(data.education);
 
     setNewEducation({
       school: "",
@@ -86,9 +102,15 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
   const handleDelete = async () => {
     if (selectedId === null) return
 
-    const res = await deleteEducation(selectedId)
+    const data = await withRequest(
+      () => deleteEducation(selectedId),
+      showToast
+    )
+
+    if (!data) return;
+
     setSelectedId(null)
-    setEducation(res.data.education)
+    setEducation(data.education);
   }
 
   return (

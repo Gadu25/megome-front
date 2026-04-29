@@ -3,6 +3,8 @@
 import { useState, useRef } from "react"
 import { projectApi } from "@/lib/api/projectApi"
 import { XMarkIcon } from "@heroicons/react/24/outline"
+import { useToast } from "../toast/useToast";
+import { withRequest } from "@/functions/withRequest";
 import type { Project } from "@/types/types"
 import Modal from "../modal/Modal"
 
@@ -19,7 +21,8 @@ type Props = {
 }
 
 export default function ProfileProjectForm({ initialProjects, setProjects }: Props) {
-  const { addProject, updateProject, deleteProject } = projectApi()
+  const { addProject, updateProject, deleteProject } = projectApi();
+  const { showToast } = useToast();
 
   const debounceRef = useRef<Record<number, NodeJS.Timeout>>({})
 
@@ -54,8 +57,13 @@ export default function ProfileProjectForm({ initialProjects, setProjects }: Pro
       if (!updatedItem) return
 
       try {
-        const res = await updateProject(id, updatedItem)
-        setProjects(res.data.projects)
+        const data = await withRequest(
+          () => updateProject(id, updatedItem as ProjectForm),
+          showToast
+        )
+
+        if (!data) return;
+        setProjects(data.projects);
       } catch (err) {
         console.error("Failed to update project", err)
       }
@@ -65,8 +73,13 @@ export default function ProfileProjectForm({ initialProjects, setProjects }: Pro
   const handleAdd = async () => {
     if (!newProject.title.trim()) return
 
-    const res = await addProject(newProject)
-    setProjects(res.data.projects)
+    const data = await withRequest(
+      () => addProject(newProject),
+      showToast
+    )
+
+    if (!data) return;
+    setProjects(data.projects);
 
     setNewProject({
       title: "",
@@ -79,9 +92,14 @@ export default function ProfileProjectForm({ initialProjects, setProjects }: Pro
   const handleDelete = async () => {
     if (selectedId === null) return
 
-    const res = await deleteProject(selectedId)
+    const data = await withRequest(
+      () => deleteProject(selectedId),
+      showToast
+    )
+
+    if (!data) return;
     setSelectedId(null)
-    setProjects(res.data.projects)
+    setProjects(data.projects);
   }
 
   return (

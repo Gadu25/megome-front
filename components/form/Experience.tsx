@@ -4,6 +4,8 @@ import { useState, useRef } from "react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import { experienceApi } from "@/lib/api/experienceApi"
 import { formatDate } from "@/functions/formatDate"
+import { useToast } from "../toast/useToast";
+import { withRequest } from "@/functions/withRequest";
 import type { Experience, ExperienceForm } from "@/types/types"
 import Modal from "../modal/Modal"
 
@@ -14,6 +16,7 @@ type Props = {
 
 export default function ProfileExperienceForm({ initialExperiences, setExperiences,}: Props) {
   const { addExperience, updateExperience, deleteExperience } = experienceApi()
+  const { showToast } = useToast();
 
   const debounceRef = useRef<Record<string, NodeJS.Timeout>>({})
 
@@ -59,8 +62,13 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
             : null,
         }
 
-        const res = await updateExperience(id, payload as ExperienceForm)
-        setExperiences(res.data.experience)
+        const data = await withRequest(
+          () => updateExperience(id, payload as ExperienceForm),
+          showToast
+        )
+
+        if (!data) return;
+        setExperiences(data.experience);
       } catch (err) {
         console.error("Failed to update experience", err)
       }
@@ -78,8 +86,13 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
         : null,
     }
 
-    const res = await addExperience(payload as ExperienceForm)
-    setExperiences(res.data.experience)
+    const data = await withRequest(
+      () => addExperience(payload as ExperienceForm),
+      showToast
+    )
+
+    if (!data) return;
+    setExperiences(data.experience);
 
     setNewExp({
       title: "",
@@ -93,9 +106,14 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
   const handleDelete = async () => {
     if (selectedId === null) return
 
-    const res = await deleteExperience(selectedId)
+    const data = await withRequest(
+      () => deleteExperience(selectedId),
+      showToast
+    )
+
+    if (!data) return;
     setSelectedId(null)
-    setExperiences(res.data.experience)
+    setExperiences(data.experience);
   }
 
   return (
