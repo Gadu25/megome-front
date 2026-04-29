@@ -3,12 +3,13 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 interface RightModalProps {
+  title?: string;
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
 }
 
-export default function RightModal({ isOpen, onClose, children }: RightModalProps) {
+export default function RightModal({ isOpen, onClose, title, children }: RightModalProps) {
   return (
     <div
       className={`fixed inset-0 z-50 ${
@@ -33,7 +34,8 @@ export default function RightModal({ isOpen, onClose, children }: RightModalProp
         `}
       >
         {/* Header */}
-        <div className="flex justify-end p-4">
+        <div className="flex justify-between p-4 items-center">
+          <h2 className="font-semibold text-2xl">{ title }</h2>
           <button onClick={onClose} className="btn btn-ghost btn-sm">
             <XMarkIcon className="w-5 h-5" />
           </button>

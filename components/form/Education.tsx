@@ -1,25 +1,21 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { Education, EducationForm } from "@/types/types"
-import { educationApi } from "@/lib/api/educationApi"
-import Modal from "../modal/Modal"
 import { XMarkIcon } from "@heroicons/react/24/outline"
+import { educationApi } from "@/lib/api/educationApi"
+import { formatDate } from "@/functions/formatDate"
+import type { Education, EducationForm } from "@/types/types"
+import Modal from "../modal/Modal"
 
 type Props = {
   initialEducation: Education[]
   setEducation: React.Dispatch<React.SetStateAction<Education[]>>
 }
 
-export default function ProfileEducationForm({
-  initialEducation,
-  setEducation,
-}: Props) {
+export default function ProfileEducationForm({ initialEducation, setEducation }: Props) {
   const { addEducation, updateEducation, deleteEducation } = educationApi()
 
   const debounceRef = useRef<Record<number, NodeJS.Timeout>>({})
-
-  const formatDate = (value: string) => value?.split("T")[0] || "";
 
   const [newEducation, setNewEducation] = useState<EducationForm>({
     school: "",
@@ -32,12 +28,7 @@ export default function ProfileEducationForm({
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedId, setSelectedId] = useState<number | null>(null)
 
-  // UPDATE
-  const handleUpdate = (
-    id: number,
-    field: keyof Education,
-    value: Education[keyof Education]
-  ) => {
+  const handleUpdate = (id: number, field: keyof Education, value: Education[keyof Education]) => {
     let updatedItem: Education | undefined
 
     setEducation((prev) =>
@@ -71,7 +62,6 @@ export default function ProfileEducationForm({
     }, 500)
   }
 
-  // ADD
   const handleAdd = async () => {
     if (!newEducation.school.trim()) return
 
@@ -93,7 +83,6 @@ export default function ProfileEducationForm({
     })
   }
 
-  // DELETE
   const handleDelete = async () => {
     if (selectedId === null) return
 
@@ -105,7 +94,6 @@ export default function ProfileEducationForm({
   return (
     <>
       <div className="space-y-6">
-        {/* LIST */}
         <div className="space-y-4">
           {initialEducation.length === 0 && (
             <div className="text-center text-sm opacity-60 py-10">
@@ -114,25 +102,16 @@ export default function ProfileEducationForm({
           )}
 
           {initialEducation.map((edu) => (
-            <div
-              key={edu.id}
-              className="card bg-base-100 border border-base-300 shadow-sm hover:shadow-md transition"
-            >
+            <div key={edu.id} className="card bg-base-100 border border-base-300 shadow-sm hover:shadow-md transition">
               <div className="card-body p-4 space-y-4">
-                {/* HEADER */}
                 <div className="flex justify-between items-start">
-                  <input
-                    type="text"
-                    placeholder="School"
-                    className="input input-ghost text-lg font-semibold w-full focus:input-bordered"
-                    value={edu.school}
+                  <input type="text" placeholder="School" className="input input-ghost text-lg font-semibold w-full focus:input-bordered" value={edu.school}
                     onChange={(e) =>
                       handleUpdate(edu.id, "school", e.target.value)
                     }
                   />
 
-                  <button
-                    className="btn btn-ghost btn-sm text-error"
+                  <button className="btn btn-ghost btn-sm text-error"
                     onClick={() => {
                       setSelectedId(edu.id)
                       setModalOpen(true)
@@ -142,44 +121,28 @@ export default function ProfileEducationForm({
                   </button>
                 </div>
 
-                {/* DETAILS */}
                 <div className="grid md:grid-cols-2 gap-3">
-                  <input
-                    type="text"
-                    placeholder="Degree"
-                    className="input input-bordered w-full"
-                    value={edu.degree}
+                  <input type="text" placeholder="Degree" className="input input-bordered w-full" value={edu.degree}
                     onChange={(e) =>
                       handleUpdate(edu.id, "degree", e.target.value)
                     }
                   />
 
-                  <input
-                    type="text"
-                    placeholder="Field of Study"
-                    className="input input-bordered w-full"
-                    value={edu.fieldOfStudy}
+                  <input type="text" placeholder="Field of Study" className="input input-bordered w-full" value={edu.fieldOfStudy}
                     onChange={(e) =>
                       handleUpdate(edu.id, "fieldOfStudy", e.target.value)
                     }
                   />
                 </div>
 
-                {/* DATES */}
                 <div className="grid md:grid-cols-2 gap-3">
-                  <input
-                    type="date"
-                    className="input input-bordered w-full"
-                    value={edu.startDate?.split("T")[0]}
+                  <input type="date" className="input input-bordered w-full" value={edu.startDate?.split("T")[0]}
                     onChange={(e) =>
                       handleUpdate(edu.id, "startDate", e.target.value)
                     }
                   />
 
-                  <input
-                    type="date"
-                    className="input input-bordered w-full"
-                    value={edu.endDate?.split("T")[0]}
+                  <input type="date" className="input input-bordered w-full" value={edu.endDate?.split("T")[0]}
                     onChange={(e) =>
                       handleUpdate(edu.id, "endDate", e.target.value)
                     }
@@ -190,84 +153,75 @@ export default function ProfileEducationForm({
           ))}
         </div>
 
-        {/* ADD */}
         <div className="card bg-base-200 border border-base-300">
-          <div className="card-body space-y-4">
+          <div className="card-body">
             <h3 className="font-semibold text-base">Add Education</h3>
 
-            <input
-              type="text"
-              placeholder="School"
-              className="input input-bordered w-full"
-              value={newEducation.school}
-              onChange={(e) =>
-                setNewEducation((prev) => ({
-                  ...prev,
-                  school: e.target.value,
-                }))
-              }
-            />
-
+            <fieldset className="fieldset relative w-full">
+              <label className="label"><span className="text-error">*</span>School</label>
+              <input type="text" placeholder="School" className="input input-bordered w-full" value={newEducation.school}
+                onChange={(e) =>
+                  setNewEducation((prev) => ({
+                    ...prev,
+                    school: e.target.value,
+                  }))
+                }
+              />
+            </fieldset>
+            
             <div className="grid md:grid-cols-2 gap-3">
-              <input
-                type="text"
-                placeholder="Degree"
-                className="input input-bordered w-full"
-                value={newEducation.degree}
-                onChange={(e) =>
-                  setNewEducation((prev) => ({
-                    ...prev,
-                    degree: e.target.value,
-                  }))
-                }
-              />
-
-              <input
-                type="text"
-                placeholder="Field of Study"
-                className="input input-bordered w-full"
-                value={newEducation.fieldOfStudy}
-                onChange={(e) =>
-                  setNewEducation((prev) => ({
-                    ...prev,
-                    fieldOfStudy: e.target.value,
-                  }))
-                }
-              />
+              <fieldset className="fieldset relative w-full">
+                <label className="label"><span className="text-error">*</span>Degree</label>
+                <input type="text" placeholder="Degree" className="input input-bordered w-full" value={newEducation.degree}
+                  onChange={(e) =>
+                    setNewEducation((prev) => ({
+                      ...prev,
+                      degree: e.target.value,
+                    }))
+                  }
+                />
+              </fieldset>
+              
+              <fieldset className="fieldset relative w-full">
+                <label className="label"><span className="text-error">*</span>Field of Study</label>
+                <input type="text" placeholder="Field of Study" className="input input-bordered w-full" value={newEducation.fieldOfStudy}
+                  onChange={(e) =>
+                    setNewEducation((prev) => ({
+                      ...prev,
+                      fieldOfStudy: e.target.value,
+                    }))
+                  }
+                />
+              </fieldset>
             </div>
-
             <div className="grid md:grid-cols-2 gap-3">
-              <input
-                type="date"
-                className="input input-bordered w-full"
-                value={newEducation.startDate}
-                onChange={(e) =>
-                  setNewEducation((prev) => ({
-                    ...prev,
-                    startDate: e.target.value,
-                  }))
-                }
-              />
-
-              <input
-                type="date"
-                className="input input-bordered w-full"
-                value={newEducation.endDate}
-                onChange={(e) =>
-                  setNewEducation((prev) => ({
-                    ...prev,
-                    endDate: e.target.value,
-                  }))
-                }
-              />
+              <fieldset className="fieldset relative w-full">
+                <label className="label"><span className="text-error">*</span>Start date</label>
+                <input type="date" className="input input-bordered w-full" value={newEducation.startDate}
+                  onChange={(e) =>
+                    setNewEducation((prev) => ({
+                      ...prev,
+                      startDate: e.target.value,
+                    }))
+                  }
+                />
+              </fieldset>
+              
+              <fieldset className="fieldset relative w-full">
+                <label className="label">End date</label>
+                <input type="date" className="input input-bordered w-full" value={newEducation.endDate}
+                  onChange={(e) =>
+                    setNewEducation((prev) => ({
+                      ...prev,
+                      endDate: e.target.value,
+                    }))
+                  }
+                />
+              </fieldset>
             </div>
 
             <div className="flex justify-end">
-              <button
-                className="btn btn-primary"
-                onClick={handleAdd}
-                disabled={!newEducation.school.trim()}
-              >
+              <button className="btn btn-primary" onClick={handleAdd} disabled={!newEducation.school.trim()}>
                 Add
               </button>
             </div>
@@ -275,7 +229,6 @@ export default function ProfileEducationForm({
         </div>
       </div>
 
-      {/* MODAL */}
       <Modal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}

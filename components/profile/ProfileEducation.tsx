@@ -96,10 +96,10 @@ export default function ProfileEducation() {
           )}
       </div>
       <RightModal
+        title="Education"
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
       >
-        <h2 className="text-lg font-bold mb-4">Education</h2>
         <ProfileEducationForm initialEducation={education} setEducation={setEducation} />
       </RightModal>
     </>

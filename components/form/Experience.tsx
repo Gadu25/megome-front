@@ -1,25 +1,21 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { Experience, ExperienceForm } from "@/types/types"
-import { experienceApi } from "@/lib/api/experienceApi"
-import Modal from "../modal/Modal"
 import { XMarkIcon } from "@heroicons/react/24/outline"
+import { experienceApi } from "@/lib/api/experienceApi"
+import { formatDate } from "@/functions/formatDate"
+import type { Experience, ExperienceForm } from "@/types/types"
+import Modal from "../modal/Modal"
 
 type Props = {
   initialExperiences: Experience[]
   setExperiences: React.Dispatch<React.SetStateAction<Experience[]>>
 }
 
-export default function ProfileExperienceForm({
-  initialExperiences,
-  setExperiences,
-}: Props) {
+export default function ProfileExperienceForm({ initialExperiences, setExperiences,}: Props) {
   const { addExperience, updateExperience, deleteExperience } = experienceApi()
 
   const debounceRef = useRef<Record<string, NodeJS.Timeout>>({})
-
-  const formatDate = (value: string) => value?.split("T")[0] || ""
 
   const [newExp, setNewExp] = useState<ExperienceForm>({
     title: "",
@@ -32,12 +28,7 @@ export default function ProfileExperienceForm({
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedId, setSelectedId] = useState<number | null>(null)
 
-  // UPDATE
-  const handleUpdate = (
-    id: number,
-    field: keyof Experience,
-    value: Experience[keyof Experience]
-  ) => {
+  const handleUpdate = ( id: number, field: keyof Experience, value: Experience[keyof Experience]) => {
     let updatedItem: Experience | undefined
 
     setExperiences((prev) =>
@@ -76,7 +67,6 @@ export default function ProfileExperienceForm({
     }, 500)
   }
 
-  // ADD
   const handleAdd = async () => {
     if (!newExp.title.trim() || !newExp.company.trim()) return
 
@@ -100,7 +90,6 @@ export default function ProfileExperienceForm({
     })
   }
 
-  // DELETE
   const handleDelete = async () => {
     if (selectedId === null) return
 
@@ -112,7 +101,6 @@ export default function ProfileExperienceForm({
   return (
     <>
       <div className="space-y-6">
-        {/* LIST */}
         <div className="space-y-4">
           {initialExperiences.length === 0 && (
             <div className="text-center text-sm opacity-60 py-10">
@@ -121,37 +109,24 @@ export default function ProfileExperienceForm({
           )}
 
           {initialExperiences.map((exp) => (
-            <div
-              key={exp.id}
-              className="card bg-base-100 border border-base-300 shadow-sm hover:shadow-md transition"
-            >
+            <div key={exp.id} className="card bg-base-100 border border-base-300 shadow-sm hover:shadow-md transition">
               <div className="card-body p-4 space-y-4">
-                {/* HEADER */}
                 <div className="flex justify-between items-start gap-2">
                   <div className="flex-1 space-y-2">
-                    <input
-                      type="text"
-                      placeholder="Job Title"
-                      className="input input-ghost text-lg font-semibold w-full focus:input-bordered"
-                      value={exp.title}
+                    <input type="text" placeholder="Job Title" className="input input-ghost text-lg font-semibold w-full focus:input-bordered" value={exp.title}
                       onChange={(e) =>
                         handleUpdate(exp.id, "title", e.target.value)
                       }
                     />
 
-                    <input
-                      type="text"
-                      placeholder="Company"
-                      className="input input-bordered w-full"
-                      value={exp.company}
+                    <input type="text" placeholder="Company" className="input input-bordered w-full" value={exp.company}
                       onChange={(e) =>
                         handleUpdate(exp.id, "company", e.target.value)
                       }
                     />
                   </div>
 
-                  <button
-                    className="btn btn-ghost btn-sm text-error"
+                  <button className="btn btn-ghost btn-sm text-error"
                     onClick={() => {
                       setSelectedId(exp.id)
                       setModalOpen(true)
@@ -161,30 +136,21 @@ export default function ProfileExperienceForm({
                   </button>
                 </div>
 
-                {/* DATES */}
                 <div className="grid md:grid-cols-2 gap-3">
-                  <input
-                    type="date"
-                    className="input input-bordered w-full"
-                    value={exp.startDate?.split("T")[0]}
+                  <input type="date" className="input input-bordered w-full" value={formatDate(exp.startDate)}
                     onChange={(e) =>
                       handleUpdate(exp.id, "startDate", e.target.value)
                     }
                   />
 
-                  <input
-                    type="date"
-                    className="input input-bordered w-full"
-                    value={exp.endDate?.split("T")[0] || ""}
+                  <input type="date" className="input input-bordered w-full" value={formatDate(exp.endDate)}
                     onChange={(e) =>
                       handleUpdate(exp.id, "endDate", e.target.value)
                     }
                   />
                 </div>
 
-                {/* DESCRIPTION */}
-                <textarea
-                  placeholder="Describe your responsibilities, impact, and technologies..."
+                <textarea placeholder="Describe your responsibilities, impact, and technologies..."
                   className="textarea textarea-bordered w-full min-h-[100px]"
                   value={exp.description}
                   onChange={(e) =>
@@ -192,7 +158,6 @@ export default function ProfileExperienceForm({
                   }
                 />
 
-                {/* CURRENT INDICATOR */}
                 {!exp.endDate && (
                   <div className="text-xs text-success">
                     Current role
@@ -203,80 +168,80 @@ export default function ProfileExperienceForm({
           ))}
         </div>
 
-        {/* ADD */}
         <div className="card bg-base-200 border border-base-300">
-          <div className="card-body space-y-4">
+          <div className="card-body">
             <h3 className="font-semibold text-base">
               Add Experience
             </h3>
 
-            <input
-              type="text"
-              placeholder="Job Title"
-              className="input input-bordered w-full"
-              value={newExp.title}
-              onChange={(e) =>
-                setNewExp((prev) => ({
-                  ...prev,
-                  title: e.target.value,
-                }))
-              }
-            />
-
-            <input
-              type="text"
-              placeholder="Company"
-              className="input input-bordered w-full"
-              value={newExp.company}
-              onChange={(e) =>
-                setNewExp((prev) => ({
-                  ...prev,
-                  company: e.target.value,
-                }))
-              }
-            />
-
+            <fieldset className="fieldset relative w-full">
+              <label className="label"><span className="text-error">*</span>Title</label>
+              <input type="text" placeholder="Job Title" className="input input-bordered w-full" value={newExp.title}
+                onChange={(e) =>
+                  setNewExp((prev) => ({
+                    ...prev,
+                    title: e.target.value,
+                  }))
+                }
+              />
+            </fieldset>
+            
+            <fieldset className="fieldset relative w-full">
+              <label className="label"><span className="text-error">*</span>Company</label>
+              <input type="text" placeholder="Company" className="input input-bordered w-full" value={newExp.company}
+                onChange={(e) =>
+                  setNewExp((prev) => ({
+                    ...prev,
+                    company: e.target.value,
+                  }))
+                }
+              />
+            </fieldset>
+            
             <div className="grid md:grid-cols-2 gap-3">
-              <input
-                type="date"
-                className="input input-bordered w-full"
-                value={newExp.startDate}
-                onChange={(e) =>
-                  setNewExp((prev) => ({
-                    ...prev,
-                    startDate: e.target.value,
-                  }))
-                }
-              />
-
-              <input
-                type="date"
-                className="input input-bordered w-full"
-                value={newExp.endDate}
-                onChange={(e) =>
-                  setNewExp((prev) => ({
-                    ...prev,
-                    endDate: e.target.value,
-                  }))
-                }
-              />
+              <fieldset className="fieldset relative w-full">
+                <label className="label"><span className="text-error">*</span>Start date</label>
+                <input type="date" className="input input-bordered w-full" value={newExp.startDate}
+                  onChange={(e) =>
+                    setNewExp((prev) => ({
+                      ...prev,
+                      startDate: e.target.value,
+                    }))
+                  }
+                />
+              </fieldset>
+              
+              <fieldset className="fieldset relative w-full">
+                <label className="label">End date</label>
+                <input type="date" className="input input-bordered w-full" value={newExp.endDate}
+                  onChange={(e) =>
+                    setNewExp((prev) => ({
+                      ...prev,
+                      endDate: e.target.value,
+                    }))
+                  }
+                />
+              </fieldset>
             </div>
-
-            <textarea
-              placeholder="Describe your responsibilities, impact, and technologies..."
-              className="textarea textarea-bordered w-full min-h-[100px]"
-              value={newExp.description}
-              onChange={(e) =>
-                setNewExp((prev) => ({
-                  ...prev,
-                  description: e.target.value,
-                }))
-              }
-            />
+            
+            <fieldset className="fieldset relative">
+              <legend className="label">Description</legend>
+              <textarea
+                placeholder="Describe your responsibilities, impact, and technologies..."
+                className="textarea textarea-bordered w-full min-h-[100px]"
+                value={newExp.description}
+                onChange={(e) =>
+                  setNewExp((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
+              />
+            </fieldset>
+            
 
             <div className="flex justify-end">
-              <button
-                className="btn btn-primary"
+              <button className="btn btn-primary"
                 onClick={handleAdd}
                 disabled={
                   !newExp.title.trim() || !newExp.company.trim()

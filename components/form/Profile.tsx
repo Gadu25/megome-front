@@ -1,14 +1,14 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import type { Profile, ProfileForm } from "@/types/types"
+import { useRouter } from "next/navigation";
 import { UserIcon } from "@heroicons/react/24/outline";
 import { profileApi } from "@/lib/api/profileApi";
-import { useRouter } from "next/navigation";
+import { authApi } from "@/lib/api/authApi";
 import { profileSchema } from "@/features/profile/schema";
 import { useToast } from "../toast/useToast";
+import type { Profile, ProfileForm } from "@/types/types"
 import Modal from "../modal/Modal";
-import { authApi } from "@/lib/api/authApi";
 
 type Props = {
   profile?: Profile | null;
@@ -43,9 +43,7 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
       firstName: profile.firstName ?? "",
       lastName: profile.lastName ?? "",
       title: profile.title ?? "",
-      birthday: profile.birthday
-        ? profile.birthday.split("T")[0]
-        : "",
+      birthday: profile.birthday ? profile.birthday.split("T")[0] : "",
       bio: profile.bio ?? "",
       phone: profile.phone ?? "",
       website: profile.website ?? "",
@@ -59,9 +57,7 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
     }
   }, [profile])
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setForm((prev) => ({ ...prev, [name]: value }))
   }
@@ -103,11 +99,7 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
 
   return (
     <>
-      <form
-        onSubmit={handleSubmit}
-        className="w-full space-y-6 text-textPrimary"
-      >
-        {/* BASIC INFO */}
+      <form onSubmit={handleSubmit} className="w-full space-y-6 text-textPrimary">
         <div className="space-y-6">
           <div className="flex gap-2 items-center">
             <span>
@@ -117,26 +109,19 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
           </div>
 
           <div className="flex flex-col md:flex-row gap-6">
-            {/* Avatar */}
             <div className="flex flex-col items-center gap-4 p-2">
               <div className="size-40 rounded-full bg-base-300 overflow-hidden flex items-center justify-center border-2 border-neutral">
                 {preview ? (
-                  <img
-                    src={preview}
-                    alt="Profile preview"
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={preview} alt="Profile preview" className="w-full h-full object-cover"/>
                 ) : (
                   <span className="text-lg">profile</span>
                 )}
               </div>
-              <input
-                type="file"
-                accept="image/*"
-                className="file-input file-input-sm"
+              <input type="file" accept="image/*" className="file-input file-input-sm"
                 onChange={(e) => {
                   const file = e.target.files?.[0] || null;
                   setForm((prev) => ({ ...prev, profileImage: file }));
+
                   if (file) {
                     const url = URL.createObjectURL(file)
                     setPreview(url)
@@ -145,9 +130,7 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
               />
             </div>
 
-            {/* Fields */}
             <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3">
-              {/* First Name */}
               <fieldset className="fieldset relative">
                 <label className="label"><span className="text-error">*</span>First Name</label>
                 <input 
@@ -161,7 +144,7 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
                   <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.firstName }</span>
                 )}
               </fieldset>
-              {/* Last Name */}
+
               <fieldset className="fieldset relative">
                 <label className="label"><span className="text-error">*</span>Last Name</label>
                 <input
@@ -176,7 +159,6 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
                 )}
               </fieldset>
 
-              {/* Title */}
               <fieldset className="fieldset relative">
                 <label className="label"><span className="text-error">*</span>Title</label>
                 <input 
@@ -192,7 +174,6 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
                 )}
               </fieldset>
               
-              {/* Birthday */}
               <fieldset className="fieldset relative">
                 <label className="label"><span className="text-error">*</span>Birthday</label>
                 <input 
@@ -207,7 +188,6 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
                 )}
               </fieldset>
 
-              {/* Location */}
               <fieldset className="fieldset md:col-span-2 relative">
                 <label className="label">Location</label>
                 <input 
@@ -222,7 +202,6 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
                 )}
               </fieldset>
 
-              {/* Phone */}
               <fieldset className="fieldset md:col-span-2 relative">
                 <label className="label">Phone</label>
                 <input 
@@ -237,7 +216,6 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
                 )}
               </fieldset>
 
-              {/* Website */}
               <fieldset className="fieldset md:col-span-2 relative">
                 <label className="label">Website</label>
                 <input 
@@ -254,8 +232,6 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
             </div>
           </div>
         </div>
-
-        {/* BIO */}
         
         <div className="space-y-4">
           <fieldset className="fieldset relative">
@@ -275,7 +251,6 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
           </fieldset>
         </div>
 
-        {/* ACTIONS */}
         <div className="flex justify-end gap-4">
           {isOnboarding && (
             <button
@@ -296,6 +271,7 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
           </button>
         </div>
       </form>
+      
       <Modal
         isOpen={open}
         onClose={() => setOpen(false)}

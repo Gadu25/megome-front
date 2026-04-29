@@ -1,8 +1,8 @@
 import { useState, useRef } from 'react'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 import { skillApi } from '@/lib/api/skillApi'
-import { Skill } from '@/types/types'
+import type { Skill } from '@/types/types'
 import Modal from '../modal/Modal'
-import  { XMarkIcon } from '@heroicons/react/24/outline'
 
 const PROFICIENCY_OPTIONS: Skill['proficiency'][] = [
   'Beginner',
@@ -67,6 +67,7 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
 
   const handleDeleteSkill = async () => {
     if (selectedSkillId === null) return;
+
     const res = await deleteSkill(selectedSkillId);
     setSelectedSkillId(null);
     setSkills(res.data.skills);
@@ -88,9 +89,7 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
                 }
               />
 
-              <select
-                className="select select-bordered"
-                value={skill.proficiency}
+              <select className="select select-bordered" value={skill.proficiency}
                 onChange={(e) => handleUpdateSkill(skill.id, 'proficiency', e.target.value as Skill['proficiency'])}
               >
                 {PROFICIENCY_OPTIONS.map((level) => (
@@ -113,22 +112,28 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
         </div>
 
         <div className="border-t pt-4 space-y-2">
-          <h3 className="font-medium text-sm opacity-70">Add Skill</h3>
+          <h3 className="font-medium text-sm">Add Skill</h3>
 
-          <div className="flex gap-2">
-            <input type="text" placeholder="Skill name" className="input input-bordered w-full" value={newSkill.skillName}
-              onChange={(e) => setNewSkill((prev) => ({ ...prev, skillName: e.target.value, }))}
-            />
-
-            <select className="select select-bordered" value={newSkill.proficiency}
-              onChange={(e) => setNewSkill((prev) => ({ ...prev, proficiency: e.target.value as Skill['proficiency'], }))}
-            >
-              {PROFICIENCY_OPTIONS.map((level) => (
-                <option key={level} value={level}>
-                  {level}
-                </option>
-              ))}
-            </select>
+          <div className="flex gap-2 items-end">
+            <fieldset className="fieldset relative w-full p-0">
+              <label className="label">Skill</label>
+              <input type="text" placeholder="Skill name" className="input input-bordered w-full" value={newSkill.skillName}
+                onChange={(e) => setNewSkill((prev) => ({ ...prev, skillName: e.target.value, }))}
+              />
+            </fieldset>
+            
+            <fieldset className="fieldset relative w-full p-0">
+              <label className="label">Proficiency</label>
+              <select className="select select-bordered" value={newSkill.proficiency}
+                onChange={(e) => setNewSkill((prev) => ({ ...prev, proficiency: e.target.value as Skill['proficiency'], }))}
+              >
+                {PROFICIENCY_OPTIONS.map((level) => (
+                  <option key={level} value={level}>
+                    {level}
+                  </option>
+                ))}
+              </select>
+            </fieldset>
 
             <button className="btn btn-primary" onClick={handleAddSkill}>
               Add
@@ -136,6 +141,7 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
           </div>
         </div>
       </div>
+      
       <Modal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}

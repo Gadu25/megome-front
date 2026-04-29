@@ -69,6 +69,7 @@ export default function TopProfile() {
         </div>
       </div>
       <RightModal
+        title="Profile"
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
       >

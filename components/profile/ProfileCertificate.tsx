@@ -112,10 +112,10 @@ export default function ProfileCertificates() {
       </div>
 
       <RightModal
+        title="Certification"
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
       >
-        <h2 className="text-lg font-bold mb-4">Certificates</h2>
         <ProfileCertificateForm 
           initialCertificates={certificates} 
           setCertificates={setCertificates} 

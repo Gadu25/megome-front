@@ -1,10 +1,10 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { Project } from "@/types/types"
 import { projectApi } from "@/lib/api/projectApi"
-import Modal from "../modal/Modal"
 import { XMarkIcon } from "@heroicons/react/24/outline"
+import type { Project } from "@/types/types"
+import Modal from "../modal/Modal"
 
 type ProjectForm = {
   title: string
@@ -18,10 +18,7 @@ type Props = {
   setProjects: React.Dispatch<React.SetStateAction<Project[]>>
 }
 
-export default function ProfileProjectForm({
-  initialProjects,
-  setProjects,
-}: Props) {
+export default function ProfileProjectForm({ initialProjects, setProjects }: Props) {
   const { addProject, updateProject, deleteProject } = projectApi()
 
   const debounceRef = useRef<Record<number, NodeJS.Timeout>>({})
@@ -36,12 +33,7 @@ export default function ProfileProjectForm({
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedId, setSelectedId] = useState<number | null>(null)
 
-  // UPDATE
-  const handleUpdate = (
-    id: number,
-    field: keyof Project,
-    value: Project[keyof Project]
-  ) => {
+  const handleUpdate = (id: number, field: keyof Project, value: Project[keyof Project]) => {
     let updatedItem: Project | undefined
 
     setProjects((prev) =>
@@ -70,7 +62,6 @@ export default function ProfileProjectForm({
     }, 500)
   }
 
-  // ADD
   const handleAdd = async () => {
     if (!newProject.title.trim()) return
 
@@ -85,7 +76,6 @@ export default function ProfileProjectForm({
     })
   }
 
-  // DELETE
   const handleDelete = async () => {
     if (selectedId === null) return
 
@@ -97,7 +87,6 @@ export default function ProfileProjectForm({
   return (
     <>
       <div className="space-y-6">
-        {/* LIST */}
         <div className="space-y-4">
           {initialProjects.length === 0 && (
             <div className="text-center text-sm opacity-60 py-10">
@@ -106,25 +95,17 @@ export default function ProfileProjectForm({
           )}
 
           {initialProjects.map((project) => (
-            <div
-              key={project.id}
-              className="card bg-base-100 border border-base-300 shadow-sm hover:shadow-md transition"
-            >
+            <div key={project.id} className="card bg-base-100 border border-base-300 shadow-sm hover:shadow-md transition">
               <div className="card-body p-4 space-y-4">
-                {/* HEADER */}
                 <div className="flex justify-between items-start">
-                  <input
-                    type="text"
-                    placeholder="Project Title"
-                    className="input input-ghost text-lg font-semibold w-full focus:input-bordered"
+                  <input type="text" placeholder="Project Title" className="input input-ghost text-lg font-semibold w-full focus:input-bordered"
                     value={project.title}
                     onChange={(e) =>
                       handleUpdate(project.id, "title", e.target.value)
                     }
                   />
 
-                  <button
-                    className="btn btn-ghost btn-sm text-error"
+                  <button className="btn btn-ghost btn-sm text-error"
                     onClick={() => {
                       setSelectedId(project.id)
                       setModalOpen(true)
@@ -134,7 +115,6 @@ export default function ProfileProjectForm({
                   </button>
                 </div>
 
-                {/* DESCRIPTION */}
                 <textarea
                   placeholder="Project description"
                   className="textarea textarea-bordered w-full min-h-[80px]"
@@ -144,23 +124,14 @@ export default function ProfileProjectForm({
                   }
                 />
 
-                {/* LINKS */}
                 <div className="grid md:grid-cols-2 gap-3">
-                  <input
-                    type="text"
-                    placeholder="Live URL (https://...)"
-                    className="input input-bordered w-full"
-                    value={project.link}
+                  <input type="text" placeholder="Live URL (https://...)" className="input input-bordered w-full" value={project.link}
                     onChange={(e) =>
                       handleUpdate(project.id, "link", e.target.value)
                     }
                   />
 
-                  <input
-                    type="text"
-                    placeholder="GitHub URL"
-                    className="input input-bordered w-full"
-                    value={project.githubLink}
+                  <input type="text" placeholder="GitHub URL" className="input input-bordered w-full" value={project.githubLink}
                     onChange={(e) =>
                       handleUpdate(project.id, "githubLink", e.target.value)
                     }
@@ -171,70 +142,65 @@ export default function ProfileProjectForm({
           ))}
         </div>
 
-        {/* ADD */}
         <div className="card bg-base-200 border border-base-300">
-          <div className="card-body space-y-4">
+          <div className="card-body">
             <h3 className="font-semibold text-base">Add Project</h3>
 
-            <input
-              type="text"
-              placeholder="Project Title"
-              className="input input-bordered w-full"
-              value={newProject.title}
-              onChange={(e) =>
-                setNewProject((prev) => ({
-                  ...prev,
-                  title: e.target.value,
-                }))
-              }
-            />
-
-            <textarea
-              placeholder="Project description"
-              className="textarea textarea-bordered w-full min-h-[80px]"
-              value={newProject.description}
-              onChange={(e) =>
-                setNewProject((prev) => ({
-                  ...prev,
-                  description: e.target.value,
-                }))
-              }
-            />
+            <fieldset className="fieldset relative">
+              <label className="label"><span className="text-error">*</span>Title</label>
+              <input type="text" placeholder="Project Title" className="input input-bordered w-full" value={newProject.title}
+                onChange={(e) =>
+                  setNewProject((prev) => ({
+                    ...prev,
+                    title: e.target.value,
+                  }))
+                }
+              />
+            </fieldset>
+            <fieldset className="fieldset relative">
+              <legend className="label">Your bio</legend>
+              <textarea
+                placeholder="Project description"
+                className="textarea textarea-bordered w-full min-h-[80px]"
+                value={newProject.description}
+                onChange={(e) =>
+                  setNewProject((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
+              />
+            </fieldset>
 
             <div className="grid md:grid-cols-2 gap-3">
-              <input
-                type="text"
-                placeholder="Live URL (https://...)"
-                className="input input-bordered w-full"
-                value={newProject.link}
-                onChange={(e) =>
-                  setNewProject((prev) => ({
-                    ...prev,
-                    link: e.target.value,
-                  }))
-                }
-              />
-
-              <input
-                type="text"
-                placeholder="GitHub URL"
-                className="input input-bordered w-full"
-                value={newProject.githubLink}
-                onChange={(e) =>
-                  setNewProject((prev) => ({
-                    ...prev,
-                    githubLink: e.target.value,
-                  }))
-                }
-              />
+              <fieldset className="fieldset relative">
+                <label className="label">Link</label>
+                <input type="text" placeholder="Live URL (https://...)" className="input input-bordered w-full"
+                  value={newProject.link}
+                  onChange={(e) =>
+                    setNewProject((prev) => ({
+                      ...prev,
+                      link: e.target.value,
+                    }))
+                  }
+                />
+              </fieldset>
+              
+              <fieldset className="fieldset relative">
+                <label className="label">Github</label>
+                <input type="text" placeholder="GitHub URL" className="input input-bordered w-full" value={newProject.githubLink}
+                  onChange={(e) =>
+                    setNewProject((prev) => ({
+                      ...prev,
+                      githubLink: e.target.value,
+                    }))
+                  }
+                />
+              </fieldset>
             </div>
 
             <div className="flex justify-end">
-              <button
-                className="btn btn-primary"
-                onClick={handleAdd}
-                disabled={!newProject.title.trim()}
-              >
+              <button className="btn btn-primary" onClick={handleAdd} disabled={!newProject.title.trim()}>
                 Add
               </button>
             </div>
@@ -242,7 +208,6 @@ export default function ProfileProjectForm({
         </div>
       </div>
 
-      {/* MODAL */}
       <Modal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}

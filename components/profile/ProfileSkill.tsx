@@ -77,10 +77,10 @@ export default function ProfileSkill() {
         </div>
       </div>
       <RightModal
+        title="Skills"
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
       >
-        <h2 className="text-lg font-bold mb-4">Skills</h2>
         <ProfileSkillForm initialSkills={skills} setSkills={setSkills} />
       </RightModal>
     </>

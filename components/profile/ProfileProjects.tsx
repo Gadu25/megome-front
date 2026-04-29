@@ -105,10 +105,10 @@ export default function ProfileProjects() {
           )}
       </div>
       <RightModal
+        title="Projects"
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
       >
-        <h2 className="text-lg font-bold mb-4">Education</h2>
         <ProfileProjectForm initialProjects={projects} setProjects={setProjects} />
       </RightModal>
     </>

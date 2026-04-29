@@ -102,10 +102,10 @@ export default function ProfileExperience() {
           )}
       </div>
       <RightModal
+        title="Experiences"
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
       >
-        <h2 className="text-lg font-bold mb-4">Skills</h2>
         <ProfileExperienceForm initialExperiences={experiences} setExperiences={setExperiences} />
       </RightModal>
     </>
