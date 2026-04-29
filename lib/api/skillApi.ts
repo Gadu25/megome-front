@@ -12,7 +12,7 @@ interface Response {
 interface SkillApi {
   getSkills: (headers?: Headers) => Promise<XiorResponse<{ skills: Skill[] }>>;
   addSkill: (skill: SkillForm, headers?: Headers) => Promise<XiorResponse<Response>>;
-  updateSkill: (id: number, skill: Skill, headers?: Headers) => Promise<XiorResponse<Response>>;
+  updateSkill: (id: number, skill: SkillForm, headers?: Headers) => Promise<XiorResponse<Response>>;
   deleteSkill: (id: number, headers?: Headers) => Promise<XiorResponse<Response>>;
 }
 
@@ -56,7 +56,7 @@ const addSkill = (skill: SkillForm, headers?: Headers) => {
   );
 }
 
-const updateSkill = (id: number, skill: Skill, headers?: Headers) => {
+const updateSkill = (id: number, skill: SkillForm, headers?: Headers) => {
   const cookieHeader = headers?.get("cookie");
   const formData = new FormData();
 
