@@ -3,7 +3,7 @@ import ProfileForm from "@/components/form/Profile";
 export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-base-200 flex items-center justify-center p-4">
-      <div className="w-full max-w-3xl">
+      <div className="w-full max-w-6xl">
 
         <div className="card bg-base-100 shadow-xl border border-base-300">
           <div className="card-body space-y-6">
@@ -32,7 +32,7 @@ export default function ProfilePage() {
 
             {/* Form container */}
             <div className="rounded-lg bg-base-200 p-4 sm:p-6 border border-base-300">
-              <ProfileForm />
+              <ProfileForm isOnboarding={true} />
             </div>
 
             {/* Footer note */}

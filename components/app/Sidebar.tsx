@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { LogoFull, LogoSmall } from "../common/Logo";
-import { HomeIcon, WindowIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
-import { SVGProps } from "react";
+import { HomeIcon, WindowIcon } from "@heroicons/react/24/outline";
 
 type item = {
   name: string;
@@ -20,11 +19,6 @@ export default function Sidebar() {
       name: "Projects",
       path: "/projects",
       icon: WindowIcon,
-    },
-    {
-      name: "Settings",
-      path: "/settings",
-      icon: Cog6ToothIcon,
     },
   ];
 
