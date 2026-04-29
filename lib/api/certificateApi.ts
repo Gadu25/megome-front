@@ -72,7 +72,7 @@ const updateCertificate = (id: number, certificate: CertificateForm, headers?: H
   formData.append("credentialId", certificate.credentialId);
   formData.append("credentialUrl", certificate.credentialUrl);
 
-  return xiorClient.post<Response>(
+  return xiorClient.put<Response>(
     `${BACKEND_URL}/api/v1/certification/${id}`,
     formData,
     {
