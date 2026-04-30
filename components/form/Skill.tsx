@@ -30,10 +30,12 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
 
   const handleUpdateSkill = (id: number, field: keyof Skill, value: Skill[keyof Skill] ) => {
     let updatedSkill: Skill | undefined;
+    let previousItem: Skill | undefined;
 
     setSkills((prev) => {
       const next = prev.map((skill) => {
         if (skill.id === id) {
+          previousItem = skill;
           updatedSkill = { ...skill, [field]: value };
           return updatedSkill;
         }
@@ -56,9 +58,21 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
         )
 
         if (!data) return;
-        setSkills(data.skills);
+
+        setSkills((prev) =>
+          prev.map((item) =>
+            item.id === id ? { ...item, ...data.skill } : item
+          )
+        );
       } catch (err) {
         console.error('Failed to update skill', err);
+        if (previousItem) {
+          setSkills((prev) =>
+            prev.map((item) =>
+              item.id === id ? previousItem! : item
+            )
+          )
+        }
       }
     }, 500);
   };
@@ -72,7 +86,8 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
     )
 
     if (!data) return;
-    setSkills(data.skills);
+
+    setSkills((prev) => [...prev, data.skill]);
 
     setNewSkill({
       skillName: '',
@@ -90,7 +105,9 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
 
     if (!data) return;
     setSelectedSkillId(null);
-    setSkills(data.skills);
+    setSkills((prev) =>
+      prev.filter((item) => item.id !== selectedSkillId)
+    );
   }
 
   const proceedCancel = async () => {

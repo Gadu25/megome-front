@@ -6,7 +6,7 @@ const BACKEND_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
 
 interface Response {
   message: string;
-  skills: Skill[];
+  skill: Skill;
 }
 
 interface SkillApi {
