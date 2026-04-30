@@ -33,10 +33,12 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
 
   const handleUpdate = ( id: number, field: keyof Experience, value: Experience[keyof Experience]) => {
     let updatedItem: Experience | undefined
+    let previousItem: Experience | undefined
 
     setExperiences((prev) =>
       prev.map((item) => {
         if (item.id === id) {
+          previousItem = item
           updatedItem = { ...item, [field]: value }
           return updatedItem
         }
@@ -68,9 +70,20 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
         )
 
         if (!data) return;
-        setExperiences(data.experience);
+        setExperiences((prev) =>
+          prev.map((item) =>
+            item.id === id ? { ...item, ...data.experience } : item
+          )
+        );
       } catch (err) {
         console.error("Failed to update experience", err)
+        if (previousItem) {
+          setExperiences((prev) =>
+            prev.map((item) =>
+              item.id === id ? previousItem! : item
+            )
+          )
+        }
       }
     }, 500)
   }
@@ -92,7 +105,7 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
     )
 
     if (!data) return;
-    setExperiences(data.experience);
+    setExperiences((prev) => [...prev, data.experience]);
 
     setNewExp({
       title: "",
@@ -113,7 +126,9 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
 
     if (!data) return;
     setSelectedId(null)
-    setExperiences(data.experience);
+    setExperiences((prev) =>
+      prev.filter((item) => item.id !== selectedId)
+    );
   }
 
   return (
