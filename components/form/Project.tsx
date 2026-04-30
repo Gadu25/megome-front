@@ -15,7 +15,7 @@ type ProjectForm = {
   githubLink: string
 }
 
-type Props = {
+type Props = {  
   initialProjects: Project[]
   setProjects: React.Dispatch<React.SetStateAction<Project[]>>
 }
@@ -38,10 +38,12 @@ export default function ProfileProjectForm({ initialProjects, setProjects }: Pro
 
   const handleUpdate = (id: number, field: keyof Project, value: Project[keyof Project]) => {
     let updatedItem: Project | undefined
+    let previousItem: Project | undefined
 
     setProjects((prev) =>
       prev.map((item) => {
         if (item.id === id) {
+          previousItem = item
           updatedItem = { ...item, [field]: value }
           return updatedItem
         }
@@ -63,9 +65,21 @@ export default function ProfileProjectForm({ initialProjects, setProjects }: Pro
         )
 
         if (!data) return;
-        setProjects(data.projects);
+
+        setProjects((prev) =>
+          prev.map((item) =>
+            item.id === id ? { ...item, ...data.project } : item
+          )
+        );
       } catch (err) {
         console.error("Failed to update project", err)
+        if (previousItem) {
+          setProjects((prev) => 
+            prev.map((item) =>
+              item.id === id ? previousItem! : item
+            )
+          )
+        }
       }
     }, 500)
   }
@@ -79,7 +93,7 @@ export default function ProfileProjectForm({ initialProjects, setProjects }: Pro
     )
 
     if (!data) return;
-    setProjects(data.projects);
+    setProjects((prev) => [...prev, data.project]);
 
     setNewProject({
       title: "",
@@ -99,7 +113,9 @@ export default function ProfileProjectForm({ initialProjects, setProjects }: Pro
 
     if (!data) return;
     setSelectedId(null)
-    setProjects(data.projects);
+    setProjects((prev) =>
+      prev.filter((item) => item.id !== selectedId)
+    );
   }
 
   return (
