@@ -33,10 +33,12 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
 
   const handleUpdate = (id: number, field: keyof Education, value: Education[keyof Education]) => {
     let updatedItem: Education | undefined
+    let previousItem: Education | undefined
 
     setEducation((prev) =>
       prev.map((item) => {
         if (item.id === id) {
+          previousItem = item
           updatedItem = { ...item, [field]: value }
           return updatedItem
         }
@@ -64,10 +66,21 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
         )
 
         if (!data) return;
-
-        setEducation(data.education);
+        
+        setEducation((prev) =>
+          prev.map((item) =>
+            item.id === id ? { ...item, ...data.education } : item
+          )
+        );
       } catch (err) {
         console.error("Failed to update education", err)
+        if (previousItem) {
+          setEducation((prev) => 
+            prev.map((item) => 
+              item.id === id ? previousItem! : item
+            )
+          )
+        }
       }
     }, 500)
   }
@@ -88,7 +101,7 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
 
     if (!data) return;
 
-    setEducation(data.education);
+    setEducation((prev) => [...prev, data.education]);
 
     setNewEducation({
       school: "",
@@ -110,7 +123,9 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
     if (!data) return;
 
     setSelectedId(null)
-    setEducation(data.education);
+    setEducation((prev) =>
+      prev.filter((item) => item.id !== selectedId)
+    );
   }
 
   return (
@@ -158,13 +173,13 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-3">
-                  <input type="date" className="input input-bordered w-full" value={edu.startDate?.split("T")[0]}
+                  <input type="date" className="input input-bordered w-full" value={formatDate(edu.startDate)}
                     onChange={(e) =>
                       handleUpdate(edu.id, "startDate", e.target.value)
                     }
                   />
 
-                  <input type="date" className="input input-bordered w-full" value={edu.endDate?.split("T")[0]}
+                  <input type="date" className="input input-bordered w-full" value={formatDate(edu.endDate)}
                     onChange={(e) =>
                       handleUpdate(edu.id, "endDate", e.target.value)
                     }
