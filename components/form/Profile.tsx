@@ -7,6 +7,7 @@ import { profileApi } from "@/lib/api/profileApi";
 import { authApi } from "@/lib/api/authApi";
 import { profileSchema } from "@/features/profile/schema";
 import { useToast } from "../toast/useToast";
+import { withRequest } from "@/functions/withRequest";
 import type { Profile, ProfileForm } from "@/types/types"
 import Modal from "../modal/Modal";
 
@@ -76,11 +77,15 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
         return;
       }
 
-      const res = await updateProfile(form);
-      showToast(res.data.message, "success")
-      if (setProfile) {
-        setProfile(res.data.profile)
-      }
+      const data = await withRequest(
+        () => updateProfile(form),
+        showToast
+      )
+
+      if (!data) return;
+
+      setProfile?.(data.profile);
+
       if (isOnboarding) {
         router.push("/dashboard");
       }

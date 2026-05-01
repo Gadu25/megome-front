@@ -4,6 +4,8 @@ import { useState, useRef } from "react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import { experienceApi } from "@/lib/api/experienceApi"
 import { formatDate } from "@/functions/formatDate"
+import { useToast } from "../toast/useToast";
+import { withRequest } from "@/functions/withRequest";
 import type { Experience, ExperienceForm } from "@/types/types"
 import Modal from "../modal/Modal"
 
@@ -14,6 +16,7 @@ type Props = {
 
 export default function ProfileExperienceForm({ initialExperiences, setExperiences,}: Props) {
   const { addExperience, updateExperience, deleteExperience } = experienceApi()
+  const { showToast } = useToast();
 
   const debounceRef = useRef<Record<string, NodeJS.Timeout>>({})
 
@@ -30,10 +33,12 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
 
   const handleUpdate = ( id: number, field: keyof Experience, value: Experience[keyof Experience]) => {
     let updatedItem: Experience | undefined
+    let previousItem: Experience | undefined
 
     setExperiences((prev) =>
       prev.map((item) => {
         if (item.id === id) {
+          previousItem = item
           updatedItem = { ...item, [field]: value }
           return updatedItem
         }
@@ -59,10 +64,26 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
             : null,
         }
 
-        const res = await updateExperience(id, payload as ExperienceForm)
-        setExperiences(res.data.experience)
+        const data = await withRequest(
+          () => updateExperience(id, payload as ExperienceForm),
+          showToast
+        )
+
+        if (!data) return;
+        setExperiences((prev) =>
+          prev.map((item) =>
+            item.id === id ? { ...item, ...data.experience } : item
+          )
+        );
       } catch (err) {
         console.error("Failed to update experience", err)
+        if (previousItem) {
+          setExperiences((prev) =>
+            prev.map((item) =>
+              item.id === id ? previousItem! : item
+            )
+          )
+        }
       }
     }, 500)
   }
@@ -78,8 +99,13 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
         : null,
     }
 
-    const res = await addExperience(payload as ExperienceForm)
-    setExperiences(res.data.experience)
+    const data = await withRequest(
+      () => addExperience(payload as ExperienceForm),
+      showToast
+    )
+
+    if (!data) return;
+    setExperiences((prev) => [...prev, data.experience]);
 
     setNewExp({
       title: "",
@@ -93,9 +119,16 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
   const handleDelete = async () => {
     if (selectedId === null) return
 
-    const res = await deleteExperience(selectedId)
+    const data = await withRequest(
+      () => deleteExperience(selectedId),
+      showToast
+    )
+
+    if (!data) return;
     setSelectedId(null)
-    setExperiences(res.data.experience)
+    setExperiences((prev) =>
+      prev.filter((item) => item.id !== selectedId)
+    );
   }
 
   return (
