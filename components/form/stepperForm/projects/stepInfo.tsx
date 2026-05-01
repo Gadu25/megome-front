@@ -9,7 +9,7 @@ type Props = {
 
 export default function StepInfo({ form, setForm, setIsDirty }: Props) {
   return (
-    <div>
+    <div className="space-y-2">
       <fieldset className="fieldset relative">
         <label className="label"><span className="text-error">*</span>Title</label>
         <input type="text" placeholder="Project Title" className="input input-bordered w-full" value={form.title}

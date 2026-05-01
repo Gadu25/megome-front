@@ -54,26 +54,26 @@ export default function CreateProjectPage() {
   const [selectedTech, setSelectedTech] = useState<Technology[]>([])
 
   const createDraft = async () => {
-    if (projectId) {
-      if (!isDirty) return
+    // if (projectId) {
+    //   if (!isDirty) return
 
-      await withRequest(
-        () => updateProject(projectId, form),
-        showToast
-      )
-      setIsDirty(false)
-      return
-    }
+    //   await withRequest(
+    //     () => updateProject(projectId, form),
+    //     showToast
+    //   )
+    //   setIsDirty(false)
+    //   return
+    // }
 
-    const data = await withRequest(
-      () => addProject(form),
-      showToast
-    )
+    // const data = await withRequest(
+    //   () => addProject(form),
+    //   showToast
+    // )
 
-    if (!data) return
+    // if (!data) return
 
-    setProjectId(data.project.id)
-    setIsDirty(false)
+    // setProjectId(data.project.id)
+    // setIsDirty(false)
   }
 
   const saveImages = async () => {

@@ -81,7 +81,7 @@ export default function StepConfirm({
               <a
                 href={form.githubLink}
                 target="_blank"
-                className="link link-neutral text-sm"
+                className="link link-primary text-sm"
               >
                 {form.githubLink || "—"}
               </a>

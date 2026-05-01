@@ -25,7 +25,11 @@ export default function Sidebar() {
   return (
     <div className="drawer-side is-drawer-close:overflow-visible">
       <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
-      <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64">
+      <div className="flex min-h-full flex-col items-start
+        bg-base-100/20 backdrop-blur-xl
+        border-r border-base-content/10
+        is-drawer-close:w-14 is-drawer-open:w-64"
+      >
         <div className="is-drawer-close:hidden w-full px-4 pt-4 pb-6">
           <LogoFull/>
         </div>

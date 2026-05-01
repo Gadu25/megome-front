@@ -22,7 +22,11 @@ export default function Navbar({ profile }: Props) {
   const title = routeTitles[pathname] || "App";
 
   return (
-    <nav className="navbar w-full bg-base-300/50">
+    <nav className="navbar w-full sticky top-0 z-50
+      bg-base-100/30 backdrop-blur-2xl
+      border-b border-white/10
+      shadow-sm"
+    >
       <label htmlFor="my-drawer-4" aria-label="open sidebar" className="btn btn-square btn-ghost">
         <Bars3BottomLeftIcon className="my-1.5 inline-block size-5" />
       </label>
