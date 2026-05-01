@@ -128,13 +128,13 @@ export default function CreateProjectPage() {
       id: "confirm",
       title: "Review",
       description: "Double-check everything before making it public.",
-      render: () => <StepConfirm form={form} tech={tech} />,
+      render: () => <StepConfirm form={form} images={images} tech={selectedTech} />,
       onNext: publish,
     },
   ]
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
+    <div className="p-6">
       <Stepper steps={steps} />
     </div>
   )

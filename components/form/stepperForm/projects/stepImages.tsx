@@ -79,7 +79,7 @@ export default function StepImages({ images, setImages }: Props) {
             <div key={i} className="relative group">
               <img
                 src={img.preview}
-                className="w-full h-28 object-cover rounded"
+                className="w-full h-47 object-cover rounded"
               />
 
               <button
