@@ -5,7 +5,7 @@ import RightContent from "@/components/profile/RightContent";
 export default function ProfilePage() {
   
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="mx-auto space-y-6">
 
       {/* TOP PROFILE */}
       <div className="card bg-base-100 shadow p-6 flex flex-col lg:flex-row gap-6">
