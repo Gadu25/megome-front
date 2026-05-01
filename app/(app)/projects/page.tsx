@@ -1,5 +1,6 @@
 import SearchBar from "@/components/common/SearchBar"
 import { AdjustmentsHorizontalIcon, PlusIcon } from "@heroicons/react/24/outline"
+import Link from "next/link"
 
 export default function ProjectPage() {
   return (
@@ -10,7 +11,9 @@ export default function ProjectPage() {
           <AdjustmentsHorizontalIcon className="size-5"/>
         </button>
         <button className="btn btn-square">
-          <PlusIcon className="size-5"/>
+          <Link href="/projects/new">
+            <PlusIcon className="size-5"/>
+          </Link>
         </button>
       </div>
       <div className="flex flex-wrap flex-col md:flex-row gap-2 lg:gap-4">
