@@ -2,13 +2,10 @@ import { useEffect, useState } from "react";
 import { Project } from "@/types/types";
 import { projectApi } from "@/lib/api/projectApi";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
-import RightModal from "../modal/RightModal";
-import ProfileProjectForm from "../form/Project";
 import Link from "next/link";
 
 export default function ProfileProjects() {
   const { getProjects } = projectApi();
-  const [isEditOpen, setIsEditOpen] = useState(false);
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -108,13 +105,6 @@ export default function ProfileProjects() {
             </div>
           )}
       </div>
-      {/* <RightModal
-        title="Projects"
-        isOpen={isEditOpen}
-        onClose={() => setIsEditOpen(false)}
-      >
-        <ProfileProjectForm initialProjects={projects} setProjects={setProjects} />
-      </RightModal> */}
     </>
   )
 }
