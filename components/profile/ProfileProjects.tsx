@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Project } from "@/types/types";
 import { projectApi } from "@/lib/api/projectApi";
-import { humanizeDate } from "@/functions/humanitizeDate";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import RightModal from "../modal/RightModal";
 import ProfileProjectForm from "../form/Project";
+import Link from "next/link";
 
 export default function ProfileProjects() {
   const { getProjects } = projectApi();
@@ -32,9 +32,11 @@ export default function ProfileProjects() {
       <div className="card bg-base-100 shadow p-5 space-y-4">
         <div className="flex justify-between">
           <h2 className="font-semibold">Projects</h2>
-          <button className="btn btn-xs" onClick={() => setIsEditOpen(true)}>
-            <PencilSquareIcon className="size-5"/>
-          </button>
+          <Link href="/projects/">
+            <button className="btn btn-xs">
+              <PencilSquareIcon className="size-5"/>
+            </button>
+          </Link>
         </div>
 
         {projects.length === 0 ? (
@@ -45,9 +47,11 @@ export default function ProfileProjects() {
         You haven’t added any projects yet
       </p>
 
-      <button className="btn btn-primary btn-sm">
-        Add your first project
-      </button>
+      <Link href="/projects/new">
+        <button className="btn btn-primary btn-sm">
+          Add your first project
+        </button>
+      </Link>
     </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2">
@@ -104,13 +108,13 @@ export default function ProfileProjects() {
             </div>
           )}
       </div>
-      <RightModal
+      {/* <RightModal
         title="Projects"
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
       >
         <ProfileProjectForm initialProjects={projects} setProjects={setProjects} />
-      </RightModal>
+      </RightModal> */}
     </>
   )
 }

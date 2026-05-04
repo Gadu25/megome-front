@@ -122,6 +122,7 @@ export type ProjectForm = {
   description: string;
   link: string;
   githubLink: string;
+  status: string;
 }
 
 export type Certificate = {

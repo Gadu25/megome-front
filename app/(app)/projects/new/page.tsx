@@ -41,6 +41,7 @@ export default function CreateProjectPage() {
     description: "",
     link: "",
     githubLink: "",
+    status: "completed",
   })
 
   const [images, setImages] = useState<Image>({
