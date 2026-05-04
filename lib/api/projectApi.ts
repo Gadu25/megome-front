@@ -16,7 +16,7 @@ interface ProjectApi {
   deleteProject: (id: number, headers?: Headers) => Promise<XiorResponse<Response>>;
 
   // images
-  // uploadProjectImage: (id: number, projectImage: ProjectImage, headers?: Headers) => Promise<XiorResponse<Response>>;
+  uploadProjectImage: (id: number, projectImage: ProjectImage, headers?: Headers) => Promise<XiorResponse<Response>>;
 }
 
 export const projectApi = (): ProjectApi => {
@@ -24,10 +24,10 @@ export const projectApi = (): ProjectApi => {
     getProjects,
     addProject,
     updateProject,
-    deleteProject
+    deleteProject,
 
     // images
-    // uploadProjectImage,
+    uploadProjectImage,
   }
 }
 
@@ -99,22 +99,23 @@ const deleteProject = (id: number, headers?: Headers) => {
   )
 }
 
-// const uploadProjectImage = (id: number, projectImage : ProjectImage, headers?: Headers) => {
-//   const cookieHeader = headers?.get("cookie");
-//   const formData = new FormData();
+const uploadProjectImage = (id: number, projectImage : ProjectImage, headers?: Headers) => {
+  const cookieHeader = headers?.get("cookie");
+  const formData = new FormData();
 
-//   if (projectImage.file) {
-//     formData.append("file", projectImage.file);
-//   }
-//   formData.append("type", projectImage.type);
+  if (projectImage.file) {
+    formData.append("image", projectImage.file);
+    console.log("file", projectImage.file)
+  }
+  formData.append("type", projectImage.type);
 
-//   return xiorClient.put<Response>(
-//     `${BACKEND_URL}/api/v1/project/${id}/images`,
-//     formData,
-//     {
-//       headers: {
-//         cookie: cookieHeader || "",
-//       },
-//     }
-//   )
-// }
+  return xiorClient.post<Response>(
+    `${BACKEND_URL}/api/v1/project/${id}/images`,
+    formData,
+    {
+      headers: {
+        cookie: cookieHeader || "",
+      },
+    }
+  )
+}

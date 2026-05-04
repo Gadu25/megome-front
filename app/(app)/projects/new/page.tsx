@@ -21,7 +21,7 @@ type Technology = {
 }
 
 export default function CreateProjectPage() {
-  const { addProject, updateProject } = projectApi();
+  const { addProject, updateProject, uploadProjectImage } = projectApi();
   const { showToast } = useToast();
   const [isDirty, setIsDirty] = useState<Boolean>(false);
   const [form, setForm] = useState<ProjectForm>({
@@ -71,15 +71,21 @@ export default function CreateProjectPage() {
   }
 
   const saveImages = async (): Promise<boolean> => {
-    // if (!projectId) {
-    //   return false
-    // }
+    if (!projectId) {
+      return false
+    }
 
-    console.log("images", images)
-
-    return true
-
-    // upload logic
+    try {
+      await Promise.all(
+        images.screenshots.map(image =>
+          uploadProjectImage(projectId, image)
+        )
+      );
+      return true
+    } catch (err) {
+      console.error("image error", err)
+      return false
+    }
   }
 
   const saveTech = async (): Promise<boolean> => {
