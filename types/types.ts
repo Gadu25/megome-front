@@ -125,6 +125,17 @@ export type ProjectForm = {
   status: string;
 }
 
+export type ProjectImage = {
+  file: File | null
+  preview: string
+  type: "cover" | "screenshot"
+}
+
+export type Image = {
+  cover: ProjectImage | null
+  screenshots: ProjectImage[]
+}
+
 export type Certificate = {
   id: number;
   userId: number;

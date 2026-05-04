@@ -1,13 +1,12 @@
 type ProjectImage = {
   file: File | null
   preview: string
-  type: "cover" | "screenshot" | "demo"
+  type: "cover" | "screenshot"
 }
 
 type Image = {
   cover: ProjectImage | null
   screenshots: ProjectImage[]
-  demo: ProjectImage | null
 }
 
 type Technology = {
@@ -147,22 +146,6 @@ export default function StepConfirm({
             ) : (
               <div className="h-40 border border-dashed rounded-lg flex items-center justify-center opacity-60">
                 No cover image
-              </div>
-            )}
-          </div>
-
-          {/* DEMO */}
-          <div>
-            <p className="text-sm opacity-70 mb-2">Demo</p>
-
-            {images.demo ? (
-              <img
-                src={images.demo.preview}
-                className="w-full h-64 object-cover rounded-lg"
-              />
-            ) : (
-              <div className="h-40 border border-dashed rounded-lg flex items-center justify-center opacity-60">
-                No demo image
               </div>
             )}
           </div>

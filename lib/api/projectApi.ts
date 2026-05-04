@@ -1,6 +1,6 @@
 import { XiorResponse } from "xior";
 import xiorClient from "./xior";
-import type { Project, ProjectForm } from "@/types/types";
+import type { Project, ProjectForm, ProjectImage} from "@/types/types";
 
 const BACKEND_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
 
@@ -14,6 +14,9 @@ interface ProjectApi {
   addProject: (project: ProjectForm, headers?: Headers) => Promise<XiorResponse<Response>>;
   updateProject: (id: number, project: ProjectForm, headers?: Headers) => Promise<XiorResponse<Response>>;
   deleteProject: (id: number, headers?: Headers) => Promise<XiorResponse<Response>>;
+
+  // images
+  // uploadProjectImage: (id: number, projectImage: ProjectImage, headers?: Headers) => Promise<XiorResponse<Response>>;
 }
 
 export const projectApi = (): ProjectApi => {
@@ -22,6 +25,9 @@ export const projectApi = (): ProjectApi => {
     addProject,
     updateProject,
     deleteProject
+
+    // images
+    // uploadProjectImage,
   }
 }
 
@@ -46,6 +52,7 @@ const addProject = (project: ProjectForm, headers?: Headers) => {
   formData.append("description", project.description);
   formData.append("link", project.link);
   formData.append("githubLink", project.githubLink);
+  formData.append("status", project.status);
 
   return xiorClient.post<Response>(
     `${BACKEND_URL}/api/v1/project`,
@@ -66,6 +73,7 @@ const updateProject = (id: number, project: ProjectForm, headers?: Headers) => {
   formData.append("description", project.description);
   formData.append("link", project.link);
   formData.append("githubLink", project.githubLink);
+  formData.append("status", project.status);
 
   return xiorClient.put<Response>(
     `${BACKEND_URL}/api/v1/project/${id}`,
@@ -90,3 +98,23 @@ const deleteProject = (id: number, headers?: Headers) => {
     }
   )
 }
+
+// const uploadProjectImage = (id: number, projectImage : ProjectImage, headers?: Headers) => {
+//   const cookieHeader = headers?.get("cookie");
+//   const formData = new FormData();
+
+//   if (projectImage.file) {
+//     formData.append("file", projectImage.file);
+//   }
+//   formData.append("type", projectImage.type);
+
+//   return xiorClient.put<Response>(
+//     `${BACKEND_URL}/api/v1/project/${id}/images`,
+//     formData,
+//     {
+//       headers: {
+//         cookie: cookieHeader || "",
+//       },
+//     }
+//   )
+// }

@@ -7,22 +7,10 @@ import StepInfo from "@/components/form/stepperForm/projects/stepInfo"
 import StepImages from "@/components/form/stepperForm/projects/stepImages"
 import StepTech from "@/components/form/stepperForm/projects/stepTech"
 import StepConfirm from "@/components/form/stepperForm/projects/stepConfirm"
-import type { ProjectForm } from "@/types/types"
+import type { ProjectForm, Image } from "@/types/types"
 import { withRequest } from "@/functions/withRequest"
 import { projectApi } from "@/lib/api/projectApi"
 import { useToast } from "@/components/toast/useToast"
-
-type ProjectImage = {
-  file: File | null
-  preview: string
-  type: "cover" | "screenshot" | "demo"
-}
-
-type Image = {
-  cover: ProjectImage | null
-  screenshots: ProjectImage[]
-  demo: ProjectImage | null
-}
 
 type Technology = {
   id: number
@@ -47,44 +35,59 @@ export default function CreateProjectPage() {
   const [images, setImages] = useState<Image>({
     cover: null,
     screenshots: [],
-    demo: null,
   })
 
   const [tech, setTech] = useState<string[]>([])
   const [projectId, setProjectId] = useState<number | null>(null)
   const [selectedTech, setSelectedTech] = useState<Technology[]>([])
 
-  const createDraft = async () => {
-    // if (projectId) {
-    //   if (!isDirty) return
+  const createDraft = async (): Promise<boolean> => {
+    // update
+    if (projectId) {
+      if (!isDirty) return true;
 
-    //   await withRequest(
-    //     () => updateProject(projectId, form),
-    //     showToast
-    //   )
-    //   setIsDirty(false)
-    //   return
-    // }
+      const data = await withRequest(
+        () => updateProject(projectId, form),
+        showToast
+      )
 
-    // const data = await withRequest(
-    //   () => addProject(form),
-    //   showToast
-    // )
+      if (!data) return false;
+      
+      setIsDirty(false);
+      return true;
+    }
 
-    // if (!data) return
+    // create new
+    const data = await withRequest(
+      () => addProject(form),
+      showToast
+    )
 
-    // setProjectId(data.project.id)
-    // setIsDirty(false)
+    if (!data) return false;
+
+    setProjectId(data.project.id);
+    setIsDirty(false);
+    return true;
   }
 
-  const saveImages = async () => {
-    if (!projectId) return
+  const saveImages = async (): Promise<boolean> => {
+    // if (!projectId) {
+    //   return false
+    // }
+
+    console.log("images", images)
+
+    return true
 
     // upload logic
   }
 
-  const saveTech = async () => {
-    if (!projectId) return
+  const saveTech = async (): Promise<boolean> => {
+    if (!projectId) {
+      return false
+    }
+
+    return true
 
     await fetch(`/api/projects/${projectId}/tech`, {
       method: "POST",
@@ -92,8 +95,12 @@ export default function CreateProjectPage() {
     })
   }
 
-  const publish = async () => {
-    if (!projectId) return
+  const publish = async (): Promise<boolean> => {
+    if (!projectId) {
+      return false;
+    }
+
+    return true;
 
     await fetch(`/api/projects/${projectId}`, {
       method: "PATCH",

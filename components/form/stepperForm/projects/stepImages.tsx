@@ -1,17 +1,6 @@
 import { PlusIcon } from "@heroicons/react/24/outline"
+import type { Image } from "@/types/types"
 import React from "react"
-
-type ProjectImage = {
-  file: File | null
-  preview: string
-  type: "cover" | "screenshot" | "demo"
-}
-
-type Image = {
-  cover: ProjectImage | null
-  screenshots: ProjectImage[]
-  demo: ProjectImage | null
-}
 
 type Props = {
   images: Image
