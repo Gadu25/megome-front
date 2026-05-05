@@ -71,24 +71,88 @@ export default function CreateProjectPage() {
   }
 
   const saveImages = async (): Promise<boolean> => {
-    if (!projectId) {
-      return false
+    if (!projectId) return false;
+
+    // mark all pending as uploading FIRST (avoid race conditions)
+    setImages(prev => ({
+      ...prev,
+      screenshots: prev.screenshots.map(img =>
+        !img.id ? { ...img, status: "uploading" as const } : img
+      ),
+      cover: prev.cover && !prev.cover.id
+        ? { ...prev.cover, status: "uploading" as const }
+        : prev.cover
+    }));
+
+    const updatedScreenshots: ProjectImage[] = await Promise.all(
+      images.screenshots.map(async (img): Promise<ProjectImage> => {
+        if (img.status === "uploaded") return img;
+
+        try {
+          const res = await uploadProjectImage(projectId, img);
+          const data = res.data;
+
+          return {
+            ...img,
+            id: data.image.id,
+            url: data.image.url,
+            status: "uploaded" as const,
+            error: undefined,
+          };
+        } catch (err: any) {
+          const errorMessage = err?.response?.data?.error ||
+          err?.response?.data?.message ||
+          err?.message ||
+          "Upload failed";
+
+          return {
+            ...img,
+            status: "failed" as const,
+            error: errorMessage,
+          };
+        }
+      })
+    );
+
+    let updatedCover: ProjectImage | null = images.cover;
+
+    if (images.cover && (images.cover.status !== "uploaded")) {
+      try {
+        const res = await uploadCoverImage(projectId, images.cover);
+        const data = res.data;
+
+        updatedCover = {
+          ...images.cover,
+          id: data.image.id,
+          url: data.image.url,
+          status: "uploaded" as const,
+          error: undefined,
+        };
+      } catch (err: any) {
+        const errorMessage = err?.response?.data?.error ||
+          err?.response?.data?.message ||
+          err?.message ||
+          "Upload failed";
+
+        updatedCover = {
+          ...images.cover,
+          status: "failed" as const,
+          error: errorMessage,
+        };
+      }
     }
 
-    try {
-      await Promise.all(
-        images.screenshots.map(image =>
-          uploadProjectImage(projectId, image)
-        )
-      );
-      await uploadCoverImage(projectId, images.cover as ProjectImage);
+    setImages({
+      screenshots: updatedScreenshots,
+      cover: updatedCover,
+    });
 
-      return true
-    } catch (err) {
-      console.error("image error", err)
-      return false
-    }
-  }
+    const hasFailed =
+      updatedScreenshots.some(i => i.status === "failed") ||
+      updatedCover?.status === "failed";
+
+    return !hasFailed;
+  };
 
   const saveTech = async (): Promise<boolean> => {
     if (!projectId) {

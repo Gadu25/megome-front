@@ -127,9 +127,13 @@ export type ProjectForm = {
 }
 
 export type ProjectImage = {
-  file: File | null
+  id?: number
+  url?: string
+  file?: File
   preview: string
   type: "cover" | "screenshot"
+  status: "idle" | "uploading" | "uploaded" | "failed"
+  error?: string
 }
 
 export type Image = {
