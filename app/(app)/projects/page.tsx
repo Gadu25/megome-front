@@ -37,7 +37,7 @@ export default async function ProjectPage() {
       </div>
       <div className="flex flex-wrap flex-col md:flex-row gap-2 lg:gap-4">
         {projects.map((project) => (
-          <div key={project.id} className="card bg-base-100 lg:w-96 shadow-sm">
+          <div key={project.id} className="card bg-base-100 lg:w-89 shadow-sm">
             <figure>
               <img
                 src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"

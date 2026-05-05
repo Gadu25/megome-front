@@ -9,6 +9,11 @@ interface Response {
   project: Project;
 }
 
+interface SingleImageResponse {
+  message: string;
+  image: ProjectImage
+}
+
 interface ProjectApi {
   getProjects: (headers?: Headers) => Promise<XiorResponse<{ projects: Project[] }>>;
   addProject: (project: ProjectForm, headers?: Headers) => Promise<XiorResponse<Response>>;
@@ -16,8 +21,8 @@ interface ProjectApi {
   deleteProject: (id: number, headers?: Headers) => Promise<XiorResponse<Response>>;
 
   // images
-  uploadProjectImage: (id: number, projectImage: ProjectImage, headers?: Headers) => Promise<XiorResponse<Response>>;
-  uploadCoverImage: (id: number, projectCover: ProjectImage, headers?: Headers) => Promise<XiorResponse<Response>>;
+  uploadProjectImage: (id: number, projectImage: ProjectImage, headers?: Headers) => Promise<XiorResponse<SingleImageResponse>>;
+  uploadCoverImage: (id: number, projectCover: ProjectImage, headers?: Headers) => Promise<XiorResponse<SingleImageResponse>>;
 }
 
 export const projectApi = (): ProjectApi => {
@@ -111,7 +116,7 @@ const uploadProjectImage = (id: number, projectImage : ProjectImage, headers?: H
   }
   formData.append("type", projectImage.type);
 
-  return xiorClient.post<Response>(
+  return xiorClient.post<SingleImageResponse>(
     `${BACKEND_URL}/api/v1/project/${id}/images`,
     formData,
     {
@@ -132,7 +137,7 @@ const uploadCoverImage = (id: number, projectCover: ProjectImage, headers?: Head
   }
   formData.append("type", projectCover.type);
 
-  return xiorClient.put<Response>(
+  return xiorClient.put<SingleImageResponse>(
     `${BACKEND_URL}/api/v1/project/${id}/cover`,
     formData,
     {

@@ -1,13 +1,4 @@
-type ProjectImage = {
-  file: File | null
-  preview: string
-  type: "cover" | "screenshot"
-}
-
-type Image = {
-  cover: ProjectImage | null
-  screenshots: ProjectImage[]
-}
+import type { Image } from "@/types/types"
 
 type Technology = {
   id: number
