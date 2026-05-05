@@ -7,7 +7,7 @@ import StepInfo from "@/components/form/stepperForm/projects/stepInfo"
 import StepImages from "@/components/form/stepperForm/projects/stepImages"
 import StepTech from "@/components/form/stepperForm/projects/stepTech"
 import StepConfirm from "@/components/form/stepperForm/projects/stepConfirm"
-import type { ProjectForm, Image } from "@/types/types"
+import type { ProjectForm, Image, ProjectImage } from "@/types/types"
 import { withRequest } from "@/functions/withRequest"
 import { projectApi } from "@/lib/api/projectApi"
 import { useToast } from "@/components/toast/useToast"
@@ -21,7 +21,7 @@ type Technology = {
 }
 
 export default function CreateProjectPage() {
-  const { addProject, updateProject, uploadProjectImage } = projectApi();
+  const { addProject, updateProject, uploadProjectImage, uploadCoverImage } = projectApi();
   const { showToast } = useToast();
   const [isDirty, setIsDirty] = useState<Boolean>(false);
   const [form, setForm] = useState<ProjectForm>({
@@ -81,6 +81,8 @@ export default function CreateProjectPage() {
           uploadProjectImage(projectId, image)
         )
       );
+      await uploadCoverImage(projectId, images.cover as ProjectImage);
+
       return true
     } catch (err) {
       console.error("image error", err)

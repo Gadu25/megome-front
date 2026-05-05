@@ -17,6 +17,7 @@ interface ProjectApi {
 
   // images
   uploadProjectImage: (id: number, projectImage: ProjectImage, headers?: Headers) => Promise<XiorResponse<Response>>;
+  uploadCoverImage: (id: number, projectCover: ProjectImage, headers?: Headers) => Promise<XiorResponse<Response>>;
 }
 
 export const projectApi = (): ProjectApi => {
@@ -28,6 +29,7 @@ export const projectApi = (): ProjectApi => {
 
     // images
     uploadProjectImage,
+    uploadCoverImage,
   }
 }
 
@@ -111,6 +113,27 @@ const uploadProjectImage = (id: number, projectImage : ProjectImage, headers?: H
 
   return xiorClient.post<Response>(
     `${BACKEND_URL}/api/v1/project/${id}/images`,
+    formData,
+    {
+      headers: {
+        cookie: cookieHeader || "",
+      },
+    }
+  )
+}
+
+const uploadCoverImage = (id: number, projectCover: ProjectImage, headers?: Headers) => {
+  const cookieHeader = headers?.get("cookie");
+  const formData = new FormData();
+
+  if (projectCover.file) {
+    formData.append("image", projectCover.file);
+    console.log("file", projectCover.file)
+  }
+  formData.append("type", projectCover.type);
+
+  return xiorClient.put<Response>(
+    `${BACKEND_URL}/api/v1/project/${id}/cover`,
     formData,
     {
       headers: {

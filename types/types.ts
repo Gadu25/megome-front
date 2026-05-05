@@ -113,6 +113,7 @@ export type Project = {
   description: string;
   link: string;
   githubLink: string;
+  status: string;
   createdAt: string;
   updatedAt: string;
 }
