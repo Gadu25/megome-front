@@ -1,6 +1,6 @@
 import { XiorResponse } from "xior";
 import xiorClient from "./xior";
-import type { Project, ProjectForm, ProjectImage} from "@/types/types";
+import type { Project, ProjectForm, ProjectImage, ProjectFull } from "@/types/types";
 
 const BACKEND_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
 
@@ -15,7 +15,7 @@ interface SingleImageResponse {
 }
 
 interface ProjectApi {
-  getProjects: (headers?: Headers) => Promise<XiorResponse<{ projects: Project[] }>>;
+  getProjects: (headers?: Headers) => Promise<XiorResponse<{ projects: ProjectFull[] }>>;
   addProject: (project: ProjectForm, headers?: Headers) => Promise<XiorResponse<Response>>;
   updateProject: (id: number, project: ProjectForm, headers?: Headers) => Promise<XiorResponse<Response>>;
   deleteProject: (id: number, headers?: Headers) => Promise<XiorResponse<Response>>;
@@ -41,7 +41,7 @@ export const projectApi = (): ProjectApi => {
 const getProjects = (headers?: Headers) => {
   const cookieHeader = headers?.get("cookie");
 
-  return xiorClient.get<{ projects: Project[] }>(
+  return xiorClient.get<{ projects: ProjectFull[] }>(
     `${BACKEND_URL}/api/v1/project`,
     {
       headers: {

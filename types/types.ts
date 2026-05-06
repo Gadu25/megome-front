@@ -118,6 +118,23 @@ export type Project = {
   updatedAt: string;
 }
 
+export type ProjectFull = {
+  id: number;
+  userId: number;
+  title: string;
+  description: string;
+  link: string;
+  githubLink: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  images: {
+    cover?: string
+    screenshots: string[]
+  };
+  technologies: Technology[]
+}
+
 export type ProjectForm = {
   title: string;
   description: string;
