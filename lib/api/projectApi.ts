@@ -81,6 +81,7 @@ const updateProject = (id: number, project: ProjectForm, headers?: Headers) => {
   formData.append("link", project.link);
   formData.append("githubLink", project.githubLink);
   formData.append("status", project.status);
+  formData.append("isDraft", String(project.isDraft));
 
   return xiorClient.put<Response>(
     `${BACKEND_URL}/api/v1/project/${id}`,

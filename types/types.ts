@@ -124,6 +124,7 @@ export type ProjectForm = {
   link: string;
   githubLink: string;
   status: string;
+  isDraft: boolean;
 }
 
 export type ProjectImage = {
@@ -177,4 +178,8 @@ export type Technology = {
 export type TechnologyForm = {
   name: string;
   category: string;
+}
+
+export type ProjectTechnologyForm = {
+  techIds: number[];
 }

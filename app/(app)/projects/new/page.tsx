@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import Stepper, { Step } from "@/components/stepper/Stepper"
 
 import StepInfo from "@/components/form/stepperForm/projects/stepInfo"
@@ -10,11 +11,15 @@ import StepConfirm from "@/components/form/stepperForm/projects/stepConfirm"
 import type { ProjectForm, Image, ProjectImage, Technology } from "@/types/types"
 import { withRequest } from "@/functions/withRequest"
 import { projectApi } from "@/lib/api/projectApi"
+import { technologyApi } from "@/lib/api/technologyApi"
 import { useToast } from "@/components/toast/useToast"
 
 export default function CreateProjectPage() {
   const { addProject, updateProject, uploadProjectImage, uploadCoverImage } = projectApi();
+  const { linkProjectTechnologies } = technologyApi();
   const { showToast } = useToast();
+  const router = useRouter();
+
   const [isDirty, setIsDirty] = useState<Boolean>(false);
   const [form, setForm] = useState<ProjectForm>({
     title: "",
@@ -22,6 +27,7 @@ export default function CreateProjectPage() {
     link: "",
     githubLink: "",
     status: "completed",
+    isDraft: true,
   })
 
   const [images, setImages] = useState<Image>({
@@ -29,7 +35,6 @@ export default function CreateProjectPage() {
     screenshots: [],
   })
 
-  const [tech, setTech] = useState<string[]>([])
   const [projectId, setProjectId] = useState<number | null>(null)
   const [selectedTech, setSelectedTech] = useState<Technology[]>([])
 
@@ -151,25 +156,48 @@ export default function CreateProjectPage() {
       return false
     }
 
-    return true
+    try {
+      const techIds: number[] = [];
+      for (let i = 0; i < selectedTech.length; i++) {
+        techIds.push(selectedTech[i].id)
+      }
 
-    await fetch(`/api/projects/${projectId}/tech`, {
-      method: "POST",
-      body: JSON.stringify({ tech }),
-    })
+      const data = await withRequest(
+        () => linkProjectTechnologies(projectId, techIds),
+        showToast
+      )
+
+      if (!data) return false;
+
+      return true
+    } catch (err: any) {
+      const errorMessage = err?.response?.data?.error ||
+        err?.response?.data?.message ||
+        err?.message ||
+        "  failed";
+      showToast(errorMessage, 'error')
+    }
+
+    return true
   }
 
   const publish = async (): Promise<boolean> => {
     if (!projectId) {
       return false;
     }
+    setForm((prev) => ({
+      ...prev,
+      isDraft: false,
+    }))
 
+    const data = await withRequest(
+      () => updateProject(projectId, form),
+      showToast
+    )
+    if (!data) return false;
+    router.push("/projects")
     return true;
 
-    await fetch(`/api/projects/${projectId}`, {
-      method: "PATCH",
-      body: JSON.stringify({ isDraft: false }),
-    })
   }
 
   // ===== STEPS =====
