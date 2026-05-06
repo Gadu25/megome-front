@@ -1,12 +1,4 @@
-import type { Image } from "@/types/types"
-
-type Technology = {
-  id: number
-  name: string
-  slug: string
-  category: string
-  isVerified: boolean
-}
+import type { Image, Technology } from "@/types/types"
 
 type ProjectForm = {
   title: string

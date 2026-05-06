@@ -162,3 +162,19 @@ export type CertificateForm = {
   credentialId: string;
   credentialUrl: string;
 }
+
+export type Technology = {
+  id: number;
+  createdByUserId: number | null;
+  name: string;
+  slug: string;
+  category: string;
+  isVerified: string;
+  createdAt: string;
+  updatedAt: string | null;
+}
+
+export type TechnologyForm = {
+  name: string;
+  category: string;
+}
