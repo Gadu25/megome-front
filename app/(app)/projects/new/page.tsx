@@ -7,18 +7,10 @@ import StepInfo from "@/components/form/stepperForm/projects/stepInfo"
 import StepImages from "@/components/form/stepperForm/projects/stepImages"
 import StepTech from "@/components/form/stepperForm/projects/stepTech"
 import StepConfirm from "@/components/form/stepperForm/projects/stepConfirm"
-import type { ProjectForm, Image, ProjectImage } from "@/types/types"
+import type { ProjectForm, Image, ProjectImage, Technology } from "@/types/types"
 import { withRequest } from "@/functions/withRequest"
 import { projectApi } from "@/lib/api/projectApi"
 import { useToast } from "@/components/toast/useToast"
-
-type Technology = {
-  id: number
-  name: string
-  slug: string
-  category: string
-  isVerified: boolean
-}
 
 export default function CreateProjectPage() {
   const { addProject, updateProject, uploadProjectImage, uploadCoverImage } = projectApi();
@@ -201,7 +193,7 @@ export default function CreateProjectPage() {
       id: "tech",
       title: "Tech",
       description: "Select the technologies used to build this project.",
-      render: () => <StepTech tech={tech} setTech={setTech} selectedTech={selectedTech} setSelectedTech={setSelectedTech}/>,
+      render: () => <StepTech selectedTech={selectedTech} setSelectedTech={setSelectedTech}/>,
       onNext: saveTech,
     },
     {
