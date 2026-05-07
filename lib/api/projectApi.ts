@@ -15,6 +15,7 @@ interface SingleImageResponse {
 }
 
 interface ProjectApi {
+  getProject: (id: number, headers?: Headers) => Promise<XiorResponse<{ message: string, project: ProjectFull }>>;
   getProjects: (headers?: Headers) => Promise<XiorResponse<{ projects: ProjectFull[] }>>;
   addProject: (project: ProjectForm, headers?: Headers) => Promise<XiorResponse<Response>>;
   updateProject: (id: number, project: ProjectForm, headers?: Headers) => Promise<XiorResponse<Response>>;
@@ -27,6 +28,7 @@ interface ProjectApi {
 
 export const projectApi = (): ProjectApi => {
   return {
+    getProject,
     getProjects,
     addProject,
     updateProject,
@@ -36,6 +38,19 @@ export const projectApi = (): ProjectApi => {
     uploadProjectImage,
     uploadCoverImage,
   }
+}
+
+const getProject = (id: number, headers?: Headers) => {
+  const cookieHeader = headers?.get("cookie");
+  console.log("id", id)
+  return xiorClient.get<{ message: string, project: ProjectFull }>(
+    `${BACKEND_URL}/api/v1/project/${id}`,
+    {
+      headers: {
+        cookie: cookieHeader || "",
+      },
+    }
+  )
 }
 
 const getProjects = (headers?: Headers) => {
