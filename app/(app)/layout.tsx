@@ -32,7 +32,9 @@ export default async function AppLayout({ children }: Readonly<{children: React.
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">
           <Navbar profile={profile} />
-          <div className="p-6 mx-auto max-w-6xl">{ children }</div>
+          <main className="mx-auto w-full max-w-6xl p-4 sm:p-6">
+            {children}
+          </main>
         </div>
         <Sidebar />
       </div>

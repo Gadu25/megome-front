@@ -1,8 +1,8 @@
 import { projectApi } from "@/lib/api/projectApi";
 import type { ProjectFull } from "@/types/types";
-import { getStatusStyle } from "@/functions/getStatusStyle";
 import { cookies } from "next/headers";
 import { createAuthHeaders } from "@/functions/createAuthHeaders";
+import { ProjectHeader } from "@/components/projects/ProjectHeader";
 import { ScreenshotsSection } from "@/components/projects/Screenshots";
 
 export default async function ProjectDetailPage({
@@ -49,15 +49,11 @@ export default async function ProjectDetailPage({
 
       {/* HERO */}
       <header className="space-y-4">
-        <div className="flex items-center justify-between gap-4">
-          <h1 className="text-3xl font-bold leading-tight">
-            {project.title}
-          </h1>
-
-          <span className={`badge ${getStatusStyle(project.status)}`}>
-            {project.status}
-          </span>
-        </div>
+        <ProjectHeader
+          id={project.id}
+          title={project.title}
+          status={project.status}
+        />
 
         <div className="rounded-xl overflow-hidden bg-base-200 h-72">
           {cover ? (
