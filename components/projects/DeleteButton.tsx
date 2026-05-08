@@ -10,11 +10,12 @@ import { useToast } from "../toast/useToast";
 
 type Props = {
   projectId: number;
+  isDraft?: boolean;
   projectTitle: string;
   children: React.ReactNode
 };
 
-export default function DraftDeleteButton({ projectId, projectTitle, children }: Props) {
+export default function ProjectDeleteButton({ projectId, isDraft = false, projectTitle, children }: Props) {
   const router = useRouter()
   const [modalOpen, setModalOpen] = useState(false)
   const { showToast } = useToast();
@@ -27,8 +28,10 @@ export default function DraftDeleteButton({ projectId, projectTitle, children }:
         showToast
       )
       if (!data) return;
-
-      router.refresh();
+      if (isDraft) {
+        router.refresh();
+      }
+      router.push("/projects");
     } catch (error) {
       console.error(error);
     }

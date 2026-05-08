@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { EllipsisVerticalIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { getStatusStyle } from "@/functions/getStatusStyle";
-import DraftDeleteButton from "./DraftDeleteButton";
+import ProjectDeleteButton from "./DeleteButton";
 
 interface Props {
   id: number;
@@ -45,12 +45,12 @@ export function ProjectHeader({ id, title, status }: Props) {
             </li>
 
             <li className="mt-1 border-t border-base-200 pt-1">
-                <DraftDeleteButton projectId={id} projectTitle={title}>
+                <ProjectDeleteButton projectId={id} projectTitle={title}>
                   <div className="flex justify-start gap-2 w-full items-center text-error">
                     <TrashIcon className="size-4" />
                     Delete Project
                   </div>
-                </DraftDeleteButton>
+                </ProjectDeleteButton>
             </li>
           </ul>
         </div>
