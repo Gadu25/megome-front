@@ -99,58 +99,100 @@ export function ScreenshotsSection({ screenshots, projectTitle }: {
               role="dialog"
               aria-modal="true"
               aria-label="Screenshot viewer"
-              className=" fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+              className="fixed inset-0 z-100 bg-black/80 backdrop-blur-sm"
               onClick={close}
             >
+              {/* FRAME */}
               <div
-                className="relative flex w-full max-w-6xl items-center justify-center"
+                className="
+                  relative mx-auto flex h-full w-full max-w-5xl items-center justify-center
+                  px-4 py-6
+                "
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* IMAGE */}
-                <img
-                  src={screenshots[selectedIndex]}
-                  alt={`${projectTitle} screenshot ${selectedIndex + 1}`}
-                  className=" max-h-[85vh] w-auto max-w-full rounded-xl object-contain shadow-2xl"
-                />
 
-                {/* TOP BAR */}
-                <div className=" absolute left-0 right-0 top-0 flex items-center justify-between p-4">
-                  <div className=" rounded-full bg-black/50 px-3 py-1 text-sm text-white backdrop-blur-sm">
+                {/* IMAGE CONTAINER (stabilizes layout) */}
+                <div className="flex h-[85vh] w-full items-center justify-center">
+                  <img
+                    src={screenshots[selectedIndex]}
+                    alt={`${projectTitle} screenshot ${selectedIndex + 1}`}
+                    className="
+                      max-h-full max-w-full rounded-xl object-contain shadow-2xl
+                      transition-opacity duration-200
+                    "
+                  />
+                </div>
+
+                {/* MOBILE TOP BAR */}
+                <div className="absolute left-4 right-4 top-4 flex items-center justify-between md:hidden">
+                  <div className="rounded-full bg-black/50 px-3 py-1 text-sm text-white backdrop-blur-sm">
                     {selectedIndex + 1} / {screenshots.length}
                   </div>
 
                   <button
                     onClick={close}
                     aria-label="Close viewer"
-                    className="rounded-full bg-black/50 p-2 text-white backdrop-blur-sm transition 
-                    hover:bg-black/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                    className="rounded-full bg-black/50 p-2 text-white backdrop-blur-sm"
                   >
                     <XMarkIcon className="h-5 w-5" />
                   </button>
                 </div>
 
-                {/* PREV */}
-                {screenshots.length > 1 && (
+                {/* DESKTOP TOP BAR */}
+                <div className="absolute left-0 right-0 top-0 hidden items-center justify-between p-4 md:flex">
+                  <div className="rounded-full bg-black/50 px-3 py-1 text-sm text-white backdrop-blur-sm">
+                    {selectedIndex + 1} / {screenshots.length}
+                  </div>
+
                   <button
-                    onClick={prev}
-                    aria-label="Previous screenshot"
-                    className=" absolute left-4 rounded-full bg-black/50 p-3 text-white backdrop-blur-sm transition
-                      hover:bg-black/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                    onClick={close}
+                    aria-label="Close viewer"
+                    className="rounded-full bg-black/50 p-2 text-white backdrop-blur-sm"
                   >
-                    <ChevronLeftIcon className="h-6 w-6" />
+                    <XMarkIcon className="h-5 w-5" />
                   </button>
+                </div>
+
+                {/* MOBILE BOTTOM CONTROLS (thumb zone) */}
+                {screenshots.length > 1 && (
+                  <div className="absolute left-0 right-0 flex justify-between px-6 md:hidden">
+                    <button
+                      onClick={prev}
+                      aria-label="Previous screenshot"
+                      className="rounded-full bg-black/50 p-3 text-white backdrop-blur-sm"
+                    >
+                      <ChevronLeftIcon className="h-6 w-6" />
+                    </button>
+
+                    <button
+                      onClick={next}
+                      aria-label="Next screenshot"
+                      className="rounded-full bg-black/50 p-3 text-white backdrop-blur-sm"
+                    >
+                      <ChevronRightIcon className="h-6 w-6" />
+                    </button>
+                  </div>
                 )}
 
-                {/* NEXT */}
+                {/* DESKTOP SIDE CONTROLS */}
                 {screenshots.length > 1 && (
-                  <button
-                    onClick={next}
-                    aria-label="Next screenshot"
-                    className="absolute right-4 rounded-full bg-black/50 p-3 text-white backdrop-blur-sm transition
-                      hover:bg-black/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
-                  >
-                    <ChevronRightIcon className="h-6 w-6" />
-                  </button>
+                  <>
+                    <button
+                      onClick={prev}
+                      aria-label="Previous screenshot"
+                      className="absolute left-5 hidden rounded-full bg-black/50 p-3 text-white backdrop-blur-sm md:block"
+                    >
+                      <ChevronLeftIcon className="h-6 w-6" />
+                    </button>
+
+                    <button
+                      onClick={next}
+                      aria-label="Next screenshot"
+                      className="absolute right-5 hidden rounded-full bg-black/50 p-3 text-white backdrop-blur-sm md:block"
+                    >
+                      <ChevronRightIcon className="h-6 w-6" />
+                    </button>
+                  </>
                 )}
               </div>
             </div>
