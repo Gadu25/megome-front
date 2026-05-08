@@ -69,14 +69,27 @@ export default function Navbar({ profile }: Props) {
 
             {/* THEME */}
             <li>
-              <div className="flex items-center justify-between">
+              <button
+                type="button"
+                className="flex w-full items-center justify-between"
+                onClick={(e) => {
+                  // prevent accidental double triggers from internal toggle click
+                  const target = e.target as HTMLElement;
+                  if (target.closest("input")) return;
+                  
+                  const checkbox = document.querySelector<HTMLInputElement>(
+                    "#theme-toggle-input"
+                  );
+                  checkbox?.click();
+                }}
+              >
                 <div className="flex items-center gap-2">
                   <SwatchIcon className="size-4" />
                   Theme
                 </div>
 
                 <ThemeToggle />
-              </div>
+              </button>
             </li>
 
             <li className="mt-1 border-t border-base-200 pt-1">
