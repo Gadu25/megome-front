@@ -1,9 +1,11 @@
 import { cookies } from "next/headers";
 
 import { createAuthHeaders } from "@/functions/createAuthHeaders";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { projectApi } from "@/lib/api/projectApi";
 
 import ProjectWizard from "@/components/projects/ProjectWizard";
+import Link from "next/link";
 
 export default async function EditProjectPage({
   params,
@@ -41,9 +43,23 @@ export default async function EditProjectPage({
   }
 
   return (
-    <ProjectWizard
-      mode="edit"
-      initialProject={project}
-    />
+    <>
+      {project.isDraft == false ? (
+
+        <div className="mb-4">
+          <Link
+            href="/projects"
+            className="inline-flex items-center gap-2 text-sm text-base-content/70 hover:text-base-content transition-colors"
+          >
+            <ArrowLeftIcon className="size-4" />
+            Finish Edit
+          </Link>
+        </div>
+      ): null }
+      <ProjectWizard
+        mode="edit"
+        initialProject={project}
+      />
+    </>
   );
 }
