@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
 import { Experience } from "@/types/types";
 import { experienceApi } from "@/lib/api/experienceApi";
 import { humanizeDate } from "@/functions/humanitizeDate";
@@ -11,6 +12,7 @@ import { EmptyState } from "../sections/EmptyState";
 
 export default function ProfileExperience() {
   const { getExperience } = experienceApi();
+
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,22 +32,35 @@ export default function ProfileExperience() {
     fetchExperience();
   }, []);
 
+  const sortedExperiences = useMemo(
+    () =>
+      [...experiences].sort(
+        (a, b) =>
+          new Date(b.startDate).getTime() -
+          new Date(a.startDate).getTime()
+      ),
+    [experiences]
+  );
+
+  const openEditModal = () => setIsEditOpen(true);
+  const closeEditModal = () => setIsEditOpen(false);
+
   return (
     <>
-      <div className="space-y-4">
+      <section className="space-y-4">
         <SectionHeader
           title="Experiences"
-          onEdit={() => setIsEditOpen(true)}
+          onEdit={openEditModal}
         />
 
-        {experiences.length === 0 ? (
+        {!loading && experiences.length === 0 ? (
           <EmptyState
             title="🎓"
             description="You haven’t added any work experience yet"
             action={
               <button
                 className="btn btn-sm btn-primary"
-                onClick={() => setIsEditOpen(true)}
+                onClick={openEditModal}
               >
                 Add your first experience
               </button>
@@ -53,62 +68,68 @@ export default function ProfileExperience() {
           />
         ) : (
           <div className="space-y-4">
-            {[...experiences]
-              .sort(
-                (a, b) =>
-                  new Date(b.startDate).getTime() -
-                  new Date(a.startDate).getTime()
-              )
-              .map((exp, index, arr) => (
-                <div
+            {sortedExperiences.map((exp, index) => {
+              const isLastItem =
+                index === sortedExperiences.length - 1;
+
+              return (
+                <article
                   key={exp.id}
-                  className="flex gap-4 p-4 rounded-xl border border-base-300 bg-base-100 hover:shadow-sm transition"
+                  className="flex gap-4 rounded-xl border border-base-300 bg-base-100 p-4 transition hover:shadow-sm"
                 >
                   {/* TIMELINE */}
-                  <div className="flex flex-col items-center">
-                    <div className="w-3 h-3 rounded-full bg-primary mt-1" />
-                    {index !== arr.length - 1 && (
-                      <div className="flex-1 w-px bg-base-300 mt-1" />
+                  <div
+                    aria-hidden="true"
+                    className="flex flex-col items-center"
+                  >
+                    <div className="mt-1 h-3 w-3 rounded-full bg-primary" />
+
+                    {!isLastItem && (
+                      <div className="mt-1 w-px flex-1 bg-base-300" />
                     )}
                   </div>
 
                   {/* CONTENT */}
-                  <div className="flex-1 space-y-2">
-                    {/* TITLE */}
-                    <h3 className="font-semibold leading-tight">
-                      {exp.title || "Untitled Role"}
-                    </h3>
+                  <div className="flex-1 space-y-2 min-w-0">
+                    <header className="space-y-1">
+                      <h3 className="font-semibold leading-tight">
+                        {exp.title || "Untitled Role"}
+                      </h3>
 
-                    {/* COMPANY + DATE */}
-                    <p className="text-sm text-base-content/70">
-                      {exp.company || "Unknown Company"}
-                    </p>
+                      <p className="text-sm text-base-content/70">
+                        {exp.company || "Unknown Company"}
+                      </p>
 
-                    <p className="text-xs text-base-content/50">
-                      {humanizeDate(exp.startDate)} —{" "}
-                      {exp.endDate
-                        ? humanizeDate(exp.endDate)
-                        : "Present"}
-                    </p>
+                      <p className="text-xs text-base-content/50">
+                        {humanizeDate(exp.startDate)} —{" "}
+                        {exp.endDate
+                          ? humanizeDate(exp.endDate)
+                          : "Present"}
+                      </p>
+                    </header>
 
-                    {/* DESCRIPTION */}
                     {exp.description && (
-                      <p className="text-sm text-base-content/70 leading-relaxed line-clamp-3">
+                      <p className="line-clamp-3 text-sm leading-relaxed text-base-content/70">
                         {exp.description}
                       </p>
                     )}
                   </div>
-                </div>
-              ))}
+                </article>
+              );
+            })}
           </div>
         )}
-      </div>
+      </section>
+
       <RightModal
         title="Experiences"
         isOpen={isEditOpen}
-        onClose={() => setIsEditOpen(false)}
+        onClose={closeEditModal}
       >
-        <ProfileExperienceForm initialExperiences={experiences} setExperiences={setExperiences} />
+        <ProfileExperienceForm
+          initialExperiences={experiences}
+          setExperiences={setExperiences}
+        />
       </RightModal>
     </>
   );

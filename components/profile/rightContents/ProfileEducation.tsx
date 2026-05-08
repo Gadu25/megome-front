@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
 import { Education } from "@/types/types";
 import { educationApi } from "@/lib/api/educationApi";
 import { humanizeDate } from "@/functions/humanitizeDate";
@@ -11,6 +12,7 @@ import ProfileEducationForm from "../../form/Education";
 
 export default function ProfileEducation() {
   const { getEducation } = educationApi();
+
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [education, setEducation] = useState<Education[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,78 +28,108 @@ export default function ProfileEducation() {
         setLoading(false);
       }
     };
-    
+
     fetchEducation();
   }, []);
 
+  const sortedEducation = useMemo(
+    () =>
+      [...education].sort(
+        (a, b) =>
+          new Date(b.startDate).getTime() -
+          new Date(a.startDate).getTime()
+      ),
+    [education]
+  );
+
+  const openEditModal = () => setIsEditOpen(true);
+  const closeEditModal = () => setIsEditOpen(false);
+
   return (
     <>
-      <div className="space-y-4">
+      <section className="space-y-4">
         <SectionHeader
           title="Education"
-          onEdit={() => setIsEditOpen(true)}
+          onEdit={openEditModal}
         />
 
-        {education.length === 0 ? (
+        {!loading && education.length === 0 ? (
           <EmptyState
             title="🎓"
-            description=" You haven’t added any education yet"
+            description="You haven’t added any education yet"
             action={
               <button
                 className="btn btn-sm btn-primary"
-                onClick={() => setIsEditOpen(true)}
+                onClick={openEditModal}
               >
                 Add your first education
               </button>
             }
           />
-          ) : (
-            <div className="space-y-4">
-              {education.map((edu) => (
-                <div
+        ) : (
+          <div className="space-y-4">
+            {sortedEducation.map((edu, index) => {
+              const isLastItem =
+                index === sortedEducation.length - 1;
+
+              return (
+                <article
                   key={edu.id}
-                  className="flex gap-4 p-4 rounded-xl border border-base-300 bg-base-100 hover:shadow-sm transition"
+                  className="flex gap-4 rounded-xl border border-base-300 bg-base-100 p-4 transition hover:shadow-sm"
                 >
-                  {/* LEFT INDICATOR (timeline feel) */}
-                  <div className="flex flex-col items-center">
-                    <div className="w-3 h-3 rounded-full bg-primary mt-1" />
-                    <div className="flex-1 w-px bg-base-300 mt-1" />
+                  {/* TIMELINE */}
+                  <div
+                    aria-hidden="true"
+                    className="flex flex-col items-center"
+                  >
+                    <div className="mt-1 h-3 w-3 rounded-full bg-primary" />
+
+                    {!isLastItem && (
+                      <div className="mt-1 w-px flex-1 bg-base-300" />
+                    )}
                   </div>
 
                   {/* CONTENT */}
-                  <div className="flex-1 space-y-1">
-                    {/* DEGREE */}
-                    <h3 className="font-semibold leading-tight">
-                      {edu.degree || "Untitled Degree"}
-                      {edu.fieldOfStudy && (
-                        <span className="ml-2 text-sm font-normal text-base-content/60">
-                          • {edu.fieldOfStudy}
-                        </span>
-                      )}
-                    </h3>
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <header className="space-y-1">
+                      <h3 className="font-semibold leading-tight">
+                        {edu.degree || "Untitled Degree"}
 
-                    {/* SCHOOL */}
-                    <p className="text-sm text-base-content/70">
-                      {edu.school}
-                    </p>
+                        {edu.fieldOfStudy && (
+                          <span className="ml-2 text-sm font-normal text-base-content/60">
+                            • {edu.fieldOfStudy}
+                          </span>
+                        )}
+                      </h3>
 
-                    {/* DATE */}
-                    <p className="text-xs text-base-content/50">
-                      {humanizeDate(edu.startDate)} —{" "}
-                      {edu.endDate ? humanizeDate(edu.endDate) : "Present"}
-                    </p>
+                      <p className="text-sm text-base-content/70">
+                        {edu.school}
+                      </p>
+
+                      <p className="text-xs text-base-content/50">
+                        {humanizeDate(edu.startDate)} —{" "}
+                        {edu.endDate
+                          ? humanizeDate(edu.endDate)
+                          : "Present"}
+                      </p>
+                    </header>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-      </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
       <RightModal
         title="Education"
         isOpen={isEditOpen}
-        onClose={() => setIsEditOpen(false)}
+        onClose={closeEditModal}
       >
-        <ProfileEducationForm initialEducation={education} setEducation={setEducation} />
+        <ProfileEducationForm
+          initialEducation={education}
+          setEducation={setEducation}
+        />
       </RightModal>
     </>
   );

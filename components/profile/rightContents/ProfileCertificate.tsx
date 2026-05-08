@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
 import { Certificate } from "@/types/types";
 import { certificateApi } from "@/lib/api/certificateApi";
 import { humanizeDate } from "@/functions/humanitizeDate";
+
 import RightModal from "../../modal/RightModal";
 import ProfileCertificateForm from "../../form/Certificate";
 
@@ -30,89 +32,106 @@ export default function ProfileCertificates() {
     fetchCertificates();
   }, []);
 
+  const sortedCertificates = useMemo(
+    () =>
+      [...certificates].sort(
+        (a, b) =>
+          new Date(b.issueDate).getTime() -
+          new Date(a.issueDate).getTime()
+      ),
+    [certificates]
+  );
+
+  const openEditModal = () => setIsEditOpen(true);
+  const closeEditModal = () => setIsEditOpen(false);
+
   return (
     <>
-    <div className="space-y-4">
-      <SectionHeader
-        title="Certificates"
-        onEdit={() => setIsEditOpen(true)}
-      />
-
-      {certificates.length === 0 ? (
-        <EmptyState
-          title="🎓"
-          description="You haven’t added any certificates yet"
-          action={
-            <button
-              className="btn btn-sm btn-primary"
-              onClick={() => setIsEditOpen(true)}
-            >
-              Add Certificates
-            </button>
-          }
+      <section className="space-y-4">
+        <SectionHeader
+          title="Certificates"
+          onEdit={openEditModal}
         />
-      ) : (
-        <div className="space-y-3">
-          {certificates.map((cert) => (
-            <div
-              key={cert.id}
-              className="card bg-base-100 border border-base-300 hover:shadow-md transition"
-            >
-              <div className="card-body p-5 space-y-2">
-                {/* TITLE */}
-                <h3 className="font-semibold text-base leading-tight">
-                  {cert.title || "Untitled Certificate"}
-                </h3>
 
-                {/* ISSUER */}
-                <p className="text-sm text-base-content/70">
-                  {cert.issuer || "Unknown issuer"}
-                </p>
+        {!loading && certificates.length === 0 ? (
+          <EmptyState
+            title="🎓"
+            description="You haven’t added any certificates yet"
+            action={
+              <button
+                className="btn btn-sm btn-primary"
+                onClick={openEditModal}
+              >
+                Add certificates
+              </button>
+            }
+          />
+        ) : (
+          <div className="space-y-3">
+            {sortedCertificates.map((cert) => (
+              <article
+                key={cert.id}
+                className="card border border-base-300 bg-base-100 transition hover:shadow-md"
+              >
+                <div className="card-body space-y-3 p-5">
+                  <header className="space-y-1">
+                    <h3 className="text-base font-semibold leading-tight">
+                      {cert.title || "Untitled Certificate"}
+                    </h3>
 
-                {/* DATES */}
-                <div className="text-xs text-base-content/50">
-                  Issued {humanizeDate(cert.issueDate)}
-                  {cert.expirationDate && (
-                    <> • Expires {humanizeDate(cert.expirationDate)}</>
+                    <p className="text-sm text-base-content/70">
+                      {cert.issuer || "Unknown issuer"}
+                    </p>
+
+                    <p className="text-xs text-base-content/50">
+                      Issued {humanizeDate(cert.issueDate)}
+
+                      {cert.expirationDate && (
+                        <>
+                          {" "}
+                          • Expires{" "}
+                          {humanizeDate(cert.expirationDate)}
+                        </>
+                      )}
+                    </p>
+                  </header>
+
+                  {(cert.credentialId ||
+                    cert.credentialUrl) && (
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      {cert.credentialUrl && (
+                        <a
+                          href={cert.credentialUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-xs btn-primary"
+                        >
+                          View Credential
+                        </a>
+                      )}
+
+                      {cert.credentialId && (
+                        <span className="rounded bg-base-200 px-2 py-1 text-xs">
+                          ID: {cert.credentialId}
+                        </span>
+                      )}
+                    </div>
                   )}
                 </div>
-
-                {/* CREDENTIAL INFO */}
-                {(cert.credentialId || cert.credentialUrl) && (
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    {cert.credentialUrl && (
-                      <a
-                        href={cert.credentialUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn-xs btn-primary"
-                      >
-                        View Credential
-                      </a>
-                    )}
-
-                    {cert.credentialId && (
-                      <span className="text-xs px-2 py-1 rounded bg-base-200">
-                        ID: {cert.credentialId}
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
 
       <RightModal
         title="Certification"
         isOpen={isEditOpen}
-        onClose={() => setIsEditOpen(false)}
+        onClose={closeEditModal}
       >
-        <ProfileCertificateForm 
-          initialCertificates={certificates} 
-          setCertificates={setCertificates} 
+        <ProfileCertificateForm
+          initialCertificates={certificates}
+          setCertificates={setCertificates}
         />
       </RightModal>
     </>

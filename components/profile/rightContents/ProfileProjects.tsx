@@ -1,17 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+
 import { Project } from "@/types/types";
 import { projectApi } from "@/lib/api/projectApi";
-
-import { useRouter } from "next/navigation"
 
 import { SectionHeader } from "../sections/SectionHeaders";
 import { EmptyState } from "../sections/EmptyState";
 
+const MAX_PREVIEW_PROJECTS = 4;
+
 export default function ProfileProjects() {
   const { getProjects } = projectApi();
+  const router = useRouter();
+
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -19,52 +22,61 @@ export default function ProfileProjects() {
         const res = await getProjects();
         setProjects(res.data.projects);
       } catch (error) {
-        console.error("Error fetching experience:", error);
+        console.error("Error fetching projects:", error);
       } finally {
         setLoading(false);
       }
-    }
+    };
 
     fetchProjects();
-  }, [])
+  }, []);
+
+  const displayProjects = useMemo(
+    () => projects.slice(0, MAX_PREVIEW_PROJECTS),
+    [projects]
+  );
+
+  const handleProjectsRedirect = () => {
+    router.push("/projects");
+  };
 
   return (
-    <>
-      <div className="space-y-4">
-        <SectionHeader
-          title="Projects"
-          onEdit={() => router.push("/projects")}
-        />
+    <div className="space-y-4">
+      <SectionHeader
+        title="Projects"
+        onEdit={handleProjectsRedirect}
+      />
 
-        {projects.length === 0 ? (
-          <EmptyState
-            title="🎓"
-            description="You haven’t added any projects yet"
-            action={
-              <button
-                className="btn btn-sm btn-primary"
-                onClick={() => router.push("/projects")}
-              >
-                Add your first project
-              </button>
-            }
-          />
-        ) : (
+      {!loading && projects.length === 0 ? (
+        <EmptyState
+          title="🎓"
+          description="You haven’t added any projects yet"
+          action={
+            <button
+              className="btn btn-sm btn-primary"
+              onClick={handleProjectsRedirect}
+            >
+              Add your first project
+            </button>
+          }
+        />
+      ) : (
+        <>
           <div className="grid gap-4 md:grid-cols-2">
-            {projects.map((project) => (
-              <div
+            {displayProjects.map((project) => (
+              <article
                 key={project.id}
-                className="card bg-base-100 border border-base-300 hover:shadow-md transition"
+                className="card bg-base-100 border border-base-300 transition hover:shadow-md"
               >
-                <div className="card-body p-5 space-y-3">
+                <div className="card-body space-y-3 p-5">
                   {/* TITLE */}
-                  <h3 className="font-semibold text-base leading-tight">
+                  <h3 className="text-base font-semibold leading-tight">
                     {project.title || "Untitled Project"}
                   </h3>
 
                   {/* DESCRIPTION */}
                   {project.description && (
-                    <p className="text-sm text-base-content/70 line-clamp-3">
+                    <p className="line-clamp-3 text-sm text-base-content/70">
                       {project.description}
                     </p>
                   )}
@@ -94,11 +106,22 @@ export default function ProfileProjects() {
                     )}
                   </div>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
-        )}
-      </div>
-    </>
-  )
+
+          {projects.length > MAX_PREVIEW_PROJECTS && (
+            <div className="flex justify-center pt-2">
+              <button
+                className="btn btn-sm btn-outline"
+                onClick={handleProjectsRedirect}
+              >
+                See more projects
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
 }
