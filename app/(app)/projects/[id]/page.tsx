@@ -1,9 +1,12 @@
+import Link from "next/link";
 import { projectApi } from "@/lib/api/projectApi";
 import type { ProjectFull } from "@/types/types";
 import { cookies } from "next/headers";
 import { createAuthHeaders } from "@/functions/createAuthHeaders";
 import { ProjectHeader } from "@/components/projects/ProjectHeader";
 import { ScreenshotsSection } from "@/components/projects/Screenshots";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { humanizeDate } from "@/functions/humanitizeDate";
 
 export default async function ProjectDetailPage({
   params,
@@ -46,6 +49,15 @@ export default async function ProjectDetailPage({
 
   return (
     <div className="max-w-5xl mx-auto pb-8 space-y-10">
+      <div className="mb-4">
+        <Link
+          href="/projects"
+          className="inline-flex items-center gap-2 text-sm text-base-content/70 hover:text-base-content transition-colors"
+        >
+          <ArrowLeftIcon className="size-4" />
+          Back to Projects
+        </Link>
+      </div>
 
       {/* HERO */}
       <header className="space-y-4">
@@ -151,8 +163,10 @@ export default async function ProjectDetailPage({
             </h3>
 
             <div className="space-y-1">
-              <p>Created: {new Date(project.createdAt).toLocaleDateString()}</p>
-              <p>Updated: {new Date(project.updatedAt).toLocaleDateString()}</p>
+              <p>Created: {humanizeDate(project.createdAt)}</p>
+              {humanizeDate(project.createdAt) != humanizeDate(project.updatedAt) && (
+                <p>Last Updated: {humanizeDate(project.updatedAt)}</p>
+              )}
             </div>
           </section>
 

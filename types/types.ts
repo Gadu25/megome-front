@@ -126,6 +126,7 @@ export type ProjectFull = {
   link: string;
   githubLink: string;
   status: string;
+  isDraft: boolean;
   createdAt: string;
   updatedAt: string;
   images: {
