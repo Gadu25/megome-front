@@ -1,7 +1,9 @@
 import { useState, useRef } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { skillApi } from '@/lib/api/skillApi'
-import type { Skill } from '@/types/types'
+import { useToast } from "../toast/useToast";
+import { withRequest } from "@/functions/withRequest";
+import type { Skill, SkillForm } from '@/types/types'
 import Modal from '../modal/Modal'
 
 const PROFICIENCY_OPTIONS: Skill['proficiency'][] = [
@@ -18,17 +20,22 @@ type Props = {
 
 export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
   const { addSkill, updateSkill, deleteSkill } = skillApi();
+  const { showToast } = useToast();
+
   const debounceRef = useRef<Record<number, NodeJS.Timeout>>({});
+
   const [newSkill, setNewSkill] = useState({ skillName: '', proficiency: 'Beginner' as Skill['proficiency'] })
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedSkillId, setSelectedSkillId] = useState<number | null>(null);
 
   const handleUpdateSkill = (id: number, field: keyof Skill, value: Skill[keyof Skill] ) => {
     let updatedSkill: Skill | undefined;
+    let previousItem: Skill | undefined;
 
     setSkills((prev) => {
       const next = prev.map((skill) => {
         if (skill.id === id) {
+          previousItem = skill;
           updatedSkill = { ...skill, [field]: value };
           return updatedSkill;
         }
@@ -45,10 +52,27 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
       if (!updatedSkill) return;
 
       try {
-        const res = await updateSkill(id, updatedSkill);
-        setSkills(res.data.skills);
+        const data = await withRequest(
+          () => updateSkill(id, updatedSkill as SkillForm),
+          showToast
+        )
+
+        if (!data) return;
+
+        setSkills((prev) =>
+          prev.map((item) =>
+            item.id === id ? { ...item, ...data.skill } : item
+          )
+        );
       } catch (err) {
         console.error('Failed to update skill', err);
+        if (previousItem) {
+          setSkills((prev) =>
+            prev.map((item) =>
+              item.id === id ? previousItem! : item
+            )
+          )
+        }
       }
     }, 500);
   };
@@ -56,8 +80,14 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
   const handleAddSkill = async () => {
     if (!newSkill.skillName.trim()) return
 
-    const res = await addSkill(newSkill);
-    setSkills(res.data.skills);
+    const data = await withRequest(
+      () => addSkill(newSkill as SkillForm),
+      showToast
+    )
+
+    if (!data) return;
+
+    setSkills((prev) => [...prev, data.skill]);
 
     setNewSkill({
       skillName: '',
@@ -68,9 +98,16 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
   const handleDeleteSkill = async () => {
     if (selectedSkillId === null) return;
 
-    const res = await deleteSkill(selectedSkillId);
+    const data = await withRequest(
+      () => deleteSkill(selectedSkillId),
+      showToast
+    )
+
+    if (!data) return;
     setSelectedSkillId(null);
-    setSkills(res.data.skills);
+    setSkills((prev) =>
+      prev.filter((item) => item.id !== selectedSkillId)
+    );
   }
 
   const proceedCancel = async () => {

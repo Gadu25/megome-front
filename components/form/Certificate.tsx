@@ -4,6 +4,8 @@ import { useState, useRef } from "react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import { certificateApi } from "@/lib/api/certificateApi"
 import { formatDate } from "@/functions/formatDate"
+import { withRequest } from "@/functions/withRequest"
+import { useToast } from "../toast/useToast";
 import type { Certificate, CertificateForm } from "@/types/types"
 import Modal from "../modal/Modal"
 
@@ -14,7 +16,8 @@ type Props = {
 }
 
 export default function ProfileCertificateForm({ initialCertificates, setCertificates }: Props) {
-  const { addCertificate, updateCertificate, deleteCertificate } = certificateApi()
+  const { addCertificate, updateCertificate, deleteCertificate } = certificateApi();
+  const { showToast } = useToast();
 
   const debounceRef = useRef<Record<number, NodeJS.Timeout>>({})
 
@@ -32,10 +35,12 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
 
   const handleUpdate = (id: number, field: keyof Certificate, value: Certificate[keyof Certificate]) => {
     let updatedItem: Certificate | undefined
-
+    let previousItem: Certificate | undefined
+    
     setCertificates((prev) =>
       prev.map((item) => {
         if (item.id === id) {
+          previousItem = item
           updatedItem = { ...item, [field]: value }
           return updatedItem
         }
@@ -59,10 +64,27 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
             : null,
         }
 
-        const res = await updateCertificate(id, payload as CertificateForm)
-        setCertificates(res.data.certificates)
+        const data = await withRequest(
+          () => updateCertificate(id, payload as CertificateForm),
+          showToast
+        )
+
+        if (!data) return;
+
+        setCertificates((prev) =>
+          prev.map((item) =>
+            item.id === id ? { ...item, ...data.certificate } : item
+          )
+        );
       } catch (err) {
         console.error("Failed to update certificate", err)
+        if (previousItem) {
+          setCertificates((prev) =>
+            prev.map((item) =>
+              item.id === id ? previousItem! : item
+            )
+          )
+        }
       }
     }, 500)
   }
@@ -80,8 +102,14 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
       credentialUrl: newCert.credentialUrl || null,
     }
 
-    const res = await addCertificate(payload as CertificateForm)
-    setCertificates(res.data.certificates)
+    const data = await withRequest(
+      () => addCertificate(payload as CertificateForm),
+      showToast
+    )
+
+    if (!data) return;
+
+    setCertificates((prev) => [...prev, data.certificate]);
 
     setNewCert({
       title: "",
@@ -96,9 +124,17 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
   const handleDelete = async () => {
     if (selectedId === null) return
 
-    const res = await deleteCertificate(selectedId)
+    const data = await withRequest(
+      () => deleteCertificate(selectedId),
+      showToast
+    )
+
+    if (!data) return;
+
     setSelectedId(null)
-    setCertificates(res.data.certificates)
+    setCertificates((prev) =>
+      prev.filter((item) => item.id !== selectedId)
+    );
   }
 
   return (
