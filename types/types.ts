@@ -201,3 +201,17 @@ export type TechnologyForm = {
 export type ProjectTechnologyForm = {
   techIds: number[];
 }
+
+export type PersonalAccessToken = {
+  id: number,
+  userId: number,
+  name: string;
+  lastUsedAt: string;
+  revokedAt: string;
+  createdAt: string;
+  updatedAt: string | null;
+}
+
+export type PersonalAccessTokenForm = {
+  name: string;
+}
