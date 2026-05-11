@@ -51,7 +51,7 @@ const addPAT = (patForm: PersonalAccessTokenForm, headers?: Headers) => {
 const revokePAT = (id: number, headers?: Headers) => {
   const cookieHeader = headers?.get("cookie");
 
-  return xiorClient.put<{ message: string }>(
+  return xiorClient.post<{ message: string }>(
     `${BACKEND_URL}/api/v1/pat/${id}/revoke`,
     {
       headers: {
