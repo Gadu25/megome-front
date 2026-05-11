@@ -44,7 +44,7 @@ export default async function SettingsPage({
       : "account";
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6 lg:px-6">
+    <div className="mx-auto max-w-7xl px-4 lg:px-6">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
 
         {/* Sidebar */}
