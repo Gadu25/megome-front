@@ -49,7 +49,7 @@ export default async function SettingsPage({
 
         {/* Sidebar */}
         <aside className="lg:col-span-1">
-          <div className="card border border-base-200 bg-base-100 shadow-sm lg:sticky lg:top-16">
+          <div className="card border border-base-200 bg-base-100 shadow-sm lg:sticky lg:top-18">
             <div className="card-body p-3">
 
               <div className="px-2 pb-2">
