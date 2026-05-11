@@ -1,112 +1,201 @@
 "use client";
+import { useState } from "react";
+import { BoltIcon, PuzzlePieceIcon, ShieldCheckIcon } from "@heroicons/react/24/outline";
+import { LogoFull } from "@/components/common/Logo";
+import ThemeToggle from "@/components/common/ThemeToggle";
+import AuthForm from "@/components/auth/AuthForm";
 
-import { useState } from 'react';
-import { BoltIcon, ShieldCheckIcon, PuzzlePieceIcon } from '@heroicons/react/24/outline'
-import { LogoFull } from '@/components/common/Logo';
-import ThemeToggle from '@/components/common/ThemeToggle';
-import AuthForm from '@/components/auth/AuthForm';
+type FeatureProps = {
+  icon: React.ReactNode;
+  label: string;
+};
+
+function Feature({ icon, label }: FeatureProps) {
+  return (
+    <div className="flex items-center gap-2 text-sm text-base-content/70">
+      <div className="text-primary">
+        {icon}
+      </div>
+
+      <span>{label}</span>
+    </div>
+  );
+}
+
+type AuthTabProps = {
+  children: React.ReactNode;
+  active: boolean;
+  onClick: () => void;
+};
+
+function AuthTab({
+  children,
+  active,
+  onClick,
+}: AuthTabProps) {
+  return (
+    <button
+      role="tab"
+      aria-selected={active}
+      onClick={onClick}
+      className={`relative z-10 flex-1 py-3 text-center text-sm font-medium
+        transition-colors duration-200 focus:outline-none
+        ${
+          active
+            ? "text-primary"
+            : "text-base-content/60 hover:text-base-content"
+        }
+      `}
+    >
+      {children}
+    </button>
+  );
+}
 
 export default function Auth() {
-  const [isSignUp, setIsSignUp] = useState<boolean>(false);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   return (
-    <>
-      <div className="flex h-screen w-screen flex-col xl:flex-row">
-        <div className="flex-1 flex flex-col justify-between p-4 lg:p-16">
-          {/* header */}
-          <div className="flex items-center relative">
-            <LogoFull/>
-            <span className="border border-solid border-gray-800 text-xs flex justify-center items-center py-1 px-2 rounded-full ms-4">API-First Portfolio Platform</span>
-            <div className="px-4 absolute right-0">
-              <ThemeToggle/>
-            </div>
-          </div>
+    <main className="min-h-screen bg-base-100">
+      <div className="flex min-h-screen flex-col xl:grid xl:grid-cols-2">
 
-          {/* body */}
-          <div className="mt-16 xl:mt-0 text-center xl:text-start">
-            <h1 className="text-3xl lg:text-6xl mb-4 ">Your Portfolio.<br/>Powered by <span className="text-primary">API_</span></h1>
-            <div className="hidden lg:block">
-              <p className="text-xl">Store, Manage, Expose.</p>
-              <p className="text-xl">Your career data, structured and developer ready.</p>
+        {/* Marketing Section */}
+        <section className="flex flex-col px-4 pb-8 pt-4 sm:px-6 lg:px-12 lg:pb-10 lg:pt-8 xl:order-1 xl:py-10">
+          {/* Header */}
+          <header className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <LogoFull />
+
+              <span className=" hidden rounded-full border border-base-300 px-3 py-1 text-xs text-base-content/70 lg:inline-flex">
+                API-First Portfolio Platform
+              </span>
             </div>
-            <div className="flex justify-center xl:justify-start">
-              <div className="lg:my-4 border border-solid border-gray-800 rounded-xl lg:min-w-lg text-sm lg:text-lg">
-                <div className="flex justify-between p-2 items-center text-accent-content bg-accent rounded-tl-xl rounded-tr-xl">
-                  <div className="flex gap-4 items-center mx-4 font-semibold"><div className="size-2 rounded-full bg-success"></div>API Response</div>
-                  <div className="tracking-[4px]">•••</div>
+
+            <ThemeToggle />
+          </header>
+
+          {/* Hero */}
+          <div className="mx-auto md:flex hidden w-full max-w-2xl flex-1 flex-col justify-center py-8 lg:py-12 xl:py-0">
+            <div className="space-y-4 lg:space-y-6">
+
+              {/* Heading */}
+              <div className="space-y-3 text-center xl:text-left">
+                <h1 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+                  Your Portfolio.
+                  <br />
+                  Powered by{" "}
+                  <span className="text-primary">
+                    API_
+                  </span>
+                </h1>
+
+                <div className="space-y-1 text-base-content/70">
+                  <p className="text-sm sm:text-base lg:text-lg">
+                    Store, manage, and expose your developer portfolio through structured APIs.
+                  </p>
+
+                  <p className="hidden lg:block text-base lg:text-lg">
+                    Built for developers who want reusable career data.
+                  </p>
                 </div>
-                <div className="p-2 bg-neutral rounded-br-lg rounded-bl-lg">
-                  <pre className="text-start text-neutral-content font-mono p-6 text-xs lg:text-sm font-semibold">
-                    {"{"}
-                      <div className="ms-4 mt-2 mb-2">
-                        <span className="text-blue-400">"name"</span>: <span className="text-green-400">"John Doe"</span>,
-                        <br />
-                        <span className="text-blue-400">"role"</span>: <span className="text-green-400">"Full Stack Engineer"</span>,
-                        <br />
-                        <span className="text-blue-400">"skills"</span>: [
-                          <span className="text-yellow-400">"Go"</span>, <span className="text-yellow-400">"Next.js"</span>, <span className="text-yellow-400">"AWS"</span>
-                        ],
-                        <br />
-                        <span className="text-blue-400">"projects"</span>: <span className="text-purple-400">12</span>
-                      </div>
-                    {"}"}
+              </div>
+
+              {/* API Preview */}
+              <div className=" overflow-hidden rounded-2xl border border-base-300 bg-neutral shadow-sm lg:shadow-md">
+                {/* Top Bar */}
+                <div className=" flex items-center justify-between border-b border-white/10 bg-neutral px-4 py-3">
+                  <div className="flex items-center gap-3 text-sm font-medium text-neutral-content">
+                    <div className="size-2 rounded-full bg-success" />
+                    API Response
+                  </div>
+
+                  <div className="tracking-[3px] text-neutral-content/50">
+                    •••
+                  </div>
+                </div>
+
+                {/* Code Block */}
+                <div className="overflow-x-auto p-3 lg:p-4">
+                  <pre
+                    className="text-[11px] leading-5 text-neutral-content sm:text-xs sm:leading-6 lg:text-sm"
+                  >
+                    {`{
+  "name": "John Doe",
+  "role": "Full Stack Engineer",
+  "skills": ["Go", "Next.js", "AWS"],
+  "projects": 12
+}`}
                   </pre>
                 </div>
               </div>
-            </div>
-            <div className="hidden xl:flex justify-center xl:justify-between max-w-lg my-8 text-base-content">
-              <div className="p-2 flex gap-2 items-center">
-                <BoltIcon className="size-8" />
-                <span>Fast</span>
-              </div>
-              <div className="p-2 flex gap-2 items-center">
-                <ShieldCheckIcon className="size-8" />
-                <span>Secure</span>
-              </div>
-              <div className="p-2 flex gap-2 items-center">
-                <PuzzlePieceIcon className="size-8" />
-                <span>Plug & Play</span>
+
+              {/* Features */}
+              <div className="hidden gap-6 pt-2 xl:flex">
+                <Feature
+                  icon={<BoltIcon className="size-5" />}
+                  label="Fast"
+                />
+
+                <Feature
+                  icon={<ShieldCheckIcon className="size-5" />}
+                  label="Secure"
+                />
+
+                <Feature
+                  icon={<PuzzlePieceIcon className="size-5" />}
+                  label="Plug & Play"
+                />
               </div>
             </div>
           </div>
 
-          {/* footer */}
-          <div className="hidden xl:block text-base-content">
-            <span>© 2026 Megome • Built for developers.</span>
-          </div>
-        </div>
+          {/* Footer */}
+          <footer className="hidden text-sm text-base-content/60 xl:block">
+            © 2026 Megome • Built for developers.
+          </footer>
+        </section>
 
-        <div className="flex-1 bg-base-300 p-2 lg:p-24 flex justify-center items-center w-full">
-          <div className="card card-border bg-base-100 w-full lg:mx-16 max-w-lg">
-            <div className="card-body">
-              <div className="flex relative pb-2 text-sm lg:text-xl text-base-content">
-                <button 
-                  className="flex-1 p-2 flex justify-center items-center cursor-pointer"
+        {/* Auth Section */}
+        <section className="order-1 flex items-center justify-center bg-base-200 px-4 pb-6 pt-3 sm:px-6 lg:px-10 lg:py-10 xl:order-2">
+          <div className="w-full max-w-md rounded-2xl border border-base-300 bg-base-100 shadow-lg xl:shadow-xl">
+            <div className="p-5 sm:p-6 lg:p-8">
+              {/* Tabs */}
+              <div
+                role="tablist"
+                aria-label="Authentication mode"
+                className="relative mb-6 flex border-b border-base-300"
+              >
+                <AuthTab
+                  active={!isSignUp}
                   onClick={() => setIsSignUp(false)}
                 >
                   Sign In
-                </button>
-                <button 
-                  className="flex-1 p-2 flex justify-center items-center cursor-pointer"
+                </AuthTab>
+
+                <AuthTab
+                  active={isSignUp}
                   onClick={() => setIsSignUp(true)}
                 >
                   Sign Up
-                </button>
-                <div 
-                  className={`
-                    absolute bottom-0 left-0 h-1 w-1/2 rounded-sm bg-primary
-                    transition-transform duration-300 ease-in-out
-                    ${isSignUp ? "translate-x-full" : "translate-x-0"}
+                </AuthTab>
+
+                {/* Active Indicator */}
+                <div className={`absolute bottom-0 left-0 h-0.5 w-1/2 bg-primary transition-transform duration-300 ease-in-out
+                    ${isSignUp ? "translate-x-full" : ""}
                   `}
                 />
               </div>
-              <div className="min-h-[300px] py-2 lg:py-4">
-                <AuthForm mode={isSignUp ? "signup": "signin"} />
+
+              {/* Form */}
+              <div className="min-h-[320px]">
+                <AuthForm
+                  mode={isSignUp ? "signup" : "signin"}
+                />
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </div>
-    </>
-  )
+    </main>
+  );
 }

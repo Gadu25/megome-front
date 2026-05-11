@@ -1,64 +1,89 @@
 "use client";
 
 import { useState } from "react";
-import ProfileProjects from "./ProfileProjects";
-import ProfileEducation from "./ProfileEducation";
-import ProfileExperience from "./ProfileExperience";
-import ProfileCertificates from "./ProfileCertificate";
+import ProfileProjects from "./rightContents/ProfileProjects";
+import ProfileEducation from "./rightContents/ProfileEducation";
+import ProfileExperience from "./rightContents/ProfileExperience";
+import ProfileCertificates from "./rightContents/ProfileCertificate";
 
-type Tab = 'projects' | 'experience' | 'education' | 'certificates';
+type Tab =
+  | "projects"
+  | "experience"
+  | "education"
+  | "certificates";
+
+const tabs: {
+  key: Tab;
+  label: string;
+}[] = [
+  {
+    key: "education",
+    label: "Education",
+  },
+  {
+    key: "experience",
+    label: "Experience",
+  },
+  {
+    key: "projects",
+    label: "Projects",
+  },
+  {
+    key: "certificates",
+    label: "Certificates",
+  },
+];
 
 export default function RightContent() {
-  const [activeTab, setActiveTab] = useState<Tab>('education');
+  const [activeTab, setActiveTab] =
+    useState<Tab>("education");
+
   return (
-    <>
-    <div className="space-y-4 lg:col-span-2">
+    <section className="space-y-4">
 
-
-      <div role="tablist" className="tabs tabs-boxed">
-        <button role="tab" className={`tab ${activeTab === 'education' ? 'tab-active' : ''}`}
-          onClick={() => setActiveTab('education')}
-        >
-          Education
-        </button>
-
-        <button role="tab" className={`tab ${activeTab === 'experience' ? 'tab-active' : ''}`}
-          onClick={() => setActiveTab('experience')}
-        >
-          Experience
-        </button>
-
-        <button role="tab" className={`tab ${activeTab === 'projects' ? 'tab-active' : ''}`}
-          onClick={() => setActiveTab('projects')}
-        >
-          Projects
-        </button>
-
-        <button role="tab" className={`tab ${activeTab === 'certificates' ? 'tab-active' : ''}`}
-          onClick={() => setActiveTab('certificates')}
-        >
-          Certificates
-        </button>
+      {/* Tabs */}
+      <div
+        role="tablist"
+        aria-label="Profile sections"
+        className="flex gap-2 overflow-x-auto rounded-2xl border border-base-300 bg-base-100 p-2"
+      >
+        {tabs.map((tab) => (
+          <button
+            key={tab.key}
+            role="tab"
+            aria-selected={activeTab === tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={`whitespace-nowrap rounded-xl px-4 py-2 text-sm font-medium transition-colors
+              ${
+                activeTab === tab.key
+                  ? "bg-primary text-primary-content"
+                  : "text-base-content/70 hover:bg-base-200"
+              }
+            `}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
-      <div className="w-full">
-        {activeTab === 'projects' && (
+      {/* Content */}
+      <div className="rounded-3xl border border-base-300 bg-base-100 p-4 sm:p-6">
+        {activeTab === "projects" && (
           <ProfileProjects />
         )}
 
-        {activeTab === 'experience' && (
+        {activeTab === "experience" && (
           <ProfileExperience />
         )}
 
-        {activeTab === 'education' && (
+        {activeTab === "education" && (
           <ProfileEducation />
         )}
 
-        {activeTab === 'certificates' && (
+        {activeTab === "certificates" && (
           <ProfileCertificates />
         )}
       </div>
-    </div>
-    </>
-  )
+    </section>
+  );
 }

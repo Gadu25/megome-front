@@ -1,7 +1,6 @@
 import { XiorResponse } from "xior";
 import xiorClient from "./xior";
 import type { Certificate, CertificateForm } from "@/types/types";
-import { $ZodNumberInternals } from "zod/v4/core";
 
 const BACKEND_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
 

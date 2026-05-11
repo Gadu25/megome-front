@@ -113,8 +113,27 @@ export type Project = {
   description: string;
   link: string;
   githubLink: string;
+  status: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export type ProjectFull = {
+  id: number;
+  userId: number;
+  title: string;
+  description: string;
+  link: string;
+  githubLink: string;
+  status: string;
+  isDraft: boolean;
+  createdAt: string;
+  updatedAt: string;
+  images: {
+    cover?: string | null
+    screenshots: string[]
+  };
+  technologies: Technology[]
 }
 
 export type ProjectForm = {
@@ -122,6 +141,23 @@ export type ProjectForm = {
   description: string;
   link: string;
   githubLink: string;
+  status: string;
+  isDraft: boolean;
+}
+
+export type ProjectImage = {
+  id?: number
+  url?: string
+  file?: File
+  preview: string
+  type: "cover" | "screenshot"
+  status: "idle" | "uploading" | "uploaded" | "failed"
+  error?: string
+}
+
+export type Image = {
+  cover: ProjectImage | null
+  screenshots: ProjectImage[]
 }
 
 export type Certificate = {
@@ -144,4 +180,24 @@ export type CertificateForm = {
   expirationDate: string;
   credentialId: string;
   credentialUrl: string;
+}
+
+export type Technology = {
+  id: number;
+  createdByUserId: number | null;
+  name: string;
+  slug: string;
+  category: string;
+  isVerified: string;
+  createdAt: string;
+  updatedAt: string | null;
+}
+
+export type TechnologyForm = {
+  name: string;
+  category: string;
+}
+
+export type ProjectTechnologyForm = {
+  techIds: number[];
 }
