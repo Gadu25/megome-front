@@ -26,8 +26,15 @@ export const authApi = (): AuthApi => {
   };
 };
 
+// const login = (email: string, password: string) => {
+//   return xiorClient.post<Response>(`${BACKEND_URL}/api/v1/auth/login`, { email, password });
+// };
+
 const login = (email: string, password: string) => {
-  return xiorClient.post<Response>(`${BACKEND_URL}/api/v1/auth/login`, { email, password });
+  return xiorClient.post("/api/auth/login", {
+    email,
+    password,
+  });
 };
 
 const register = (email: string, password: string) => {
