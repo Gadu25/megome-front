@@ -68,17 +68,10 @@ const getProjects = (headers?: Headers) => {
 
 const addProject = (project: ProjectForm, headers?: Headers) => {
   const cookieHeader = headers?.get("cookie");
-  const formData = new FormData();
-
-  formData.append("title", project.title);
-  formData.append("description", project.description);
-  formData.append("link", project.link);
-  formData.append("githubLink", project.githubLink);
-  formData.append("status", project.status);
 
   return xiorClient.post<Response>(
     `${BACKEND_URL}/api/v1/project`,
-    formData,
+    project,
     {
       headers: {
         cookie: cookieHeader || "",
@@ -89,18 +82,10 @@ const addProject = (project: ProjectForm, headers?: Headers) => {
 
 const updateProject = (id: number, project: ProjectForm, headers?: Headers) => {
   const cookieHeader = headers?.get("cookie");
-  const formData = new FormData();
-
-  formData.append("title", project.title);
-  formData.append("description", project.description);
-  formData.append("link", project.link);
-  formData.append("githubLink", project.githubLink);
-  formData.append("status", project.status);
-  formData.append("isDraft", String(project.isDraft));
 
   return xiorClient.put<Response>(
     `${BACKEND_URL}/api/v1/project/${id}`,
-    formData,
+    project,
     {
       headers: {
         cookie: cookieHeader || "",

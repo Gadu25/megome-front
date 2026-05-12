@@ -1,5 +1,5 @@
 import Link from "next/link";
-import DraftDeleteButton from "./DraftDeleteButton";
+import ProjectDeleteButton from "./DeleteButton";
 import { getStatusStyle } from "@/functions/getStatusStyle";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import type { ProjectFull } from "@/types/types";
@@ -41,8 +41,9 @@ export default function ProjectCard({
             md:group-focus-within:opacity-100
           "
         >
-          <DraftDeleteButton
+          <ProjectDeleteButton
             projectId={project.id}
+            isDraft={project.isDraft}
             projectTitle={project.title}
           >
             <div className="
@@ -51,7 +52,7 @@ export default function ProjectCard({
             ">
               <TrashIcon className="size-4" aria-hidden="true" />
             </div>
-          </DraftDeleteButton>
+          </ProjectDeleteButton>
         </div>
       )}
 

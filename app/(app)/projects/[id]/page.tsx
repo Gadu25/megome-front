@@ -30,6 +30,7 @@ export default async function ProjectDetailPage({
 
   try {
     const res = await getProject(parseInt(id), headers);
+    console.log("res", res)
     project = res?.data?.project ?? null;
   } catch (error) {
     console.error("Failed to fetch project:", error);
