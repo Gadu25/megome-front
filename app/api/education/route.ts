@@ -6,7 +6,6 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL!;
 export async function GET() {
   try {
     const accessToken = await getAccessToken();
-    console.log("ACCESS TOKEN", accessToken)
 
     const response = await fetch(
       `${BACKEND_URL}/api/v1/education`,

@@ -4,7 +4,7 @@ import { getAccessToken } from "@/lib/auth/cookies";
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL!;
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
-try {
+  try {
     const { id } = await params;
     const accessToken = await getAccessToken();
     const body = await req.json();
