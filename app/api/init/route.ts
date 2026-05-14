@@ -1,21 +1,22 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { getAccessToken } from "@/lib/auth/cookies";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL!;
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
-    const rawCookie = req.headers.get("cookie");
-    const parsed = parseCookies(rawCookie);
-    const accessToken = parsed["access_token"];
+    const accessToken = await getAccessToken();
 
-    const response = await fetch(`${BACKEND_URL}/api/v1/init`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      cache: "no-store",
-    });
+    const response = await fetch(
+      `${BACKEND_URL}/api/v1/init`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        cache: "no-store",
+      }
+    );
 
     const data = await response.json();
 
@@ -34,21 +35,9 @@ export async function GET(req: Request) {
     return NextResponse.json(
       {
         success: false,
-        message: "Internal server error",
+        message: err || "Internal server error",
       },
       { status: 500 }
     );
   }
-}
-
-function parseCookies(cookieHeader: string | null) {
-  if (!cookieHeader) return {};
-
-  return cookieHeader.split(";").reduce((acc, cookie) => {
-    const [key, ...v] = cookie.trim().split("=");
-    if (!key) return acc;
-
-    acc[key] = decodeURIComponent(v.join("="));
-    return acc;
-  }, {} as Record<string, string>);
 }
