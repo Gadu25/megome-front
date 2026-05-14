@@ -14,13 +14,11 @@ import RightModal from "../modal/RightModal";
 import ProfileForm from "../form/Profile";
 
 import { calculateAge } from "@/functions/calculateAge";
-import { profileApi } from "@/lib/api/profileApi";
+import { getProfileClient } from "@/lib/api/client/profile";
 
 import type { Profile } from "@/types/types";
 
 export default function TopProfile() {
-  const { getProfile } = profileApi();
-
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -28,8 +26,8 @@ export default function TopProfile() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await getProfile();
-        setProfile(res.data.profile);
+        const res = await getProfileClient();
+        setProfile(res.profile);
       } catch (err) {
         console.error("Failed to fetch profile", err);
       } finally {

@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation";
 import { UserIcon } from "@heroicons/react/24/outline";
-import { profileApi } from "@/lib/api/profileApi";
-import { authApi } from "@/lib/api/authApi";
+import { updateProfileClient } from "@/lib/api/client/profile";
+import { logoutClient } from "@/lib/api/client/auth";
 import { profileSchema } from "@/features/profile/schema";
 import { useToast } from "../toast/useToast";
 import { withRequest } from "@/functions/withRequest";
@@ -18,7 +18,6 @@ type Props = {
 }
 
 export default function ProfileForm({ profile = null, isOnboarding = false, setProfile }: Props) {
-  const { updateProfile } = profileApi();
   const { showToast } = useToast();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -78,7 +77,7 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
       }
 
       const data = await withRequest(
-        () => updateProfile(form),
+        () => updateProfileClient(form),
         showToast
       )
 
@@ -97,8 +96,7 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
   }
 
   const proceedCancel = async () => {
-    const { logout } = authApi();
-    await logout();
+    await logoutClient();
     router.push("/auth");
   }
 
