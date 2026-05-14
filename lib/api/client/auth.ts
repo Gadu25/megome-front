@@ -26,3 +26,12 @@ export const registerClient = async (email: string, password: string) => {
   )
   return handleResponse<Response>(res)
 }
+
+export const logoutClient = async () => {
+  const res = await fetch(
+    "/api/auth/logout",
+    {
+      method: "POST",
+    }
+  )
+}
