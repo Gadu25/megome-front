@@ -8,18 +8,11 @@ async function buildHeaders(extra?: HeadersInit) {
 
   return {
     ...(extra || {}),
-    ...(accessToken
-      ? {
-          Authorization: `Bearer ${accessToken}`,
-        }
-      : {}),
+    ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
   };
 }
 
-export async function fetchWithAuth(
-  input: string,
-  init?: RequestInit,
-) {
+export async function fetchWithAuth(input: string, init?: RequestInit) {
   if (!input.startsWith("/")) {
     throw new Error(`Invalid API path: ${input}`);
   }
@@ -30,13 +23,9 @@ export async function fetchWithAuth(
     cache: "no-store",
   });
 
-  /**
-   * DO NOT REFRESH INSIDE SSR
-   *
-   * Redirect browser instead.
-   */
+  // Middleware handles refresh — if we still get 401 here,
   if (response.status === 401) {
-    redirect("/auth/refresh");
+    redirect("/auth");
   }
 
   return response;
