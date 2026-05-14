@@ -18,7 +18,7 @@ export default function ProfilePage() {
 
         {/* Left Sidebar */}
         <aside className="space-y-6">
-          <ProfileSkill />
+          {/* <ProfileSkill /> */}
         </aside>
 
         {/* Main Content */}

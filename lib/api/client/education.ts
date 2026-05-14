@@ -4,7 +4,7 @@ import { fetchClient } from "./fetchClient";
 
 interface Response {
   message: string;
-  education: Education[];
+  educations: Education[];
 }
 
 interface SingleResponse {

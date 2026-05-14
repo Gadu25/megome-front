@@ -24,7 +24,7 @@ export async function GET() {
       return NextResponse.json(
         {
           message: "Failed to fetch education",
-          data: []
+          educations: []
         }
       )
     }
@@ -34,7 +34,7 @@ export async function GET() {
     return NextResponse.json(
       {
         message: err,
-        data: [],
+        educations: [],
       }
     )
   }
