@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { skillApi } from '@/lib/api/skillApi'
+import { addSkillClient, updateSkillClient, deleteSkillClient } from '@/lib/api/client/skill';
 import { useToast } from "../toast/useToast";
 import { withRequest } from "@/functions/withRequest";
 import type { Skill, SkillForm } from '@/types/types'
@@ -19,7 +19,6 @@ type Props = {
 }
 
 export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
-  const { addSkill, updateSkill, deleteSkill } = skillApi();
   const { showToast } = useToast();
 
   const debounceRef = useRef<Record<number, NodeJS.Timeout>>({});
@@ -53,7 +52,7 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
 
       try {
         const data = await withRequest(
-          () => updateSkill(id, updatedSkill as SkillForm),
+          () => updateSkillClient(id, updatedSkill as SkillForm),
           showToast
         )
 
@@ -81,7 +80,7 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
     if (!newSkill.skillName.trim()) return
 
     const data = await withRequest(
-      () => addSkill(newSkill as SkillForm),
+      () => addSkillClient(newSkill as SkillForm),
       showToast
     )
 
@@ -99,7 +98,7 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
     if (selectedSkillId === null) return;
 
     const data = await withRequest(
-      () => deleteSkill(selectedSkillId),
+      () => deleteSkillClient(selectedSkillId),
       showToast
     )
 

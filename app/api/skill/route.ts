@@ -5,14 +5,14 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL!;
 
 export async function GET() {
   try {
-    const accessToken = await getAccessToken();
+    const accesToken = await getAccessToken();
 
     const response = await fetch(
-      `${BACKEND_URL}/api/v1/education`,
+      `${BACKEND_URL}/api/v1/skill`,
       {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${accessToken}`
+          Authorization: `Bearer ${accesToken}`,
         }
       }
     )
@@ -22,8 +22,8 @@ export async function GET() {
     if (!response.ok) {
       return NextResponse.json(
         {
-          message: "Failed to fetch education",
-          educations: []
+          message: "Failed to fetch skills",
+          skills: [],
         }
       )
     }
@@ -31,10 +31,10 @@ export async function GET() {
     return NextResponse.json(data);
   } catch (err) {
     return NextResponse.json(
-      {
+       {
         message: err,
-        educations: [],
-      }
+        skills: [],
+       }
     )
   }
 }
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
     const accessToken = await getAccessToken();
     const body = await req.json();
 
-    const response = await fetch(`${BACKEND_URL}/api/v1/education`, {
+    const response = await fetch(`${BACKEND_URL}/api/v1/skill`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
 
     if (!response.ok) {
       return NextResponse.json(
-        { message: data.error || "Failed to add education" },
+        { message: data.error || "Failed to add skill" },
         { status: response.status }
       );
     }

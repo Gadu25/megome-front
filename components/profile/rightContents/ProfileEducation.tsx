@@ -31,15 +31,15 @@ export default function ProfileEducation() {
     fetchEducation();
   }, []);
 
-  const sortedEducation = useMemo(
-    () =>
-      [...education].sort(
-        (a, b) =>
-          new Date(b.startDate).getTime() -
-          new Date(a.startDate).getTime()
-      ),
-    [education]
-  );
+  const sortedEducation = useMemo(() => {
+    if (!education) return [];
+
+    return [...education].sort(
+      (a, b) =>
+        new Date(b.startDate).getTime() -
+        new Date(a.startDate).getTime()
+    );
+  }, [education]);
 
   const openEditModal = () => setIsEditOpen(true);
   const closeEditModal = () => setIsEditOpen(false);
