@@ -2,7 +2,6 @@ import type { Skill, SkillForm } from "@/types/types";
 import { handleResponse } from "@/functions/handleResponse";
 import { fetchClient } from "./fetchClient";
 
-
 interface Response {
   message: string;
   skills: Skill[];
