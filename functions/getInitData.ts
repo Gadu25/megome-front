@@ -1,4 +1,4 @@
-import { InitApi } from "@/lib/api/initApi";
+import { InitApi } from "@/lib/api/client/init";
 
 export const getInit = async (headers: Headers) => {
   const { getInit } = InitApi();

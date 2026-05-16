@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { Certificate } from "@/types/types";
-import { certificateApi } from "@/lib/api/certificateApi";
+import { getCertificateClient } from "@/lib/api/client/certificate";
 import { humanizeDate } from "@/functions/humanitizeDate";
 
 import RightModal from "../../modal/RightModal";
@@ -11,7 +11,6 @@ import { SectionHeader } from "../sections/SectionHeaders";
 import { EmptyState } from "../sections/EmptyState";
 
 export default function ProfileCertificates() {
-  const { getCertificate } = certificateApi();
 
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [certificates, setCertificates] = useState<Certificate[]>([]);
@@ -20,8 +19,8 @@ export default function ProfileCertificates() {
   useEffect(() => {
     const fetchCertificates = async () => {
       try {
-        const res = await getCertificate();
-        setCertificates(res.data.certificates);
+        const res = await getCertificateClient();
+        setCertificates(res.certificates);
       } catch (error) {
         console.error("Error fetching certificates:", error);
       } finally {

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Project } from "@/types/types";
-import { projectApi } from "@/lib/api/projectApi";
+import { getProjectsClient } from "@/lib/api/client/project";
 
 import { SectionHeader } from "../sections/SectionHeaders";
 import { EmptyState } from "../sections/EmptyState";
@@ -10,7 +10,6 @@ import { EmptyState } from "../sections/EmptyState";
 const MAX_PREVIEW_PROJECTS = 4;
 
 export default function ProfileProjects() {
-  const { getProjects } = projectApi();
   const router = useRouter();
 
   const [projects, setProjects] = useState<Project[]>([]);
@@ -19,8 +18,8 @@ export default function ProfileProjects() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const res = await getProjects();
-        setProjects(res.data.projects);
+        const res = await getProjectsClient();
+        setProjects(res.projects);
       } catch (error) {
         console.error("Error fetching projects:", error);
       } finally {

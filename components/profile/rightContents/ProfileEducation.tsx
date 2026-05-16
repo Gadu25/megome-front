@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { Education } from "@/types/types";
-import { educationApi } from "@/lib/api/educationApi";
+import { getEducationClient } from "@/lib/api/client/education";
 import { humanizeDate } from "@/functions/humanitizeDate";
 
 import { SectionHeader } from "../sections/SectionHeaders";
@@ -11,7 +11,6 @@ import RightModal from "../../modal/RightModal";
 import ProfileEducationForm from "../../form/Education";
 
 export default function ProfileEducation() {
-  const { getEducation } = educationApi();
 
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [education, setEducation] = useState<Education[]>([]);
@@ -20,8 +19,8 @@ export default function ProfileEducation() {
   useEffect(() => {
     const fetchEducation = async () => {
       try {
-        const res = await getEducation();
-        setEducation(res.data.education);
+        const res = await getEducationClient();
+        setEducation(res.educations);
       } catch (error) {
         console.error("Error fetching education:", error);
       } finally {
@@ -32,15 +31,15 @@ export default function ProfileEducation() {
     fetchEducation();
   }, []);
 
-  const sortedEducation = useMemo(
-    () =>
-      [...education].sort(
-        (a, b) =>
-          new Date(b.startDate).getTime() -
-          new Date(a.startDate).getTime()
-      ),
-    [education]
-  );
+  const sortedEducation = useMemo(() => {
+    if (!education) return [];
+
+    return [...education].sort(
+      (a, b) =>
+        new Date(b.startDate).getTime() -
+        new Date(a.startDate).getTime()
+    );
+  }, [education]);
 
   const openEditModal = () => setIsEditOpen(true);
   const closeEditModal = () => setIsEditOpen(false);
