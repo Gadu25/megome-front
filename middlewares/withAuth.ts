@@ -17,7 +17,6 @@ function isTokenExpired(token: string): boolean {
     if (!decoded.exp) return false; // no expiry claim — treat as valid
 
     // Add a 10s buffer so we refresh slightly before actual expiry
-    console.log("is Expired", decoded.exp * 1000 < Date.now() + 10_000)
     return decoded.exp * 1000 < Date.now() + 10_000;
   } catch {
     return true;
@@ -29,7 +28,6 @@ async function attemptRefresh(refreshToken: string): Promise<{
   refreshToken: string;
 } | null> {
   try {
-    console.log("ATTEMPT REFRESH", refreshToken)
     const res = await fetch(`${BACKEND_URL}/api/v1/auth/refresh`, {
       method: "GET",
       headers: {

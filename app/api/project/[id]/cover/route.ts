@@ -9,7 +9,6 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     const accessToken = await getAccessToken();
     const formData = await req.formData();
 
-    console.log("accessToken", accessToken)
     const response = await fetch(`${BACKEND_URL}/api/v1/project/${id}/cover`, {
       method: "PUT",
       headers: {

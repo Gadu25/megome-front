@@ -50,10 +50,8 @@ export default async function ProjectPage({
   try {
 
     const res = await getProjectsServer();
-    console.log('res', res)
 
     projects = res?.projects ?? [];
-    console.log(projects, "projects")
   } catch (error) {
     console.error("Failed to fetch projects", error);
   }

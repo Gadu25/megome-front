@@ -66,7 +66,5 @@ export const updateCertificateClient = async (id: number, form: CertificateForm)
     }
   )
 
-  console.log("deleteCertificateClient", res)
-
   return handleResponse<SingleResponse>(res);
  }

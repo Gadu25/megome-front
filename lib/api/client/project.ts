@@ -90,7 +90,6 @@ export const uploadProjectImageClient = async (id: number, projectImage : Projec
 
   if (projectImage.file) {
     formData.append("image", projectImage.file);
-    console.log("file", projectImage.file)
   }
   formData.append("type", projectImage.type);
 
@@ -108,7 +107,6 @@ export const uploadCoverImageClient = async (id: number, projectCover: ProjectIm
 
   if (projectCover.file) {
     formData.append("image", projectCover.file);
-    console.log("file", projectCover.file)
   }
   formData.append("type", projectCover.type);
 

@@ -20,7 +20,6 @@ export default async function EditProjectPage({
 
   try {
     const res = await getProjectServer(parseInt(projectId));
-    console.log("edit this", res)
     project = res?.project ?? null;
   } catch (error) {
     console.error("Failed to fetch project:", error);

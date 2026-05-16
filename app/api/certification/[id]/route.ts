@@ -48,7 +48,6 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
       },
     });
 
-    console.log("DELETE", response)
     const data = await response.json();
 
     if (!response.ok) {
