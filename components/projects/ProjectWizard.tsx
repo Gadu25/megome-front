@@ -13,8 +13,8 @@ import type { ProjectForm, Image, Technology, ProjectFull, ProjectImage } from "
 import { mapProjectImagesToUI } from "@/functions/mapProjectImagesToUI";
 import { useToast } from "@/components/toast/useToast";
 
-import { projectApi } from "@/lib/api/projectApi"
-import { technologyApi } from "@/lib/api/technologyApi";
+import { addProjectClient, updateProjectClient, uploadProjectImageClient, uploadCoverImageClient } from "@/lib/api/client/project";
+import { linkProjectTechnologiesClient } from "@/lib/api/client/technology";
 import { withRequest } from "@/functions/withRequest";
 
 type Mode = "create" | "edit";
@@ -28,8 +28,6 @@ export default function ProjectWizard({
   mode,
   initialProject,
 }: Props) {
-  const { addProject, updateProject, uploadProjectImage, uploadCoverImage } = projectApi();
-  const { linkProjectTechnologies } = technologyApi()
   const router = useRouter();
   const { showToast } = useToast();
 
@@ -70,7 +68,7 @@ export default function ProjectWizard({
       if (!isDirty || !projectId) return true;
 
       const data = await withRequest(
-        () => updateProject(projectId, form),
+        () => updateProjectClient(projectId, form),
         showToast
       )
 
@@ -89,7 +87,7 @@ export default function ProjectWizard({
       if (!isDirty) return true;
 
       const data = await withRequest(
-        () => updateProject(projectId, form),
+        () => updateProjectClient(projectId, form),
         showToast
       )
 
@@ -101,7 +99,7 @@ export default function ProjectWizard({
 
     // create new
     const data = await withRequest(
-      () => addProject(form),
+      () => addProjectClient(form),
       showToast
     )
 
@@ -139,8 +137,8 @@ export default function ProjectWizard({
       if (img.status === "uploaded") return img;
 
       try {
-        const res = await uploadProjectImage(projectId, img);
-        const data = res.data;
+        const res = await uploadProjectImageClient(projectId, img);
+        const data = res;
 
         return {
           ...img,
@@ -171,12 +169,12 @@ export default function ProjectWizard({
     currentImages.cover.status !== "uploaded"
   ) {
     try {
-      const res = await uploadCoverImage(
+      const res = await uploadCoverImageClient(
         projectId,
         currentImages.cover
       );
 
-      const data = res.data;
+      const data = res;
 
       updatedCover = {
         ...currentImages.cover,
@@ -219,7 +217,7 @@ export default function ProjectWizard({
 
     try {
       const data = await withRequest(
-        () => linkProjectTechnologies(projectId, techIds),
+        () => linkProjectTechnologiesClient(projectId, techIds),
         showToast
       )
       
@@ -236,7 +234,7 @@ export default function ProjectWizard({
   const publish = async () => {
     if (!projectId) return false;
 
-    const res = await updateProject(projectId, {
+    const res = await updateProjectClient(projectId, {
       ...form,
       isDraft: false,
     });

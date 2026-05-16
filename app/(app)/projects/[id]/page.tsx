@@ -1,8 +1,6 @@
 import Link from "next/link";
-import { projectApi } from "@/lib/api/projectApi";
+import { getProjectServer } from "@/lib/api/server/project";
 import type { ProjectFull } from "@/types/types";
-import { cookies } from "next/headers";
-import { createAuthHeaders } from "@/functions/createAuthHeaders";
 import { ProjectHeader } from "@/components/projects/ProjectHeader";
 import { ScreenshotsSection } from "@/components/projects/Screenshots";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
@@ -13,25 +11,15 @@ export default async function ProjectDetailPage({
 }: {
   params: { id: string };
 }) {
-  const { getProject } = projectApi();
   const resolvedParams = await params;
   const id = resolvedParams.id;
-
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("Authentication");
-  const refreshToken = cookieStore.get("refresh_token");
-
-  const headers = createAuthHeaders(new Headers(), {
-    accessToken,
-    refreshToken,
-  });
 
   let project: ProjectFull | null = null;
 
   try {
-    const res = await getProject(parseInt(id), headers);
+    const res = await getProjectServer(parseInt(id));
     console.log("res", res)
-    project = res?.data?.project ?? null;
+    project = res?.project ?? null;
   } catch (error) {
     console.error("Failed to fetch project:", error);
   }
