@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
-import { certificateApi } from "@/lib/api/certificateApi"
+import { addCertificateClient, updateCertificateClient, deleteCertificateClient } from "@/lib/api/client/certificate"
 import { formatDate } from "@/functions/formatDate"
 import { withRequest } from "@/functions/withRequest"
 import { useToast } from "../toast/useToast";
@@ -16,7 +16,6 @@ type Props = {
 }
 
 export default function ProfileCertificateForm({ initialCertificates, setCertificates }: Props) {
-  const { addCertificate, updateCertificate, deleteCertificate } = certificateApi();
   const { showToast } = useToast();
 
   const debounceRef = useRef<Record<number, NodeJS.Timeout>>({})
@@ -65,7 +64,7 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
         }
 
         const data = await withRequest(
-          () => updateCertificate(id, payload as CertificateForm),
+          () => updateCertificateClient(id, payload as CertificateForm),
           showToast
         )
 
@@ -103,7 +102,7 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
     }
 
     const data = await withRequest(
-      () => addCertificate(payload as CertificateForm),
+      () => addCertificateClient(payload as CertificateForm),
       showToast
     )
 
@@ -125,7 +124,7 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
     if (selectedId === null) return
 
     const data = await withRequest(
-      () => deleteCertificate(selectedId),
+      () => deleteCertificateClient(selectedId),
       showToast
     )
 

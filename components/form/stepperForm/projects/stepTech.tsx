@@ -1,5 +1,5 @@
 import { XMarkIcon } from "@heroicons/react/24/outline"
-import { technologyApi } from "@/lib/api/technologyApi"
+import { getTechnologiesClient } from "@/lib/api/client/technology"
 import type { Technology } from "@/types/types"
 import React, {
   useEffect,
@@ -19,8 +19,6 @@ export default function StepTech({
   selectedTech,
   setSelectedTech,
 }: Props) {
-  const { getTechnologies } = technologyApi()
-
   const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(true)
   const [technologies, setTechnologies] = useState<Technology[]>([])
@@ -32,8 +30,8 @@ export default function StepTech({
   useEffect(() => {
     const fetchTechnologies = async () => {
       try {
-        const res = await getTechnologies()
-        setTechnologies(res?.data?.technologies ?? [])
+        const res = await getTechnologiesClient()
+        setTechnologies(res?.technologies ?? [])
       } catch (error) {
         console.error("Error fetching technologies:", error)
         setTechnologies([])

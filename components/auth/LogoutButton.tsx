@@ -1,7 +1,7 @@
 "use client";
-import { authApi } from "@/lib/api/authApi";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { logoutClient } from "@/lib/api/client/auth";
 import Modal from "../modal/Modal";
 
 const LogoutButton = () => {
@@ -9,8 +9,7 @@ const LogoutButton = () => {
   const [open, setOpen] = useState(false);
 
   const proceedCancel = async () => {
-    const { logout } = authApi();
-    await logout();
+    await logoutClient();
     router.push("/auth");
   }
 

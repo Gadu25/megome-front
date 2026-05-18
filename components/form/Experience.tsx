@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
-import { experienceApi } from "@/lib/api/experienceApi"
+import { addExperienceClient, updateExperienceClient, deleteExperienceClient } from "@/lib/api/client/experience"
 import { formatDate } from "@/functions/formatDate"
 import { useToast } from "../toast/useToast";
 import { withRequest } from "@/functions/withRequest";
@@ -15,7 +15,6 @@ type Props = {
 }
 
 export default function ProfileExperienceForm({ initialExperiences, setExperiences,}: Props) {
-  const { addExperience, updateExperience, deleteExperience } = experienceApi()
   const { showToast } = useToast();
 
   const debounceRef = useRef<Record<string, NodeJS.Timeout>>({})
@@ -65,7 +64,7 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
         }
 
         const data = await withRequest(
-          () => updateExperience(id, payload as ExperienceForm),
+          () => updateExperienceClient(id, payload as ExperienceForm),
           showToast
         )
 
@@ -100,7 +99,7 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
     }
 
     const data = await withRequest(
-      () => addExperience(payload as ExperienceForm),
+      () => addExperienceClient(payload as ExperienceForm),
       showToast
     )
 
@@ -120,7 +119,7 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
     if (selectedId === null) return
 
     const data = await withRequest(
-      () => deleteExperience(selectedId),
+      () => deleteExperienceClient(selectedId),
       showToast
     )
 

@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
-import { educationApi } from "@/lib/api/educationApi"
+import { addEducationClient, updateEducationClient, deleteEducationClient } from "@/lib/api/client/education"
 import { formatDate } from "@/functions/formatDate"
 import { useToast } from "../toast/useToast";
 import { withRequest } from "@/functions/withRequest";
@@ -15,7 +15,6 @@ type Props = {
 }
 
 export default function ProfileEducationForm({ initialEducation, setEducation }: Props) {
-  const { addEducation, updateEducation, deleteEducation } = educationApi()
   const { showToast } = useToast();
 
   const debounceRef = useRef<Record<number, NodeJS.Timeout>>({})
@@ -61,7 +60,7 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
         };
 
         const data = await withRequest(
-          () => updateEducation(id, payload),
+          () => updateEducationClient(id, payload),
           showToast
         )
 
@@ -95,7 +94,7 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
     }
 
     const data = await withRequest(
-      () => addEducation(payload),
+      () => addEducationClient(payload),
       showToast
     )
 
@@ -116,7 +115,7 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
     if (selectedId === null) return
 
     const data = await withRequest(
-      () => deleteEducation(selectedId),
+      () => deleteEducationClient(selectedId),
       showToast
     )
 

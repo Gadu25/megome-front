@@ -1,8 +1,7 @@
 import { cookies } from "next/headers";
 
-import { createAuthHeaders } from "@/functions/createAuthHeaders";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
-import { projectApi } from "@/lib/api/projectApi";
+import { getProjectServer } from "@/lib/api/server/project";
 
 import ProjectWizard from "@/components/projects/ProjectWizard";
 import Link from "next/link";
@@ -17,19 +16,11 @@ export default async function EditProjectPage({
 
   const cookieStore = await cookies();
 
-  const headers = createAuthHeaders(new Headers(), {
-    accessToken: cookieStore.get("Authentication"),
-    refreshToken: cookieStore.get("refresh_token"),
-  });
-
-  const { getProject } = projectApi();
-
   let project = null;
 
   try {
-    const res = await getProject(parseInt(projectId), headers);
-    console.log("edit this", res)
-    project = res?.data?.project ?? null;
+    const res = await getProjectServer(parseInt(projectId));
+    project = res?.project ?? null;
   } catch (error) {
     console.error("Failed to fetch project:", error);
   }

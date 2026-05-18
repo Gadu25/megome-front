@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { skillApi } from "@/lib/api/skillApi";
+import { getSkillClient } from "@/lib/api/client/skill";
 import { Skill } from "@/types/types";
 import RightModal from "../modal/RightModal";
 import ProfileSkillForm from "../form/Skill";
@@ -17,7 +17,6 @@ const PROFICIENCY_MAP: Record<Skill["proficiency"], number> = {
 };
 
 export default function ProfileSkill() {
-  const { getSkills } = skillApi();
 
   const [skills, setSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,8 +25,8 @@ export default function ProfileSkill() {
   useEffect(() => {
     const fetchSkills = async () => {
       try {
-        const res = await getSkills();
-        setSkills(res.data.skills);
+        const res = await getSkillClient();
+        setSkills(res.skills);
       } finally {
         setLoading(false);
       }

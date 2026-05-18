@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { projectApi } from "@/lib/api/projectApi";
+import { deleteProjectClient } from "@/lib/api/client/project";
 import Modal from "../modal/Modal";
 import { withRequest } from "@/functions/withRequest";
 import { useToast } from "../toast/useToast";
@@ -19,12 +19,11 @@ export default function ProjectDeleteButton({ projectId, isDraft = false, projec
   const router = useRouter()
   const [modalOpen, setModalOpen] = useState(false)
   const { showToast } = useToast();
-  const { deleteProject } = projectApi();
 
   async function handleDelete() {
     try {
       const data = await withRequest(
-        () => deleteProject(projectId),
+        () => deleteProjectClient(projectId),
         showToast
       )
       if (!data) return;

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { Experience } from "@/types/types";
-import { experienceApi } from "@/lib/api/experienceApi";
+import { getExperienceClient } from "@/lib/api/client/experience";
 import { humanizeDate } from "@/functions/humanitizeDate";
 
 import RightModal from "../../modal/RightModal";
@@ -11,7 +11,6 @@ import { SectionHeader } from "../sections/SectionHeaders";
 import { EmptyState } from "../sections/EmptyState";
 
 export default function ProfileExperience() {
-  const { getExperience } = experienceApi();
 
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [experiences, setExperiences] = useState<Experience[]>([]);
@@ -20,8 +19,8 @@ export default function ProfileExperience() {
   useEffect(() => {
     const fetchExperience = async () => {
       try {
-        const res = await getExperience();
-        setExperiences(res.data.experience);
+        const res = await getExperienceClient();
+        setExperiences(res.experiences);
       } catch (error) {
         console.error("Error fetching experience:", error);
       } finally {
@@ -32,15 +31,15 @@ export default function ProfileExperience() {
     fetchExperience();
   }, []);
 
-  const sortedExperiences = useMemo(
-    () =>
-      [...experiences].sort(
-        (a, b) =>
-          new Date(b.startDate).getTime() -
-          new Date(a.startDate).getTime()
-      ),
-    [experiences]
-  );
+  const sortedExperiences = useMemo(() => {
+    if (!experiences) return [];
+
+    return [...experiences].sort(
+      (a, b) =>
+        new Date(b.startDate).getTime() -
+        new Date(a.startDate).getTime()
+    );
+  }, [experiences]);
 
   const openEditModal = () => setIsEditOpen(true);
   const closeEditModal = () => setIsEditOpen(false);
