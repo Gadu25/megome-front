@@ -8,16 +8,21 @@ import { LogoFull, LogoSmall } from "../common/Logo";
 import {
   HomeIcon,
   WindowIcon,
+  CodeBracketIcon,
+  BookOpenIcon,
+  KeyIcon,
+  InformationCircleIcon,
 } from "@heroicons/react/24/outline";
 
 type Item = {
   name: string;
   path: string;
   icon: any;
+  children?: Item[];
 };
 
 export default function Sidebar() {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
 
   const menu: Item[] = [
     {
@@ -30,6 +35,28 @@ export default function Sidebar() {
       path: "/projects",
       icon: WindowIcon,
     },
+    {
+      name: "API",
+      path: "#",
+      icon: CodeBracketIcon,
+      children: [
+        {
+          name: "API Intro",
+          path: "/api/intro",
+          icon: InformationCircleIcon,
+        },
+        {
+          name: "Personal Tokens",
+          path: "/api/tokens",
+          icon: KeyIcon,
+        },
+        {
+          name: "API Reference",
+          path: "/api/reference",
+          icon: BookOpenIcon,
+        },
+      ],
+    }
   ];
 
   return (
@@ -74,22 +101,17 @@ export default function Sidebar() {
                 pathname === item.path ||
                 pathname.startsWith(`${item.path}/`);
 
+              const hasChild = !!item.children?.length;
+
               return (
-                <li key={item.path} className="flex is-drawer-close:items-center justify-center">
+                <li key={item.path}>
                   <Link
                     href={item.path}
                     className={`
-                      group rounded-xl transition-colors
-                      w-auto
-
-                      flex items-center
-
+                      flex items-center gap-3 rounded-xl px-3 py-2 transition-colors
+                      
                       is-drawer-close:justify-center
-                      is-drawer-open:justify-start
-
                       is-drawer-close:px-0
-                      is-drawer-open:px-3
-
                       is-drawer-close:w-10
                       is-drawer-close:h-10
 
@@ -98,6 +120,8 @@ export default function Sidebar() {
                           ? "bg-base-200 font-medium"
                           : "hover:bg-base-200/60"
                       }
+
+                      ${hasChild ? "is-drawer-close:hidden" : ""}
 
                       is-drawer-close:tooltip
                       is-drawer-close:tooltip-right
@@ -110,6 +134,70 @@ export default function Sidebar() {
                       {item.name}
                     </span>
                   </Link>
+
+                  {item.children && (
+                    <>
+                      <ul className="ml-6 mt-1 space-y-1 is-drawer-close:hidden">
+                        {item.children.map((child) => {
+                          const ChildIcon = child.icon;
+
+                          const childActive =
+                            pathname === child.path ||
+                            pathname.startsWith(`${child.path}/`);
+
+                          return (
+                            <li key={child.path}>
+                              <Link
+                                href={child.path}
+                                className={`
+                                  flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors
+
+                                  ${
+                                    childActive
+                                      ? "bg-base-200 font-medium"
+                                      : "hover:bg-base-200/50"
+                                  }
+                                `}
+                              >
+                                <ChildIcon className="size-4 shrink-0" />
+
+                                <span>{child.name}</span>
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                      {item.children.map((child) => {
+                        const ChildIcon = child.icon;
+                        const childActive = pathname === child.path || pathname.startsWith(`${child.path}/`);
+                        
+                        return (
+                          <Link
+                            href={child.path}
+                            className={`
+                              flex items-center gap-3 rounded-xl px-3 py-2 transition-colors
+
+                              hidden
+                              is-drawer-close:block
+                              is-drawer-close:justify-center
+
+                              ${
+                                childActive
+                                  ? "bg-base-200 font-medium"
+                                  : "hover:bg-base-200/60"
+                              }
+
+                              is-drawer-close:tooltip
+                              is-drawer-close:tooltip-right
+                            `}
+                            data-tip={child.name}
+                          >
+                            <ChildIcon className="size-5 shrink-0" />
+                          </Link>
+                        );
+                      })}
+                    </>
+                  )}
                 </li>
               );
             })}

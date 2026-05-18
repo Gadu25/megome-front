@@ -1,5 +1,3 @@
-import { SettingsCard } from "@/components/settings/SettingsCard";
-import { SettingsSectionHeader } from "@/components/settings/SettingsSectionHeader";
 import { SettingsTabs } from "@/components/settings/SettingsTab";
 
 import AccountTab from "@/components/settings/tabs/AccountTab";
