@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ClipboardIcon } from "@heroicons/react/24/outline";
 import Modal from "@/components/modal/Modal";
-import { patApi } from "@/lib/api/patApi";
+import { getPatsClient, addPatClient, revokePatClient, deletePatClient } from "@/lib/api/client/pat";
 import { withRequest } from "@/functions/withRequest";
 import { useToast } from "@/components/toast/useToast";
 
@@ -46,7 +46,6 @@ const MOCK_LOGS = [
 ];
 
 export default function ApiTab() {
-  const { getPATs, addPAT, revokePAT, deletePAT } = patApi();
   const { showToast } = useToast();
 
   const [tokens, setTokens] = useState<PersonalAccessToken[]>([]);
@@ -64,12 +63,12 @@ export default function ApiTab() {
     try {
       setLoading(true);
 
-      const res = await getPATs();
+      const res = await getPatsClient();
 
       const pats = Array.isArray(
-        res.data?.pats
+        res.pats
       )
-        ? res.data.pats
+        ? res.pats
         : [];
 
       setTokens(pats);
@@ -94,7 +93,7 @@ export default function ApiTab() {
     try {
       setGenerating(true);
       const data = await withRequest(
-        () => addPAT(form),
+        () => addPatClient(form),
         showToast
       );
 
@@ -118,7 +117,7 @@ export default function ApiTab() {
     if(!selectedToken) return
     try {
       const data = await withRequest(
-        () => revokePAT(selectedToken.id),
+        () => revokePatClient(selectedToken.id),
         showToast,
       )
 
@@ -146,7 +145,7 @@ export default function ApiTab() {
 
     try {
       const data = await withRequest(
-        () => deletePAT(selectedToken.id),
+        () => deletePatClient(selectedToken.id),
         showToast,
       )
 
