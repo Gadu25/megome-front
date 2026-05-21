@@ -12,7 +12,7 @@ interface RightModalProps {
 export default function RightModal({ isOpen, onClose, title, children }: RightModalProps) {
   return (
     <div
-      className={`fixed inset-0 z-50 ${
+      className={`fixed inset-0 z-100 ${
         isOpen ? "pointer-events-auto" : "pointer-events-none"
       }`}
     >
