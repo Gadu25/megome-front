@@ -41,7 +41,7 @@ export default function Sidebar() {
       icon: CodeBracketIcon,
       children: [
         {
-          name: "API Intro",
+          name: "API",
           path: "/api/intro",
           icon: InformationCircleIcon,
         },
@@ -50,11 +50,11 @@ export default function Sidebar() {
           path: "/api/tokens",
           icon: KeyIcon,
         },
-        {
-          name: "API Reference",
-          path: "/api/reference",
-          icon: BookOpenIcon,
-        },
+        // {
+        //   name: "API Reference",
+        //   path: "/api/reference",
+        //   icon: BookOpenIcon,
+        // },
       ],
     }
   ];
