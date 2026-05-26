@@ -1,3 +1,5 @@
+import { string } from "zod";
+
 export type LoginResponse = {
   'access-token': string;
   'message': string;
@@ -214,4 +216,22 @@ export type PersonalAccessToken = {
 
 export type PersonalAccessTokenForm = {
   name: string;
+}
+
+export type ApiUsageLog = {
+  id: number,
+  userId: number,
+  tokenId: number,
+  endpoint: string,
+  method: string,
+  statusCode: number,
+  ipAddress: string,
+  userAgent: string,
+  responseTimeMs: Int16Array,
+  createdAt: string,
+}
+
+export type ApiUsageLogWithtoken = {
+  token: PersonalAccessToken,
+  logs: ApiUsageLog[],
 }
