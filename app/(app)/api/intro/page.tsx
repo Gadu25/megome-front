@@ -387,8 +387,7 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
               </p>
 
               <CodeBlock
-                code={`curl ${API_BASE_URL}${endpoint.path} \\
--H "Authorization: Bearer YOUR_PAT"`}
+                code={`curl ${API_BASE_URL}${endpoint.path} \\ -H "Authorization: Bearer YOUR_PAT"`}
               />
             </div>
 
