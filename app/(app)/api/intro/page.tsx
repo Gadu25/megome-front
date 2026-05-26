@@ -26,7 +26,7 @@ type EndpointGroup = {
 
 /* ---------------- Data ---------------- */
 
-const MOCK_BASE_URL = "https://domain-sample.com/public/v1";
+const API_BASE_URL = `${process.env.NEXT_PUBLIC_API_URL!}/public/v1`;
 
 const MOCK_ENDPOINTS: EndpointGroup[] = [
   {
@@ -325,8 +325,8 @@ function CopyButton({ value }: { value: string }) {
 
 function CodeBlock({ code }: { code: string }) {
   return (
-    <Card className="p-0" variant="default">
-      <div className="flex items-start justify-between gap-4 p-4">
+    <Card variant="default">
+      <div className="flex items-start justify-between gap-4 p-4 bg-base-300 rounded">
         <pre className="overflow-x-auto text-sm leading-relaxed text-base-content/80">
           <code>{code}</code>
         </pre>
@@ -343,7 +343,7 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
   const id = useId();
 
   return (
-    <Card variant="interactive" className="p-0 overflow-hidden">
+    <Card variant="interactive" className="shadow-xs overflow-hidden">
       <div className="collapse group bg-transparent">
         <input id={id} type="checkbox" className="hidden" />
 
@@ -387,7 +387,7 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
               </p>
 
               <CodeBlock
-                code={`curl ${MOCK_BASE_URL}${endpoint.path} \\
+                code={`curl ${API_BASE_URL}${endpoint.path} \\
 -H "Authorization: Bearer YOUR_PAT"`}
               />
             </div>
@@ -410,13 +410,13 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
 
 export default function ApiPage() {
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
       {/* Header */}
-      <Card className="p-8">
+      <Card className="p-8 shadow-xs">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-3">
             <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-primary/10 p-3 text-primary">
+              <div className="rounded-2xl bg-primary/10 p-3 text-primary hidden lg:block">
                 <CodeBracketIcon className="size-6" />
               </div>
 
@@ -432,15 +432,15 @@ export default function ApiPage() {
             </div>
           </div>
 
-          <div className="badge badge-success badge-lg gap-2 opacity-90">
+          {/* <div className="badge badge-success badge-lg gap-2 opacity-90">
             <span className="size-2 rounded-full bg-current" />
             API Online
-          </div>
+          </div> */}
         </div>
       </Card>
 
       {/* Quick Start */}
-      <Card className="p-8">
+      <Card className="p-8 shadow-xs">
         <div className="mb-6">
           <h2 className="text-xl font-semibold">
             Quick Start
@@ -456,7 +456,7 @@ export default function ApiPage() {
             <p className="text-sm font-medium text-base-content/70">
               Base URL
             </p>
-            <CodeBlock code={MOCK_BASE_URL} />
+            <CodeBlock code={API_BASE_URL} />
           </div>
 
           <div className="space-y-2">
@@ -467,6 +467,28 @@ export default function ApiPage() {
               code="Authorization: Bearer YOUR_PERSONAL_ACCESS_TOKEN"
             />
           </div>
+        </div>
+      </Card>
+
+      {/* CTA */}
+      <Card
+        className="p-8 border-primary/10 bg-info/5"
+        variant="default"
+      >
+        <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h2 className="text-xl font-semibold">
+              Need API Access?
+            </h2>
+
+            <p className="mt-1 text-sm text-base-content/60">
+              Generate a personal access token to authenticate requests.
+            </p>
+          </div>
+
+          <button className="btn btn-primary">
+            Manage Tokens
+          </button>
         </div>
       </Card>
 
@@ -503,28 +525,6 @@ export default function ApiPage() {
           </div>
         ))}
       </section>
-
-      {/* CTA */}
-      <Card
-        className="p-8 border-primary/10 bg-primary/5"
-        variant="default"
-      >
-        <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h2 className="text-xl font-semibold">
-              Need API Access?
-            </h2>
-
-            <p className="mt-1 text-sm text-base-content/60">
-              Generate a personal access token to authenticate requests.
-            </p>
-          </div>
-
-          <button className="btn btn-primary">
-            Manage Tokens
-          </button>
-        </div>
-      </Card>
     </div>
   );
 }

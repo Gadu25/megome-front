@@ -8,6 +8,7 @@ import ProfileSkillForm from "../form/Skill";
 import { SectionCard } from "./sections/SectionCard";
 import { SectionHeader } from "./sections/SectionHeaders";
 import { EmptyState } from "./sections/EmptyState";
+import { Card } from "../common/Card";
 
 const PROFICIENCY_MAP: Record<Skill["proficiency"], number> = {
   Beginner: 25,
@@ -37,7 +38,7 @@ export default function ProfileSkill() {
 
   return (
     <>
-      <SectionCard>
+      <Card className="shadow-xs p-6">
         <SectionHeader
           title="Skills"
           onEdit={() => setIsEditOpen(true)}
@@ -78,7 +79,7 @@ export default function ProfileSkill() {
             ))}
           </div>
         )}
-      </SectionCard>
+      </Card>
 
       <RightModal
         title="Skills"

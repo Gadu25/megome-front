@@ -146,7 +146,7 @@ export default function ApiTokensPage() {
   /* ---------------- UI ---------------- */
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <ApiPageHeader
         title="Access Tokens"
         description="Manage personal access tokens used to authenticate API requests."
@@ -158,9 +158,9 @@ export default function ApiTokensPage() {
       />
 
       {/* CREATE TOKEN */}
-      <Card className="p-4">
+      <Card className="p-6 shadow-xs">
         <div className="flex items-start gap-5">
-          <div className="rounded-xl bg-primary/10 p-3 text-primary">
+          <div className="rounded-lg bg-primary/10 p-3 text-primary hidden lg:block">
             <KeyIcon className="size-6" />
           </div>
 
@@ -187,7 +187,7 @@ export default function ApiTokensPage() {
               </p>
             </div>
 
-            <Card className="p-4 bg-warning/5 border border-warning/10">
+            <Card className="p-4 bg-warning/5 border border-warning/10 rounded-lg">
               <p className="text-sm text-base-content/70">
                 Tokens are shown only once and securely hashed before storage.
               </p>
@@ -210,7 +210,7 @@ export default function ApiTokensPage() {
       </Card>
 
       {/* TOKEN LIST */}
-      <Card className="p-8">
+      <Card className="p-6 shadow-xs">
         <div className="mb-6">
           <h2 className="text-xl font-semibold">Issued Tokens</h2>
           <p className="mt-1 text-sm text-base-content/60">

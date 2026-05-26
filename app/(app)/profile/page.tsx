@@ -1,16 +1,19 @@
 import TopProfile from "@/components/profile/TopProfile";
 import ProfileSkill from "@/components/profile/ProfileSkill";
 import RightContent from "@/components/profile/RightContent";
+import { Card } from "@/components/common/Card";
 
 export default function ProfilePage() {
   return (
     <main className="mx-auto space-y-6">
 
       {/* Profile Header */}
-      <section className="rounded-3xl border border-base-300 bg-base-100 shadow-sm">
-        <div className="p-5 sm:p-6 lg:p-8">
-          <TopProfile />
-        </div>
+      <section>
+        <Card className="shadow-xs">
+          <div className="p-5 sm:p-6 lg:p-8">
+            <TopProfile />
+          </div>
+        </Card>
       </section>
 
       {/* Main Content */}
