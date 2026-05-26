@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ClipboardIcon, KeyIcon } from "@heroicons/react/24/outline";
 
@@ -282,6 +283,13 @@ export default function ApiTokensPage() {
                     </div>
 
                     <div className="flex gap-2">
+                      <Link
+                        href={`/api/tokens/logs/${token.id}`}
+                        className="btn btn-ghost btn-sm"
+                        aria-label={`View logs for ${token.name}`}
+                      >
+                        View Logs
+                      </Link>
                       {!revoked ? (
                         <button
                           className="btn btn-outline btn-warning btn-sm"
