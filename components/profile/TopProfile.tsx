@@ -40,8 +40,58 @@ export default function TopProfile() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-16">
-        <span className="loading loading-spinner loading-md" />
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
+
+        {/* Avatar */}
+        <div className="flex justify-center lg:justify-start">
+          <div className="skeleton h-28 w-28 rounded-full shrink-0"></div>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 space-y-5">
+
+          {/* Header */}
+          <div
+            className="
+              flex flex-col gap-4
+              sm:flex-row sm:items-start sm:justify-between
+            "
+          >
+            {/* Left */}
+            <div className="space-y-3 text-center sm:text-left">
+
+              {/* Name + title */}
+              <div className="space-y-2">
+                <div className="skeleton h-8 w-64 mx-auto sm:mx-0"></div>
+                <div className="skeleton h-4 w-40 mx-auto sm:mx-0"></div>
+              </div>
+
+              {/* Badges */}
+              <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
+                <div className="skeleton h-6 w-24 rounded-full"></div>
+                <div className="skeleton h-6 w-32 rounded-full"></div>
+              </div>
+            </div>
+
+            {/* Edit button */}
+            <div className="skeleton h-9 w-32 self-center sm:self-start rounded-lg"></div>
+          </div>
+
+          {/* Bio */}
+          <div className="space-y-2">
+            <div className="skeleton h-4 w-full max-w-3xl"></div>
+            <div className="skeleton h-4 w-[95%] max-w-3xl"></div>
+            <div className="skeleton h-4 w-[80%] max-w-2xl"></div>
+          </div>
+
+          {/* Metadata */}
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="skeleton h-16 rounded-xl"></div>
+            <div className="skeleton h-16 rounded-xl"></div>
+            <div className="skeleton h-16 rounded-xl"></div>
+          </div>
+
+        </div>
       </div>
     );
   }

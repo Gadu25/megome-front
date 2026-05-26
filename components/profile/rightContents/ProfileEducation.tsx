@@ -44,6 +44,66 @@ export default function ProfileEducation() {
   const openEditModal = () => setIsEditOpen(true);
   const closeEditModal = () => setIsEditOpen(false);
 
+  if (loading) {
+    return (
+      <section className="space-y-4">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="skeleton h-6 w-32"></div>
+          <div className="skeleton h-9 w-24 rounded-lg"></div>
+        </div>
+
+        {/* Education list */}
+        <div className="space-y-4">
+
+          {[...Array(3)].map((_, index) => {
+            const isLastItem = index === 2;
+
+            return (
+              <article
+                key={index}
+                className="flex gap-4 rounded-xl border border-base-300 bg-base-100 p-4"
+              >
+
+                {/* Timeline */}
+                <div
+                  aria-hidden="true"
+                  className="flex flex-col items-center"
+                >
+                  <div className="mt-1 h-3 w-3 rounded-full bg-base-300" />
+
+                  {!isLastItem && (
+                    <div className="mt-1 w-px flex-1 bg-base-300" />
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className="min-w-0 flex-1 space-y-3">
+
+                  {/* Degree + field */}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <div className="skeleton h-5 w-44"></div>
+                    <div className="skeleton h-4 w-28"></div>
+                  </div>
+
+                  {/* School */}
+                  <div className="skeleton h-4 w-56"></div>
+
+                  {/* Date */}
+                  <div className="skeleton h-3 w-40"></div>
+
+                </div>
+
+              </article>
+            );
+          })}
+
+        </div>
+
+      </section>
+    )
+  }
+
   return (
     <>
       <section className="space-y-4">

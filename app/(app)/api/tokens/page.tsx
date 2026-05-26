@@ -219,8 +219,24 @@ export default function ApiTokensPage() {
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-12">
-            <span className="loading loading-spinner loading-lg" />
+          <div className="flex gap-5">
+            <div className="skeleton hidden lg:block h-12 w-12 rounded-lg"></div>
+
+            <div className="flex-1 space-y-5">
+              <div className="space-y-2">
+                <div className="skeleton h-6 w-40"></div>
+                <div className="skeleton h-4 w-72"></div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="skeleton h-4 w-24"></div>
+                <div className="skeleton h-10 w-full"></div>
+              </div>
+
+              <div className="flex justify-end">
+                <div className="skeleton h-10 w-32 rounded-md"></div>
+              </div>
+            </div>
           </div>
         ) : sortedTokens.length === 0 ? (
           <Card className="p-10 text-center border border-dashed border-base-300">

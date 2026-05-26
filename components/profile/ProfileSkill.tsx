@@ -36,6 +36,34 @@ export default function ProfileSkill() {
     fetchSkills();
   }, []);
 
+  if (loading) {
+    return (
+      <Card className="shadow-xs p-6">
+        <div className="flex items-start justify-between gap-4">
+          <div className="skeleton h-6 w-28"></div>
+        </div>
+
+        <div className="space-y-5 mt-6">
+
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="space-y-2">
+
+              {/* Top row */}
+              <div className="flex items-center justify-between">
+                <div className="skeleton h-4 w-32"></div>
+                <div className="skeleton h-4 w-20"></div>
+              </div>
+
+              {/* Progress bar */}
+              <div className="skeleton h-3 w-full rounded-full"></div>
+            </div>
+          ))}
+
+        </div>
+      </Card>
+    )
+  }
+
   return (
     <>
       <Card className="shadow-xs p-6">
@@ -44,9 +72,7 @@ export default function ProfileSkill() {
           onEdit={() => setIsEditOpen(true)}
         />
 
-        {loading ? (
-          <div className="h-24 animate-pulse bg-base-200 rounded-lg" />
-        ) : skills.length === 0 ? (
+        { skills.length === 0 ? (
           <EmptyState
             title="No skills added yet"
             description="Add your skills to showcase your expertise"
