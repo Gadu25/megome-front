@@ -44,6 +44,60 @@ export default function ProfileCertificates() {
   const openEditModal = () => setIsEditOpen(true);
   const closeEditModal = () => setIsEditOpen(false);
 
+  if (loading) {
+    return (
+      <section className="space-y-4">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="skeleton h-6 w-32"></div>
+          <div className="skeleton h-9 w-24 rounded-lg"></div>
+        </div>
+
+        {/* Certificate list */}
+        <div className="space-y-3">
+
+          {[...Array(3)].map((_, index) => (
+            <article
+              key={index}
+              className="card border border-base-300 bg-base-100"
+            >
+              <div className="card-body space-y-4 p-5">
+
+                {/* Header */}
+                <header className="space-y-2">
+
+                  {/* Title */}
+                  <div className="skeleton h-5 w-3/4"></div>
+
+                  {/* Issuer */}
+                  <div className="skeleton h-4 w-40"></div>
+
+                  {/* Dates */}
+                  <div className="skeleton h-3 w-52"></div>
+
+                </header>
+
+                {/* Actions */}
+                <div className="flex flex-wrap gap-2 pt-1">
+
+                  {/* Credential button */}
+                  <div className="skeleton h-7 w-28 rounded-md"></div>
+
+                  {/* Credential ID */}
+                  <div className="skeleton h-7 w-36 rounded-md"></div>
+
+                </div>
+
+              </div>
+            </article>
+          ))}
+
+        </div>
+
+      </section>
+    )
+  }
+
   return (
     <>
       <section className="space-y-4">

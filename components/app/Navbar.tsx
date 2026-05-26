@@ -30,8 +30,8 @@ export default function Navbar({ profile }: Props) {
   const title = routeTitles[pathname] || "App";
 
   return (
-    <nav className=" navbar sticky top-0 z-50 border-b border-base-200 bg-base-100/80 backdrop-blur-md supports-[backdrop-filter]:bg-base-100/70">
-      <div className="flex w-full items-center justify-between px-4">
+    <nav className="navbar sticky top-0 z-50 border-b border-base-200 bg-base-100/80 backdrop-blur-md supports-[backdrop-filter]:bg-base-100/70">
+      <div className="flex w-full items-center justify-between px-0 lg:px-4">
         <div className="flex items-center gap-3">
           <label htmlFor="my-drawer-4" aria-label="Open sidebar" className="btn btn-ghost btn-square">
             <Bars3BottomLeftIcon className="size-5" />

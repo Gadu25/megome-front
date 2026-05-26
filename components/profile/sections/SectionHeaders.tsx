@@ -10,7 +10,7 @@ export function SectionHeader({
   rightElement?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between mb-6">
       <h2 className="font-semibold text-base">
         {title}
       </h2>

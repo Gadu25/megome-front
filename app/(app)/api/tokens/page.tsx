@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ClipboardIcon, KeyIcon } from "@heroicons/react/24/outline";
 
@@ -146,7 +147,7 @@ export default function ApiTokensPage() {
   /* ---------------- UI ---------------- */
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <ApiPageHeader
         title="Access Tokens"
         description="Manage personal access tokens used to authenticate API requests."
@@ -158,9 +159,9 @@ export default function ApiTokensPage() {
       />
 
       {/* CREATE TOKEN */}
-      <Card className="p-4">
+      <Card className="p-6 shadow-xs">
         <div className="flex items-start gap-5">
-          <div className="rounded-xl bg-primary/10 p-3 text-primary">
+          <div className="rounded-lg bg-primary/10 p-3 text-primary hidden lg:block">
             <KeyIcon className="size-6" />
           </div>
 
@@ -187,7 +188,7 @@ export default function ApiTokensPage() {
               </p>
             </div>
 
-            <Card className="p-4 bg-warning/5 border border-warning/10">
+            <Card className="p-4 bg-warning/5 border border-warning/10 rounded-lg">
               <p className="text-sm text-base-content/70">
                 Tokens are shown only once and securely hashed before storage.
               </p>
@@ -210,7 +211,7 @@ export default function ApiTokensPage() {
       </Card>
 
       {/* TOKEN LIST */}
-      <Card className="p-8">
+      <Card className="p-6 shadow-xs">
         <div className="mb-6">
           <h2 className="text-xl font-semibold">Issued Tokens</h2>
           <p className="mt-1 text-sm text-base-content/60">
@@ -219,8 +220,24 @@ export default function ApiTokensPage() {
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-12">
-            <span className="loading loading-spinner loading-lg" />
+          <div className="flex gap-5">
+            <div className="skeleton hidden lg:block h-12 w-12 rounded-lg"></div>
+
+            <div className="flex-1 space-y-5">
+              <div className="space-y-2">
+                <div className="skeleton h-6 w-40"></div>
+                <div className="skeleton h-4 w-72"></div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="skeleton h-4 w-24"></div>
+                <div className="skeleton h-10 w-full"></div>
+              </div>
+
+              <div className="flex justify-end">
+                <div className="skeleton h-10 w-32 rounded-md"></div>
+              </div>
+            </div>
           </div>
         ) : sortedTokens.length === 0 ? (
           <Card className="p-10 text-center border border-dashed border-base-300">
@@ -266,6 +283,13 @@ export default function ApiTokensPage() {
                     </div>
 
                     <div className="flex gap-2">
+                      <Link
+                        href={`/api/tokens/logs/${token.id}`}
+                        className="btn btn-ghost btn-sm"
+                        aria-label={`View logs for ${token.name}`}
+                      >
+                        View Logs
+                      </Link>
                       {!revoked ? (
                         <button
                           className="btn btn-outline btn-warning btn-sm"
