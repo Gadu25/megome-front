@@ -3,11 +3,11 @@
 import { useId } from "react";
 import {
   ClipboardIcon,
-  ChevronDownIcon,
   ChevronRightIcon,
   CodeBracketIcon,
 } from "@heroicons/react/24/outline";
 
+import Link from "next/link";
 import { Card } from "@/components/common/Card";
 
 /* ---------------- Types ---------------- */
@@ -485,9 +485,9 @@ export default function ApiPage() {
             </p>
           </div>
 
-          <button className="btn btn-primary">
+          <Link href="/api/tokens" className="btn btn-primary">
             Manage Tokens
-          </button>
+          </Link>
         </div>
       </Card>
 
