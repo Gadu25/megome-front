@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { getTokenLogsServer } from "@/lib/api/server/apiLog";
 import { humanizeDate } from "@/functions/humanitizeDate";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 export default async function ApiUsageLogsPage({ params }: { params: { id: string }}) {
   const resolvedParams = await params;
@@ -12,6 +14,15 @@ export default async function ApiUsageLogsPage({ params }: { params: { id: strin
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
+      <div className="mb-4">
+        <Link
+          href="/api/tokens"
+          className="inline-flex items-center gap-2 text-sm text-base-content/70 hover:text-base-content transition-colors"
+        >
+          <ArrowLeftIcon className="size-4" />
+          Back to Tokens
+        </Link>
+      </div>
 
       {/* HEADER / CONTEXT */}
       <header className="space-y-3 border-b border-base-200 pb-4">
