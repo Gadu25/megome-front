@@ -13,3 +13,8 @@ export const profileSchema = z.object({
   location: z.string().max(100, "Location must be at most 100 characters").optional(),
   // profileImage: z.instanceof(File).optional(),
 });
+
+export const skillSchema = z.object({
+  skillName: z.string().min(1, "Skill name is required"),
+  proficiency: z.string().min(1, "Proficiency is required"),
+});
