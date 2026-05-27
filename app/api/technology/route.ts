@@ -7,7 +7,7 @@ export async function GET() {
   try {
     const accesToken = await getAccessToken();
 
-    const response = await fetch(
+    return await fetch(
       `${BACKEND_URL}/api/v1/technology`,
       {
         method: "GET",
@@ -16,19 +16,6 @@ export async function GET() {
         }
       }
     )
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return NextResponse.json(
-        {
-          message: "Failed to fetch technologies",
-          technologies: [],
-        }
-      )
-    }
-
-    return NextResponse.json(data);
   } catch (err) {
     return NextResponse.json(
        {

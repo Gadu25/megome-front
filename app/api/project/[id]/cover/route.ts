@@ -9,24 +9,13 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     const accessToken = await getAccessToken();
     const formData = await req.formData();
 
-    const response = await fetch(`${BACKEND_URL}/api/v1/project/${id}/cover`, {
+    return await fetch(`${BACKEND_URL}/api/v1/project/${id}/cover`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
       body: formData,
     });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return NextResponse.json(
-        { message: data.error || "Failed to upload cover", image: null },
-        { status: response.status }
-      );
-    }
-
-    return NextResponse.json(data);
   } catch (err) {
     return NextResponse.json(
       { message: err || "Internal server error", image: null },

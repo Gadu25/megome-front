@@ -7,7 +7,7 @@ export async function GET() {
   try {
     const accesToken = await getAccessToken();
 
-    const response = await fetch(
+    return await fetch(
       `${BACKEND_URL}/api/v1/certification`,
       {
         method: "GET",
@@ -16,19 +16,6 @@ export async function GET() {
         }
       }
     )
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return NextResponse.json(
-        {
-          message: "Failed to fetch certificates",
-          certificates: [],
-        }
-      )
-    }
-
-    return NextResponse.json(data);
   } catch (err) {
     return NextResponse.json(
        {
@@ -44,7 +31,7 @@ export async function POST(req: Request) {
     const accessToken = await getAccessToken();
     const body = await req.json();
 
-    const response = await fetch(`${BACKEND_URL}/api/v1/certification`, {
+    return await fetch(`${BACKEND_URL}/api/v1/certification`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,17 +39,6 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify(body),
     });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return NextResponse.json(
-        { message: data.error || "Failed to add certificate" },
-        { status: response.status }
-      );
-    }
-
-    return NextResponse.json(data);
   } catch (_) {
     return NextResponse.json(
       { message: "Internal server error" },

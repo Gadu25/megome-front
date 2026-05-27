@@ -38,7 +38,7 @@ export async function fetchClient(
     }
 
     // Retry original request with fresh cookies
-    return fetch(input, {
+    return await fetch(input, {
       ...init,
       credentials: "include",
     });
