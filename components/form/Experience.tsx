@@ -24,6 +24,7 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
     company: "",
     startDate: "",
     endDate: "",
+    isPresent: false,
     description: "",
   })
 
@@ -111,6 +112,7 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
       company: "",
       startDate: "",
       endDate: "",
+      isPresent: false,
       description: "",
     })
   }
@@ -175,12 +177,33 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
                     }
                   />
 
-                  <input type="date" className="input input-bordered w-full" value={formatDate(exp.endDate)}
+                  <input
+                    type="date"
+                    className="input input-bordered w-full"
+                    value={formatDate(exp.endDate)}
+                    disabled={exp.isPresent}
                     onChange={(e) =>
                       handleUpdate(exp.id, "endDate", e.target.value)
                     }
                   />
                 </div>
+
+                <fieldset className="fieldset relative w-full flex gap-2">
+                  <label className="label">Currently working here?</label>
+
+                  <input
+                    type="checkbox"
+                    className="toggle"
+                    checked={exp.isPresent}
+                    onChange={(e) => {
+                      handleUpdate(exp.id, "isPresent", e.target.checked)
+
+                      if (e.target.checked) {
+                        handleUpdate(exp.id, "endDate", "")
+                      }
+                    }}
+                  />
+                </fieldset>
 
                 <textarea placeholder="Describe your responsibilities, impact, and technologies..."
                   className="textarea textarea-bordered w-full min-h-[100px]"
@@ -190,7 +213,7 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
                   }
                 />
 
-                {!exp.endDate && (
+                {exp.isPresent && (
                   <div className="text-xs text-success">
                     Current role
                   </div>
@@ -245,7 +268,11 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
               
               <fieldset className="fieldset relative w-full">
                 <label className="label">End date</label>
-                <input type="date" className="input input-bordered w-full" value={newExp.endDate}
+                <input
+                  type="date"
+                  className="input input-bordered w-full"
+                  value={newExp.endDate}
+                  disabled={newExp.isPresent}
                   onChange={(e) =>
                     setNewExp((prev) => ({
                       ...prev,
@@ -255,6 +282,22 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
                 />
               </fieldset>
             </div>
+
+            <fieldset className="fieldset relative w-full flex gap-2">
+              <label className="label">Currently working here?</label>
+              <input
+                type="checkbox"
+                className="toggle"
+                checked={newExp.isPresent}
+                onChange={(e) =>
+                  setNewExp((prev) => ({
+                    ...prev,
+                    isPresent: e.target.checked,
+                    endDate: e.target.checked ? "" : prev.endDate,
+                  }))
+                }
+              />
+            </fieldset>
             
             <fieldset className="fieldset relative">
               <legend className="label">Description</legend>

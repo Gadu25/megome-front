@@ -25,6 +25,7 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
     fieldOfStudy: "",
     startDate: "",
     endDate: "",
+    isPresent: false,
   })
 
   const [modalOpen, setModalOpen] = useState(false)
@@ -90,11 +91,13 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
     const payload = {
       ...newEducation,
       startDate: formatDate(newEducation.startDate),
-      endDate: formatDate(newEducation.endDate),
+      endDate: newEducation.endDate
+        ? formatDate(newEducation.endDate)
+        : null,
     }
 
     const data = await withRequest(
-      () => addEducationClient(payload),
+      () => addEducationClient(payload as EducationForm),
       showToast
     )
 
@@ -108,6 +111,7 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
       fieldOfStudy: "",
       startDate: "",
       endDate: "",
+      isPresent: false,
     })
   }
 
@@ -179,11 +183,28 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
                   />
 
                   <input type="date" className="input input-bordered w-full" value={formatDate(edu.endDate)}
+                    disabled={edu.isPresent}
                     onChange={(e) =>
                       handleUpdate(edu.id, "endDate", e.target.value)
                     }
                   />
                 </div>
+
+                <fieldset className="fieldset relative w-full flex gap-2">
+                  <label className="label">Currently studying here?</label>
+                  <input
+                    type="checkbox"
+                    className="toggle"
+                    checked={edu.isPresent}
+                    onChange={(e) => {
+                      handleUpdate(edu.id, "isPresent", e.target.checked)
+
+                      if (e.target.checked) {
+                        handleUpdate(edu.id, "endDate", "")
+                      }
+                    }}
+                  />
+                </fieldset>
               </div>
             </div>
           ))}
@@ -246,6 +267,7 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
               <fieldset className="fieldset relative w-full">
                 <label className="label">End date</label>
                 <input type="date" className="input input-bordered w-full" value={newEducation.endDate}
+                  disabled={newEducation.isPresent}
                   onChange={(e) =>
                     setNewEducation((prev) => ({
                       ...prev,
@@ -255,6 +277,22 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
                 />
               </fieldset>
             </div>
+
+            <fieldset className="fieldset relative w-full flex gap-2">
+              <label className="label">Currently working here?</label>
+              <input
+                type="checkbox"
+                className="toggle"
+                checked={newEducation.isPresent}
+                onChange={(e) =>
+                  setNewEducation((prev) => ({
+                    ...prev,
+                    isPresent: e.target.checked,
+                    endDate: e.target.checked ? "" : prev.endDate,
+                  }))
+                }
+              />
+            </fieldset>
 
             <div className="flex justify-end">
               <button className="btn btn-primary" onClick={handleAdd} disabled={!newEducation.school.trim()}>
