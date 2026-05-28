@@ -28,7 +28,7 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedSkillId, setSelectedSkillId] = useState<number | null>(null);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
-  const [loading, setLoading] = useState(false);
+  const [addLoading, setAddLoading] = useState(false);
 
   const handleUpdateSkill = (id: number, field: keyof Skill, value: Skill[keyof Skill] ) => {
     let updatedSkill: Skill | undefined;
@@ -81,14 +81,15 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
 
   const handleAddSkill = async () => {
     setErrors({});
-    setLoading(true);
+    setAddLoading(true);
 
     try {
       const result = skillSchema.safeParse(newSkill);
 
       if (!result.success) {
         setErrors(result.error.flatten().fieldErrors);
-        setLoading(false);
+        setAddLoading(false);
+        return;
       }
 
       const data = await withRequest(
@@ -107,7 +108,7 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
     } catch (err: any) {
       showToast(err.response?.data?.error, "error")
     } finally {
-      setLoading(false)
+      setAddLoading(false)
     }
   }
 
@@ -130,38 +131,50 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
     handleDeleteSkill()
   }
 
+  function LoadingSkill() {
+    return (
+      <div className="flex gap-2 items-center">
+        <div className="skeleton h-10 flex-1 rounded-md"></div>
+        <div className="skeleton h-10 w-32 rounded-md"></div>
+        <div className="skeleton h-6 w-6 rounded-sm"></div>
+      </div>
+    )
+  }
+
   return (
     <>
       <div className="space-y-6">
         <div className="space-y-4">
           {initialSkills.map((skill) => (
-            <div key={skill.id} className="flex gap-2 items-center">
-              <input type="text" className="input input-bordered w-full" value={skill.skillName}
-                onChange={(e) =>
-                  handleUpdateSkill(skill.id, 'skillName', e.target.value)
-                }
-              />
+              <div key={skill.id} className="flex gap-2 items-center">
+                <input type="text" className="input input-bordered w-full" value={skill.skillName}
+                  onChange={(e) =>
+                    handleUpdateSkill(skill.id, 'skillName', e.target.value)
+                  }
+                />
 
-              <select className="select select-bordered" value={skill.proficiency}
-                onChange={(e) => handleUpdateSkill(skill.id, 'proficiency', e.target.value as Skill['proficiency'])}
-              >
-                {PROFICIENCY_OPTIONS.map((level) => (
-                  <option key={level} value={level}>
-                    {level}
-                  </option>
-                ))}
-              </select>
+                <select className="select select-bordered" value={skill.proficiency}
+                  onChange={(e) => handleUpdateSkill(skill.id, 'proficiency', e.target.value as Skill['proficiency'])}
+                >
+                  {PROFICIENCY_OPTIONS.map((level) => (
+                    <option key={level} value={level}>
+                      {level}
+                    </option>
+                  ))}
+                </select>
 
-              <button className="btn btn-error btn-xs"
-                onClick={() => {
-                  setSelectedSkillId(skill.id);
-                  setModalOpen(true);
-                }}
-              >
-                <XMarkIcon className="size-4"/>
-              </button>
-            </div>
-          ))}
+                <button className="btn btn-error btn-xs"
+                  onClick={() => {
+                    setSelectedSkillId(skill.id);
+                    setModalOpen(true);
+                  }}
+                >
+                  <XMarkIcon className="size-4"/>
+                </button>
+              </div>
+            ))
+          }
+          { addLoading ? <LoadingSkill/> : null }
         </div>
 
         <div className="border-t pt-4 space-y-2">
