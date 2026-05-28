@@ -18,3 +18,11 @@ export const skillSchema = z.object({
   skillName: z.string().min(1, "Skill name is required"),
   proficiency: z.string().min(1, "Proficiency is required"),
 });
+
+export const educationSchema = z.object({
+  
+})
+
+export const experienceSchema = z.object({
+  
+})
