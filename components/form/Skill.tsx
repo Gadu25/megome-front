@@ -88,12 +88,11 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
 
       if (!result.success) {
         setErrors(result.error.flatten().fieldErrors);
-        setAddLoading(false);
         return;
       }
 
       const data = await withRequest(
-        () => addSkillClient(newSkill as SkillForm),
+        () => addSkillClient(result.data as SkillForm),
         showToast
       )
 
