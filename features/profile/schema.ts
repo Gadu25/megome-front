@@ -20,9 +20,45 @@ export const skillSchema = z.object({
 });
 
 export const educationSchema = z.object({
-  
+  school: z.string().min(1, "Institution name is required"),
+  degree: z.string().min(1, "Degree is required"),
+  fieldOfStudy: z.string().min(1, "Field of study is required"),
+  startDate: z.string().min(1, "Start date is required"),
+  endDate: z.string().optional(),
+  isPresent: z.boolean(),
 })
+.refine(
+  (data) => {
+    if (data.isPresent) return true;
+    return !!data.endDate && data.endDate.trim().length > 0;
+  },
+  {
+    message: "End date is required",
+    path: ["endDate"],
+  }
+);
 
-export const experienceSchema = z.object({
-  
-})
+export type EducationForm = z.infer<typeof educationSchema>;
+
+export const experienceSchema = z
+  .object({
+    title: z.string().min(1, "Job title is required"),
+    company: z.string().min(1, "Company name is required"),
+    startDate: z.string().min(1, "Start date is required"),
+    endDate: z.string().optional(),
+    isPresent: z.boolean(),
+    description: z
+      .string()
+      .min(1, "Description is required")
+      .max(1000, "Description is too long"),
+  })
+  .refine(
+    (data) => {
+      if (data.isPresent) return true;
+      return !!data.endDate && data.endDate.trim().length > 0;
+    },
+    {
+      message: "End date is required",
+      path: ["endDate"],
+    }
+  );
