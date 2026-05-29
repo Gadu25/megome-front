@@ -148,6 +148,39 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
     );
   }
 
+  function LoadingEducation() {
+    return (
+      <div className="card bg-base-100 border border-base-300 shadow-sm">
+        <div className="card-body p-4 space-y-4">
+          {/* Header */}
+          <div className="flex justify-between items-start gap-2">
+            <div className="skeleton h-10 flex-1 rounded-md" />
+
+            <div className="skeleton h-8 w-8 rounded-md shrink-0" />
+          </div>
+
+          {/* Degree + Field */}
+          <div className="grid md:grid-cols-2 gap-3">
+            <div className="skeleton h-10 w-full rounded-md" />
+            <div className="skeleton h-10 w-full rounded-md" />
+          </div>
+
+          {/* Dates */}
+          <div className="grid md:grid-cols-2 gap-3">
+            <div className="skeleton h-10 w-full rounded-md" />
+            <div className="skeleton h-10 w-full rounded-md" />
+          </div>
+
+          {/* Toggle */}
+          <div className="flex items-center justify-between gap-2">
+            <div className="skeleton h-4 w-44 rounded" />
+            <div className="skeleton h-6 w-12 rounded-full" />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
       <div className="space-y-6">
@@ -225,6 +258,7 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
               </div>
             </div>
           ))}
+          {addLoading ? <LoadingEducation/> : null}
         </div>
 
         <div className="card bg-base-200 border border-base-300">
