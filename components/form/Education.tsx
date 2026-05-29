@@ -22,6 +22,7 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
 
   const [newEducation, setNewEducation] = useState<EducationForm>({
     school: "",
+    description: "",
     degree: "",
     fieldOfStudy: "",
     startDate: "",
@@ -119,6 +120,7 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
 
       setNewEducation({
         school: "",
+        description: "",
         degree: "",
         fieldOfStudy: "",
         startDate: "",
@@ -211,6 +213,15 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
                   </button>
                 </div>
 
+                <textarea
+                  placeholder="Describe your studies, achievements, activities, and relevant coursework..."
+                  className="textarea textarea-bordered w-full min-h-[100px]"
+                  value={edu.description}
+                  onChange={(e) =>
+                    handleUpdate(edu.id, "description", e.target.value)
+                  }
+                />
+
                 <div className="grid md:grid-cols-2 gap-3">
                   <input type="text" placeholder="Degree" className="input input-bordered w-full" value={edu.degree}
                     onChange={(e) =>
@@ -278,6 +289,26 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
                 />
                 {errors.school && (
                   <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.school }</span>
+                )}
+              </fieldset>
+
+              <fieldset className="fieldset relative">
+                <legend className="label">Description</legend>
+                <textarea
+                  placeholder="Describe your studies, achievements, activities, and relevant coursework..."
+                  className="textarea textarea-bordered w-full min-h-[100px]"
+                  value={newEducation.description}
+                  onChange={(e) =>
+                    setNewEducation((prev) => ({
+                      ...prev,
+                      description: e.target.value,
+                    }))
+                  }
+                />
+                {errors.description && (
+                  <span className="text-error text-sm absolute bottom-[-1rem] left-0">
+                    {errors.description}
+                  </span>
                 )}
               </fieldset>
               

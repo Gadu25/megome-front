@@ -149,7 +149,7 @@ export default function ProfileEducation() {
                   </div>
 
                   {/* CONTENT */}
-                  <div className="min-w-0 flex-1 space-y-1">
+                  <div className="min-w-0 flex-1 space-y-2">
                     <header className="space-y-1">
                       <h3 className="font-semibold leading-tight">
                         {edu.degree || "Untitled Degree"}
@@ -172,6 +172,12 @@ export default function ProfileEducation() {
                           : "Present"}
                       </p>
                     </header>
+
+                    {edu.description && (
+                      <p className="text-sm leading-relaxed text-base-content/80 whitespace-pre-line">
+                        {edu.description}
+                      </p>
+                    )}
                   </div>
                 </article>
               );

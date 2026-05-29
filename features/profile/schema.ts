@@ -21,6 +21,10 @@ export const skillSchema = z.object({
 
 export const educationSchema = z.object({
   school: z.string().min(1, "Institution name is required"),
+  description: z
+      .string()
+      .min(1, "Description is required")
+      .max(1000, "Description is too long"),
   degree: z.string().min(1, "Degree is required"),
   fieldOfStudy: z.string().min(1, "Field of study is required"),
   startDate: z.string().min(1, "Start date is required"),
@@ -38,10 +42,7 @@ export const educationSchema = z.object({
   }
 );
 
-export type EducationForm = z.infer<typeof educationSchema>;
-
-export const experienceSchema = z
-  .object({
+export const experienceSchema = z.object({
     title: z.string().min(1, "Job title is required"),
     company: z.string().min(1, "Company name is required"),
     startDate: z.string().min(1, "Start date is required"),

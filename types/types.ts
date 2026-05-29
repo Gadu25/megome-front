@@ -94,6 +94,7 @@ export type Education = {
   id: number;
   userId: number;
   school: string;
+  description: string;
   degree: string;
   fieldOfStudy: string;
   startDate: string;
@@ -105,6 +106,7 @@ export type Education = {
 
 export type EducationForm = {
   school: string;
+  description: string;
   degree: string;
   fieldOfStudy: string;
   startDate: string;
