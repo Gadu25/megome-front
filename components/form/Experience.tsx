@@ -8,6 +8,7 @@ import { useToast } from "../toast/useToast";
 import { withRequest } from "@/functions/withRequest";
 import type { Experience, ExperienceForm } from "@/types/types"
 import Modal from "../modal/Modal"
+import { experienceSchema } from "@/features/profile/schema"
 
 type Props = {
   initialExperiences: Experience[]
@@ -30,6 +31,8 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
 
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedId, setSelectedId] = useState<number | null>(null)
+  const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const [addLoading, setAddLoading] = useState(false);
 
   const handleUpdate = ( id: number, field: keyof Experience, value: Experience[keyof Experience]) => {
     let updatedItem: Experience | undefined
@@ -89,32 +92,47 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
   }
 
   const handleAdd = async () => {
-    if (!newExp.title.trim() || !newExp.company.trim()) return
+    setErrors({});
+    setAddLoading(true);
 
-    const payload = {
-      ...newExp,
-      startDate: formatDate(newExp.startDate),
-      endDate: newExp.endDate
-        ? formatDate(newExp.endDate)
-        : null,
+    try {
+      const result = experienceSchema.safeParse(newExp);
+
+      if (!result.success) {
+        setErrors(result.error.flatten().fieldErrors);
+        return
+      }
+
+      const payload = {
+        ...result.data,
+        startDate: formatDate(result.data.startDate),
+        endDate: result.data.endDate
+          ? formatDate(result.data.endDate)
+          : null,
+      }
+  
+      const data = await withRequest(
+        () => addExperienceClient(payload as ExperienceForm),
+        showToast
+      )
+  
+      if (!data) return;
+      setExperiences((prev) => [...prev, data.experience]);
+  
+      setNewExp({
+        title: "",
+        company: "",
+        startDate: "",
+        endDate: "",
+        isPresent: false,
+        description: "",
+      })
+    } catch (err: any) {
+      showToast(err.response?.data?.error, "error")
+    } finally {
+      setAddLoading(false);
     }
 
-    const data = await withRequest(
-      () => addExperienceClient(payload as ExperienceForm),
-      showToast
-    )
-
-    if (!data) return;
-    setExperiences((prev) => [...prev, data.experience]);
-
-    setNewExp({
-      title: "",
-      company: "",
-      startDate: "",
-      endDate: "",
-      isPresent: false,
-      description: "",
-    })
   }
 
   const handleDelete = async () => {
@@ -130,6 +148,36 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
     setExperiences((prev) =>
       prev.filter((item) => item.id !== selectedId)
     );
+  }
+
+  function LoadingExperience() {
+    return (
+      <div className="card bg-base-100 border border-base-300 shadow-sm">
+        <div className="card-body p-4 space-y-4">
+          <div className="flex justify-between items-start gap-2">
+            <div className="flex-1 space-y-2">
+              <div className="skeleton h-10 w-full rounded-md" />
+              <div className="skeleton h-10 w-full rounded-md" />
+            </div>
+
+            <div className="skeleton h-8 w-8 rounded-md shrink-0" />
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-3">
+            <div className="skeleton h-10 w-full rounded-md" />
+            <div className="skeleton h-10 w-full rounded-md" />
+          </div>
+
+          <div className="flex items-center justify-between gap-2">
+            <div className="skeleton h-4 w-40 rounded" />
+            <div className="skeleton h-6 w-12 rounded-full" />
+          </div>
+
+          <div className="skeleton h-28 w-full rounded-md" />
+          <div className="skeleton h-4 w-24 rounded" />
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -221,6 +269,7 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
               </div>
             </div>
           ))}
+          {addLoading ? <LoadingExperience/> : null}
         </div>
 
         <div className="card bg-base-200 border border-base-300">
@@ -228,100 +277,111 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
             <h3 className="font-semibold text-base">
               Add Experience
             </h3>
-
-            <fieldset className="fieldset relative w-full">
-              <label className="label"><span className="text-error">*</span>Title</label>
-              <input type="text" placeholder="Job Title" className="input input-bordered w-full" value={newExp.title}
-                onChange={(e) =>
-                  setNewExp((prev) => ({
-                    ...prev,
-                    title: e.target.value,
-                  }))
-                }
-              />
-            </fieldset>
-            
-            <fieldset className="fieldset relative w-full">
-              <label className="label"><span className="text-error">*</span>Company</label>
-              <input type="text" placeholder="Company" className="input input-bordered w-full" value={newExp.company}
-                onChange={(e) =>
-                  setNewExp((prev) => ({
-                    ...prev,
-                    company: e.target.value,
-                  }))
-                }
-              />
-            </fieldset>
-            
-            <div className="grid md:grid-cols-2 gap-3">
+            <div className="space-y-4">
               <fieldset className="fieldset relative w-full">
-                <label className="label"><span className="text-error">*</span>Start date</label>
-                <input type="date" className="input input-bordered w-full" value={newExp.startDate}
+                <label className="label"><span className="text-error">*</span>Title</label>
+                <input type="text" placeholder="Job Title" className="input input-bordered w-full" value={newExp.title}
                   onChange={(e) =>
                     setNewExp((prev) => ({
                       ...prev,
-                      startDate: e.target.value,
+                      title: e.target.value,
+                    }))
+                  }
+                />
+                {errors.title && (
+                  <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.title }</span>
+                )}
+              </fieldset>
+              
+              <fieldset className="fieldset relative w-full">
+                <label className="label"><span className="text-error">*</span>Company</label>
+                <input type="text" placeholder="Company" className="input input-bordered w-full" value={newExp.company}
+                  onChange={(e) =>
+                    setNewExp((prev) => ({
+                      ...prev,
+                      company: e.target.value,
+                    }))
+                  }
+                />
+                {errors.company && (
+                  <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.company }</span>
+                )}
+              </fieldset>
+              
+              <div className="grid md:grid-cols-2 gap-3">
+                <fieldset className="fieldset relative w-full">
+                  <label className="label"><span className="text-error">*</span>Start date</label>
+                  <input type="date" className="input input-bordered w-full" value={newExp.startDate}
+                    onChange={(e) =>
+                      setNewExp((prev) => ({
+                        ...prev,
+                        startDate: e.target.value,
+                      }))
+                    }
+                  />
+                  {errors.startDate && (
+                    <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.startDate }</span>
+                  )}
+                </fieldset>
+                
+                <fieldset className="fieldset relative w-full">
+                  <label className="label">End date</label>
+                  <input
+                    type="date"
+                    className="input input-bordered w-full"
+                    value={newExp.endDate}
+                    disabled={newExp.isPresent}
+                    onChange={(e) =>
+                      setNewExp((prev) => ({
+                        ...prev,
+                        endDate: e.target.value,
+                      }))
+                    }
+                  />
+                  {errors.endDate && (
+                    <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.endDate }</span>
+                  )}
+                </fieldset>
+              </div>
+
+              <fieldset className="fieldset relative w-full flex gap-2">
+                <label className="label">Currently working here?</label>
+                <input
+                  type="checkbox"
+                  className="toggle"
+                  checked={newExp.isPresent}
+                  onChange={(e) =>
+                    setNewExp((prev) => ({
+                      ...prev,
+                      isPresent: e.target.checked,
+                      endDate: e.target.checked ? "" : prev.endDate,
                     }))
                   }
                 />
               </fieldset>
               
-              <fieldset className="fieldset relative w-full">
-                <label className="label">End date</label>
-                <input
-                  type="date"
-                  className="input input-bordered w-full"
-                  value={newExp.endDate}
-                  disabled={newExp.isPresent}
+              <fieldset className="fieldset relative">
+                <legend className="label">Description</legend>
+                <textarea
+                  placeholder="Describe your responsibilities, impact, and technologies..."
+                  className="textarea textarea-bordered w-full min-h-[100px]"
+                  value={newExp.description}
                   onChange={(e) =>
                     setNewExp((prev) => ({
                       ...prev,
-                      endDate: e.target.value,
+                      description: e.target.value,
                     }))
                   }
                 />
+                {errors.description && (
+                  <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.description }</span>
+                )}
               </fieldset>
             </div>
-
-            <fieldset className="fieldset relative w-full flex gap-2">
-              <label className="label">Currently working here?</label>
-              <input
-                type="checkbox"
-                className="toggle"
-                checked={newExp.isPresent}
-                onChange={(e) =>
-                  setNewExp((prev) => ({
-                    ...prev,
-                    isPresent: e.target.checked,
-                    endDate: e.target.checked ? "" : prev.endDate,
-                  }))
-                }
-              />
-            </fieldset>
-            
-            <fieldset className="fieldset relative">
-              <legend className="label">Description</legend>
-              <textarea
-                placeholder="Describe your responsibilities, impact, and technologies..."
-                className="textarea textarea-bordered w-full min-h-[100px]"
-                value={newExp.description}
-                onChange={(e) =>
-                  setNewExp((prev) => ({
-                    ...prev,
-                    description: e.target.value,
-                  }))
-                }
-              />
-            </fieldset>
             
 
             <div className="flex justify-end">
-              <button className="btn btn-primary"
-                onClick={handleAdd}
-                disabled={
-                  !newExp.title.trim() || !newExp.company.trim()
-                }
-              >
+              <button className="btn btn-primary" onClick={handleAdd}>
                 Add
               </button>
             </div>
