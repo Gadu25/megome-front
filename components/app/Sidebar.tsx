@@ -41,7 +41,7 @@ export default function Sidebar() {
       icon: CodeBracketIcon,
       children: [
         {
-          name: "API",
+          name: "API Intro",
           path: "/api/intro",
           icon: InformationCircleIcon,
         },
@@ -106,6 +106,7 @@ export default function Sidebar() {
               return (
                 <li key={item.path}>
                   <Link
+                    key={item.name}
                     href={item.path}
                     className={`
                       flex items-center gap-3 rounded-xl px-3 py-2 transition-colors
@@ -173,6 +174,7 @@ export default function Sidebar() {
                         
                         return (
                           <Link
+                            key={child.path}
                             href={child.path}
                             className={`
                               flex items-center gap-3 rounded-xl px-3 py-2 transition-colors

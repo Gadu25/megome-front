@@ -60,12 +60,12 @@ export default function Navbar({ profile }: Props) {
               </Link>
             </li>
 
-            <li>
+            {/* <li>
               <Link href="/settings">
                 <Cog6ToothIcon className="size-4" />
                 Settings
               </Link>
-            </li>
+            </li> */}
 
             {/* THEME */}
             <li>
@@ -88,7 +88,9 @@ export default function Navbar({ profile }: Props) {
                   Theme
                 </div>
 
-                <ThemeToggle />
+                <div className="pointer-events-none">
+                  <ThemeToggle />
+                </div>
               </button>
             </li>
 

@@ -1,3 +1,4 @@
+import { Card } from "@/components/common/Card";
 import { SettingsTabs } from "@/components/settings/SettingsTab";
 
 import AccountTab from "@/components/settings/tabs/AccountTab";
@@ -47,10 +48,8 @@ export default async function SettingsPage({
 
         {/* Sidebar */}
         <aside className="lg:col-span-1">
-          <div className="card border border-base-200 bg-base-100 shadow-sm lg:sticky lg:top-18">
-            <div className="card-body p-3">
-
-              <div className="px-2 pb-2">
+          <Card variant="default" className="p-4 shadow-xs">
+              <div className="px-2 pb-4">
                 <h1 className="text-lg font-semibold">
                   Settings
                 </h1>
@@ -61,8 +60,7 @@ export default async function SettingsPage({
               </div>
 
               <SettingsTabs activeTab={activeTab} />
-            </div>
-          </div>
+          </Card>
         </aside>
 
         {/* Content */}

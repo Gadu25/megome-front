@@ -9,7 +9,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     const accessToken = await getAccessToken();
     const body = await req.json();
 
-    const response = await fetch(`${BACKEND_URL}/api/v1/certification/${id}`, {
+    return await fetch(`${BACKEND_URL}/api/v1/certification/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -17,17 +17,6 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       },
       body: JSON.stringify(body),
     });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return NextResponse.json(
-        { message: data.error || "Failed to update certificate" },
-        { status: response.status }
-      );
-    }
-
-    return NextResponse.json(data);
   } catch (err) {
     return NextResponse.json(
       { message: err || "Internal server error" },
@@ -41,23 +30,12 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     const { id } = await params;
     const accessToken = await getAccessToken();
 
-    const response = await fetch(`${BACKEND_URL}/api/v1/certification/${id}`, {
+    return await fetch(`${BACKEND_URL}/api/v1/certification/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return NextResponse.json(
-        { message: data.error || "Failed to delete certificate" },
-        { status: response.status }
-      );
-    }
-
-    return NextResponse.json(data);
   } catch (err) {
     return NextResponse.json(
       { message: err || "Internal server error" },

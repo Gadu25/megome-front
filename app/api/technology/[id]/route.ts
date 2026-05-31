@@ -9,7 +9,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const accessToken = await getAccessToken();
     const body = await req.json();
 
-    const response = await fetch(`${BACKEND_URL}/api/v1/projectTech/${id}/batch`, {
+    return await fetch(`${BACKEND_URL}/api/v1/projectTech/${id}/batch`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -17,17 +17,6 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       },
       body: JSON.stringify(body),
     });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      return NextResponse.json(
-        { message: data.error || "Failed to link project technologies" },
-        { status: response.status }
-      );
-    }
-
-    return NextResponse.json(data);
   } catch (err) {
     return NextResponse.json(
       { message: err || "Internal server error" },

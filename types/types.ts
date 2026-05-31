@@ -75,6 +75,7 @@ export type Experience = {
   company: string;
   startDate: string;
   endDate: string;
+  isPresent: boolean;
   description: string;
   createdAt: string;
   updatedAt: string;
@@ -85,6 +86,7 @@ export type ExperienceForm = {
   company: string;
   startDate: string;
   endDate: string;
+  isPresent: boolean;
   description: string;
 }
 
@@ -92,20 +94,24 @@ export type Education = {
   id: number;
   userId: number;
   school: string;
+  description: string;
   degree: string;
   fieldOfStudy: string;
   startDate: string;
   endDate: string;
+  isPresent: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
 export type EducationForm = {
   school: string;
+  description: string;
   degree: string;
   fieldOfStudy: string;
   startDate: string;
   endDate: string;
+  isPresent: boolean;
 }
 
 export type Project = {
