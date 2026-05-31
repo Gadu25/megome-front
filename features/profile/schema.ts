@@ -63,3 +63,34 @@ export const experienceSchema = z.object({
       path: ["endDate"],
     }
   );
+
+export const certificateSchema = z.object({
+  title: z.string().min(1, "Certificate title is required"),
+
+  issuer: z.string().min(1, "Issuer is required"),
+
+  issueDate: z.string().min(1, "Issue date is required"),
+
+  expirationDate: z.string().optional(),
+
+  credentialId: z.string().optional(),
+
+  credentialUrl: z.preprocess(
+    (val) => (val === "" ? undefined : val),
+    z.string().url("Invalid credential URL").optional()
+  ),
+})
+.refine(
+  (data) => {
+    if (!data.expirationDate) return true;
+
+    return (
+      new Date(data.expirationDate).getTime() >=
+      new Date(data.issueDate).getTime()
+    );
+  },
+  {
+    path: ["expirationDate"],
+    message: "Expiration date must be after the issue date",
+  }
+);
