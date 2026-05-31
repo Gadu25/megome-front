@@ -41,7 +41,7 @@ export default function Sidebar() {
       icon: CodeBracketIcon,
       children: [
         {
-          name: "API",
+          name: "API Intro",
           path: "/api/intro",
           icon: InformationCircleIcon,
         },
