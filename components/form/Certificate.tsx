@@ -152,6 +152,60 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
     );
   }
 
+  function LoadingCertificate() {
+    return (
+      <div className="card bg-base-200 border border-base-300">
+        <div className="card-body space-y-4">
+          {/* Header */}
+          <div className="skeleton h-6 w-40 rounded" />
+
+          {/* Title */}
+          <div className="space-y-2">
+            <div className="skeleton h-4 w-20 rounded" />
+            <div className="skeleton h-10 w-full rounded-md" />
+          </div>
+
+          {/* Issuer */}
+          <div className="space-y-2">
+            <div className="skeleton h-4 w-20 rounded" />
+            <div className="skeleton h-10 w-full rounded-md" />
+          </div>
+
+          {/* Dates */}
+          <div className="grid md:grid-cols-2 gap-3">
+            <div className="space-y-2">
+              <div className="skeleton h-4 w-24 rounded" />
+              <div className="skeleton h-10 w-full rounded-md" />
+            </div>
+
+            <div className="space-y-2">
+              <div className="skeleton h-4 w-28 rounded" />
+              <div className="skeleton h-10 w-full rounded-md" />
+            </div>
+          </div>
+
+          {/* Credential ID + URL */}
+          <div className="grid md:grid-cols-2 gap-3">
+            <div className="space-y-2">
+              <div className="skeleton h-4 w-28 rounded" />
+              <div className="skeleton h-10 w-full rounded-md" />
+            </div>
+
+            <div className="space-y-2">
+              <div className="skeleton h-4 w-12 rounded" />
+              <div className="skeleton h-10 w-full rounded-md" />
+            </div>
+          </div>
+
+          {/* Button */}
+          <div className="flex justify-end">
+            <div className="skeleton h-10 w-24 rounded-md" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="space-y-6">
@@ -227,6 +281,7 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
               </div>
             </div>
           ))}
+          {addLoading ? <LoadingCertificate/> : null}
         </div>
 
         <div className="card bg-base-200 border border-base-300">
