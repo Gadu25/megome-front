@@ -4,6 +4,7 @@ import { useState, useRef } from "react"
 import { XMarkIcon } from "@heroicons/react/24/outline"
 import { addCertificateClient, updateCertificateClient, deleteCertificateClient } from "@/lib/api/client/certificate"
 import { formatDate } from "@/functions/formatDate"
+import { certificateSchema } from "@/features/profile/schema";
 import { withRequest } from "@/functions/withRequest"
 import { useToast } from "../toast/useToast";
 import type { Certificate, CertificateForm } from "@/types/types"
@@ -31,6 +32,8 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
 
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedId, setSelectedId] = useState<number | null>(null)
+  const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const [addLoading, setAddLoading] = useState(false);
 
   const handleUpdate = (id: number, field: keyof Certificate, value: Certificate[keyof Certificate]) => {
     let updatedItem: Certificate | undefined
@@ -89,35 +92,48 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
   }
 
   const handleAdd = async () => {
-    if (!newCert.title.trim() || !newCert.issuer.trim() || !newCert.issueDate) {
-      return
+    setErrors({});
+    setAddLoading(true);
+
+    try {
+      const result = certificateSchema.safeParse(newCert);
+
+      if (!result.success) {
+        setErrors(result.error.flatten().fieldErrors);
+        return;
+      }
+
+      const payload = {
+        ...newCert,
+        issueDate: formatDate(newCert.issueDate),
+        expirationDate: newCert.expirationDate ? formatDate(newCert.expirationDate) : null,
+        credentialId: newCert.credentialId || null,
+        credentialUrl: newCert.credentialUrl || null,
+      }
+
+      const data = await withRequest(
+        () => addCertificateClient(payload as CertificateForm),
+        showToast
+      )
+
+      if (!data) return;
+
+      setCertificates((prev) => [...prev, data.certificate]);
+
+      setNewCert({
+        title: "",
+        issuer: "",
+        issueDate: "",
+        expirationDate: "",
+        credentialId: "",
+        credentialUrl: "",
+      })
+
+    } catch(err: any) {
+      showToast(err.response?.data?.error, "error")
+    } finally {
+      setAddLoading(false);
     }
-
-    const payload = {
-      ...newCert,
-      issueDate: formatDate(newCert.issueDate),
-      expirationDate: newCert.expirationDate ? formatDate(newCert.expirationDate) : null,
-      credentialId: newCert.credentialId || null,
-      credentialUrl: newCert.credentialUrl || null,
-    }
-
-    const data = await withRequest(
-      () => addCertificateClient(payload as CertificateForm),
-      showToast
-    )
-
-    if (!data) return;
-
-    setCertificates((prev) => [...prev, data.certificate]);
-
-    setNewCert({
-      title: "",
-      issuer: "",
-      issueDate: "",
-      expirationDate: "",
-      credentialId: "",
-      credentialUrl: "",
-    })
   }
 
   const handleDelete = async () => {
@@ -227,6 +243,9 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
                   }))
                 }
               />
+              {errors.title && (
+                <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.title }</span>
+              )}
             </fieldset>
 
             <fieldset className="fieldset relative w-full">
@@ -239,6 +258,9 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
                   }))
                 }
               />
+              {errors.issuer && (
+                <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.issuer }</span>
+              )}
             </fieldset>
 
             <div className="grid md:grid-cols-2 gap-3">
@@ -252,6 +274,9 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
                     }))
                   }
                 />
+                {errors.issueDate && (
+                <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.issueDate }</span>
+              )}
               </fieldset>
               
               <fieldset className="fieldset relative w-full">
@@ -264,6 +289,9 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
                     }))
                   }
                 />
+                {errors.expirationDate && (
+                <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.expirationDate }</span>
+              )}
               </fieldset>
             </div>
 
@@ -278,6 +306,9 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
                     }))
                   }
                 />
+                {errors.credentialId && (
+                  <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.credentialId }</span>
+                )}
               </fieldset>
               
               <fieldset className="fieldset relative w-full">
@@ -290,18 +321,15 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
                     }))
                   }
                 />
+                {errors.credentialUrl && (
+                  <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.credentialUrl }</span>
+                )}
               </fieldset>
               
             </div>
 
             <div className="flex justify-end">
-              <button className="btn btn-primary" onClick={handleAdd}
-                disabled={
-                  !newCert.title.trim() ||
-                  !newCert.issuer.trim() ||
-                  !newCert.issueDate
-                }
-              >
+              <button className="btn btn-primary" onClick={handleAdd}>
                 Add
               </button>
             </div>
