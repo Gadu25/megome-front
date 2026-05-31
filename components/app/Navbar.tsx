@@ -60,12 +60,12 @@ export default function Navbar({ profile }: Props) {
               </Link>
             </li>
 
-            <li>
+            {/* <li>
               <Link href="/settings">
                 <Cog6ToothIcon className="size-4" />
                 Settings
               </Link>
-            </li>
+            </li> */}
 
             {/* THEME */}
             <li>
