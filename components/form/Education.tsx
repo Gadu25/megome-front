@@ -278,7 +278,7 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
             <div className="space-y-6">
 
               <fieldset className="fieldset relative w-full">
-                <label className="label"><span className="text-error">*</span>School</label>
+                <label className="label"><span className="text-error">*</span>School/ Institute</label>
                 <input type="text" placeholder="School" className="input input-bordered w-full" value={newEducation.school}
                   onChange={(e) =>
                     setNewEducation((prev) => ({
