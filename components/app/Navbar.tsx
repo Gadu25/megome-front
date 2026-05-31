@@ -88,7 +88,9 @@ export default function Navbar({ profile }: Props) {
                   Theme
                 </div>
 
-                <ThemeToggle />
+                <div className="pointer-events-none">
+                  <ThemeToggle />
+                </div>
               </button>
             </li>
 
