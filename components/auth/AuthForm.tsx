@@ -42,7 +42,7 @@ export default function AuthForm({ mode }: { mode: MODE }) {
   };
 
   const handleRegister = async () => {
-    const res = await registerClient(email, password);
+    const res = await registerClient(username, email, password);
 
     // showToast(res.message, "success");
 
