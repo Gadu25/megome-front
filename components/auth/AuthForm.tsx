@@ -8,6 +8,7 @@ import { authSchema } from "@/features/auth/schema";
 import { useToast } from "../toast/useToast";
 import { getInitClient } from "@/lib/api/client/init";
 import { loginClient, registerClient } from "@/lib/api/client/auth";
+import { GoogleLoginButton } from "./GoogleLoginButton";
 
 const SIGNUP = "signup";
 const SIGNIN = "signin";
@@ -20,6 +21,7 @@ export default function AuthForm({ mode }: { mode: MODE }) {
 
 
   const [showPass, setShowPass] = useState(false);
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -108,6 +110,32 @@ export default function AuthForm({ mode }: { mode: MODE }) {
       )}
 
       <form onSubmit={handleAction} className="space-y-3 mx-auto">
+        {mode === SIGNIN && (
+          <>
+            <GoogleLoginButton />
+
+            <div className="divider">
+              OR
+            </div>
+          </>
+        )}
+        {mode === SIGNUP && (
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend">
+              Username
+            </legend>
+
+            <input
+              type="text"
+              value={username}
+              className={`input w-full ${
+                errors.username ? "input-error" : ""
+              }`}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </fieldset>
+        )}
         <fieldset className="fieldset relative">
           <legend className="fieldset-legend">Email</legend>
           <input
@@ -143,9 +171,11 @@ export default function AuthForm({ mode }: { mode: MODE }) {
         </fieldset>
 
         <div className="flex justify-between items-center mt-10">
-          <a href="#" className="text-sm text-accent">
-            Forgot password?
-          </a>
+          {mode === SIGNIN ?
+            <a href="#" className="text-sm text-accent">
+              Forgot password?
+            </a>
+          : <div></div> }
 
           <button
             type="submit"
