@@ -24,7 +24,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: data.message || "Register failed",
+          message: data.error || "Register failed",
         },
         {
           status: response.status,
