@@ -6,7 +6,7 @@ export type LoginResponse = {
 };
 
 export type LoginPayload = {
-  'email': string;
+  'emailOrPassword': string;
   'password': string;
 }
 

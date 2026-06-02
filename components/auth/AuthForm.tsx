@@ -4,7 +4,7 @@ import React, { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/16/solid";
-import { authSchema } from "@/features/auth/schema";
+import { registerSchema, loginSchema } from "@/features/auth/schema";
 import { useToast } from "../toast/useToast";
 import { getInitClient } from "@/lib/api/client/init";
 import { loginClient, registerClient } from "@/lib/api/client/auth";
@@ -23,13 +23,14 @@ export default function AuthForm({ mode }: { mode: MODE }) {
   const [showPass, setShowPass] = useState(false);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
 
   const handleLogin = async () => {
-    const res = await loginClient(email, password);
+    const res = await loginClient(emailOrUsername, password);
 
     const initData = await getInitClient();
 
@@ -62,19 +63,35 @@ export default function AuthForm({ mode }: { mode: MODE }) {
     setErrors({});
     setLoading(true);
 
+    const isSignIn = mode === SIGNIN;
+
     try {
-      const result = authSchema.safeParse({ email, password });
+      const schema = isSignIn ? loginSchema : registerSchema;
+      const action = isSignIn ? handleLogin : handleRegister;
+
+      if (!schema) {
+        throw new Error("Schema not defined");
+      }
+
+      const data = isSignIn ? {
+        emailOrUsername,
+        password,
+      }
+      : {
+        username,
+        email,
+        password,
+      };
+
+      const result = schema.safeParse(data);
 
       if (!result.success) {
         setErrors(result.error.flatten().fieldErrors);
+        console.log("ERRORS", errors)
         return;
       }
 
-      if (mode === SIGNIN) {
-        await handleLogin();
-      } else {
-        await handleRegister();
-      }
+      await action();
     } catch (err: any) {
       setError(err.message || "An error occurred");
     } finally {
@@ -137,12 +154,21 @@ export default function AuthForm({ mode }: { mode: MODE }) {
           </fieldset>
         )}
         <fieldset className="fieldset relative">
-          <legend className="fieldset-legend">Email</legend>
+            {mode === SIGNUP ? 
+              (
+              <legend className="fieldset-legend">
+                Email
+              </legend>
+              ) :
+              <legend className="fieldset-legend">
+                Email or Username
+              </legend>
+            }
           <input
-            type="email"
-            value={email}
+            type="text"
+            value={mode === SIGNUP ? email : emailOrUsername}
             className={`input w-full ${errors.email ? "input-error" : ""}`}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={mode === SIGNUP ? (e) => setEmail(e.target.value) : (e) => setEmailOrUsername(e.target.value)}
             required
           />
         </fieldset>

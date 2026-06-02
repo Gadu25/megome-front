@@ -5,12 +5,12 @@ interface Response {
   message: string;
 }
 
-export const loginClient = async (email: string, password: string) => {
+export const loginClient = async (emailOrUsername: string, password: string) => {
   const res = await fetch(
     "/api/auth/login",
     {
       method: "POST",
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ emailOrUsername, password }),
     },
   )
   return handleResponse<Response>(res)
