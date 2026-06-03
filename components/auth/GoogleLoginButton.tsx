@@ -3,6 +3,7 @@
 export function GoogleLoginButton() {
   const handleGoogleLogin = async () => {
     // trigger google oauth
+    window.location.href = "http://localhost:8080/auth/google";
   };
 
   return (
