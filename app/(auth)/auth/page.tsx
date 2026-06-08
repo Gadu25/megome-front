@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { BoltIcon, PuzzlePieceIcon, ShieldCheckIcon } from "@heroicons/react/24/outline";
 import { LogoFull } from "@/components/common/Logo";
 import ThemeToggle from "@/components/common/ThemeToggle";
 import AuthForm from "@/components/auth/AuthForm";
+import Link from "next/link";
 
 type FeatureProps = {
   icon: React.ReactNode;
@@ -53,7 +55,8 @@ function AuthTab({
 }
 
 export default function Auth() {
-  const [isSignUp, setIsSignUp] = useState(false);
+  const searchParams = useSearchParams();
+  const [isSignUp, setIsSignUp] = useState(searchParams?.get("mode") === "signup");
 
   return (
     <main className="min-h-screen bg-base-100">
@@ -64,7 +67,9 @@ export default function Auth() {
           {/* Header */}
           <header className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <LogoFull />
+              <Link href="/">
+                <LogoFull />
+              </Link>
 
               <span className=" hidden rounded-full border border-base-300 px-3 py-1 text-xs text-base-content/70 lg:inline-flex">
                 API-First Portfolio Platform
