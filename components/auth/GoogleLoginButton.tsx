@@ -1,45 +1,38 @@
 export function GoogleLoginButton() {
   const handleGoogleLogin = () => {
-    const width = 500;
-    const height = 600;
+  const popup = window.open(
+    "http://localhost:8080/api/v1/auth/google",
+    "google-oauth",
+    "width=500,height=600"
+  );
 
-    const left = window.screenX + (window.innerWidth - width) / 2;
-    const top = window.screenY + (window.innerHeight - height) / 2;
+  const listener = async (event: MessageEvent) => {
+    if (event.origin !== window.location.origin) {
+      return;
+    }
 
-    const popup = window.open(
-      "http://localhost:8080/api/v1/auth/google",
-      "google-oauth",
-      `width=${width},height=${height},top=${top},left=${left}`
-    );
+    if (event.data?.type !== "GOOGLE_AUTH_SUCCESS") {
+      return;
+    }
 
-    const timer = setInterval(() => {
-      if (!popup || popup.closed) {
-        clearInterval(timer);
-        return;
-      }
+    window.removeEventListener("message", listener);
 
-      try {
-        const url = popup.location.href;
+    await fetch("/api/auth/oauth-login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        accessToken: event.data.accessToken,
+        refreshToken: event.data.refreshToken,
+      }),
+    });
 
-        if (url.includes("/auth/callback")) {
-          const params = new URL(url).searchParams;
-
-          const accessToken = params.get("access_token");
-          const refreshToken = params.get("refresh_token");
-
-          if (accessToken && refreshToken) {
-            localStorage.setItem("access_token", accessToken);
-            localStorage.setItem("refresh_token", refreshToken);
-
-            popup.close();
-            window.location.href = "/dashboard";
-          }
-        }
-      } catch (e) {
-        // ignore cross-origin until redirect back to your domain
-      }
-    }, 500);
+    window.location.href = "/dashboard";
   };
+
+  window.addEventListener("message", listener);
+};
 
   return (
     <button
