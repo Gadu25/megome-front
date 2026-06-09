@@ -26,38 +26,31 @@ type StepItem = {
 
 const CODE_EXAMPLES: Record<CodeTab, string> = {
   json: `{
-  "id": "usr_k8x2m9p",
-  "username": "jdoe",
-  "profile": {
-    "name": "Jane Doe",
-    "title": "Senior Software Engineer",
-    "bio": "Building resilient systems at scale."
-  },
-  "experience": [
-    {
-      "company": "Acme Corp",
-      "role": "Lead Engineer",
-      "start": "2021-03",
-      "current": true
-    }
-  ],
-  "projects": [
-    {
-      "title": "Distributed Cache Layer",
-      "stack": ["Go", "Redis", "gRPC"],
-      "url": "https://github.com/jdoe/cache"
-    }
-  ],
-  "skills": ["Go", "Kubernetes", "PostgreSQL"]
+  "message": "profile retrieved successfully",
+  "data": {
+    "id": 12,
+    "userId": 7,
+    "firstName": "Juan",
+    "lastName": "Dela Cruz",
+    "title": "Full Stack Engineer",
+    "birthday": "1998-03-14T00:00:00Z",
+    "bio": "Passionate about building scalable web applications and clean user experiences.",
+    "phone": "+63 917 555 1023",
+    "website": "https://juandelacruz.dev",
+    "location": "Cebu City, Philippines",
+    "profileImage": "https://cdn.example.com/profile/avatar.webp",
+    "createdAt": "2026-01-08T09:12:44Z",
+    "updatedAt": "2026-05-18T11:45:21Z"
+  }
 }`,
   curl: `curl -X GET \\
-  https://api.megome.dev/v1/jdoe \\
+  ${process.env.NEXT_PUBLIC_API_URL!}/public/v1/profile \\
   -H "Authorization: Bearer mgm_live_••••••••"`,
   fetch: `const res = await fetch(
-  "https://api.megome.dev/v1/jdoe",
+  "${process.env.NEXT_PUBLIC_API_URL!}/public/v1/profile",
   {
     headers: {
-      Authorization: \`Bearer \${process.env.MEGOME_API_KEY}\`
+      Authorization: \`Bearer \${process.env.MEGOME_ACCESS_KEY}\`
     }
   }
 );
@@ -78,8 +71,8 @@ const FEATURES: FeatureItem[] = [
   },
   {
     icon: <BoltIcon className="size-5" />,
-    title: "REST API, first class",
-    desc: "One endpoint per user. Hit it from any portfolio site, static generator, or CLI. Works with fetch, curl, Axios.",
+    title: "REST API",
+    desc: "Single clean endpoint with token-scoped responses that vary based on access permissions. Works with fetch, curl, or Axios from any portfolio site, static generator, or CLI.",
   },
   {
     icon: <ArrowPathIcon className="size-5" />,
@@ -88,8 +81,8 @@ const FEATURES: FeatureItem[] = [
   },
   {
     icon: <KeyIcon className="size-5" />,
-    title: "API key management",
-    desc: "Generate scoped keys per project. Rotate without touching your consumers. Monitor usage from the dashboard.",
+    title: "API authentication",
+    desc: "Use personal access tokens to access the API. Tokens can be generated and managed from your account.",
   },
 ];
 
@@ -107,7 +100,7 @@ const STEPS: StepItem[] = [
   {
     num: "03",
     title: "Power your portfolio",
-    desc: "Fetch your data anywhere — static sites, SPAs, CLI scripts. One source, infinite consumers.",
+    desc: "Fetch your data anywhere: static sites, SPAs, CLI scripts. One source, infinite consumers.",
   },
 ];
 
@@ -162,7 +155,7 @@ function CodeTabButton({ tab, active, onClick }: CodeTabButtonProps) {
       className={`text-xs px-3 py-1.5 transition-colors font-mono tracking-wide rounded-lg
         ${active
           ? "bg-base-300 text-base-content"
-          : "text-base-content/40 hover:text-base-content/70"
+          : "text-neutral-content/50 hover:text-neutral-content/80"
         }`}
     >
       {CODE_TAB_LABELS[tab]}
@@ -253,20 +246,20 @@ export default function LandingPage() {
             <Link href="/auth?mode=signup" className="btn btn-primary rounded-xl">
               Start free
             </Link>
-            <Link href="#api" className="btn btn-ghost rounded-xl text-base-content/60">
+            {/* <Link href="#api" className="btn btn-ghost rounded-xl text-base-content/60">
               View API docs →
-            </Link>
+            </Link> */}
           </div>
         </div>
 
         {/* Stat strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-base-300 border border-base-300 rounded-2xl overflow-hidden mt-16">
+        {/* <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-base-300 border border-base-300 rounded-2xl overflow-hidden mt-16">
           {(["Go backend", "REST endpoints", "Typed schema", "API keys"] as const).map((t) => (
             <div key={t} className="bg-base-100 px-5 py-4">
               <p className="text-xs text-base-content/40 font-mono tracking-widest uppercase">{t}</p>
             </div>
           ))}
-        </div>
+        </div> */}
       </section>
 
       {/* ── CODE BLOCK ── */}
@@ -277,7 +270,7 @@ export default function LandingPage() {
           <div className="flex items-center justify-between border-b border-white/10 bg-neutral px-4 py-3">
             <div className="flex items-center gap-3 text-sm font-medium text-neutral-content">
               <div className="size-2 rounded-full bg-success" />
-              API Response
+              API Example
             </div>
             <div className="flex items-center gap-2">
               {(["json", "curl", "fetch"] as CodeTab[]).map((tab) => (
@@ -288,12 +281,12 @@ export default function LandingPage() {
                   onClick={() => setActiveTab(tab)}
                 />
               ))}
-              <button
+              {/* <button
                 onClick={handleCopy}
                 className="text-xs px-3 py-1.5 text-neutral-content/50 hover:text-neutral-content transition-colors font-mono tracking-wide"
               >
                 {copied ? "Copied!" : "Copy"}
-              </button>
+              </button> */}
             </div>
           </div>
 
@@ -308,9 +301,9 @@ export default function LandingPage() {
           <div className="border-t border-white/10 px-4 py-2.5 flex items-center gap-3">
             <span className="text-xs text-success font-mono tracking-widest uppercase">GET</span>
             <span className="text-xs text-neutral-content/40 font-mono">
-              https://api.megome.dev/v1/
+              {process.env.NEXT_PUBLIC_API_URL!}/public/v1/profile
             </span>
-            <span className="text-xs text-primary font-mono">{"{username}"}</span>
+            {/* <span className="text-xs text-primary font-mono">{"{username}"}</span> */}
           </div>
         </div>
       </section>
@@ -400,7 +393,7 @@ export default function LandingPage() {
         </div>
 
         <p className="text-xs text-base-content/30 text-center mt-3 tracking-wide">
-          Structured editing — no CMS clutter
+          Structured content editing with a clean, form-based interface.
         </p>
       </section>
 
@@ -431,7 +424,7 @@ export default function LandingPage() {
       <footer className="border-t border-base-300 px-4 sm:px-6 py-6 max-w-5xl mx-auto">
         <div className="flex items-center justify-between">
           <span className="text-sm text-base-content/40">© 2026 Megome · Built for developers.</span>
-          <div className="flex gap-6">
+          {/* <div className="flex gap-6">
             {(["Docs", "GitHub", "Status"] as const).map((l) => (
               <a
                 key={l}
@@ -441,7 +434,7 @@ export default function LandingPage() {
                 {l}
               </a>
             ))}
-          </div>
+          </div> */}
         </div>
       </footer>
     </main>
