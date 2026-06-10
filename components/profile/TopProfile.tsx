@@ -140,10 +140,12 @@ export default function TopProfile() {
               </div>
 
               <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
-                <span className="badge badge-outline">
-                  {calculateAge(profile.birthday)} years old
-                </span>
-
+                {profile.birthday ? (
+                  <span className="badge badge-outline">
+                    {calculateAge(profile.birthday)} years old
+                  </span>
+                )
+                : null}
                 {profile.location && (
                   <span className="badge badge-ghost">
                     {profile.location}
