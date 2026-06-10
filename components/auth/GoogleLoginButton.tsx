@@ -1,7 +1,9 @@
 export function GoogleLoginButton() {
+  const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL!;
+
   const handleGoogleLogin = () => {
   const popup = window.open(
-    "http://localhost:8080/api/v1/auth/google",
+    `${BACKEND_URL}/api/v1/auth/google`,
     "google-oauth",
     "width=500,height=600"
   );
