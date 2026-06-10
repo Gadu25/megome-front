@@ -62,7 +62,7 @@ export function withAuth(middleware: CustomMiddleware) {
 
     const publicRoutes = ["/auth", "/"];
     const isProtectedRoute = !publicRoutes.some((r) =>
-      pathname.startsWith(r)
+      r === "/" ? pathname === "/" : pathname.startsWith(r)
     );
 
     // Treat missing OR expired access token the same way
