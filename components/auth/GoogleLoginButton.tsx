@@ -1,9 +1,38 @@
-// components/auth/GoogleLoginButton.tsx
-
 export function GoogleLoginButton() {
-  const handleGoogleLogin = async () => {
-    // trigger google oauth
+  const handleGoogleLogin = () => {
+  const popup = window.open(
+    "http://localhost:8080/api/v1/auth/google",
+    "google-oauth",
+    "width=500,height=600"
+  );
+
+  const listener = async (event: MessageEvent) => {
+    if (event.origin !== window.location.origin) {
+      return;
+    }
+
+    if (event.data?.type !== "GOOGLE_AUTH_SUCCESS") {
+      return;
+    }
+
+    window.removeEventListener("message", listener);
+
+    await fetch("/api/auth/oauth-login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        accessToken: event.data.accessToken,
+        refreshToken: event.data.refreshToken,
+      }),
+    });
+
+    window.location.href = "/dashboard";
   };
+
+  window.addEventListener("message", listener);
+};
 
   return (
     <button
