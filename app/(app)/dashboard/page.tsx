@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   BoltIcon,
   KeyIcon,
@@ -8,6 +8,8 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { FeatureInProgressOverlay } from "@/components/common/FeatureInProgress";
+import { getDashboardOverview } from "@/lib/api/client/dashboard";
+import { DasboardOverview } from "@/types/types";
 
 /* ─────────────────────────────
    MOCK DATA
@@ -182,6 +184,24 @@ function ApiPlayground() {
 
 export default function DashboardPage() {
   const completion = useMemo(() => mockProfileCompletion, []);
+  const [dashboardOverview, setDashboardOverview] = useState<DasboardOverview | null>(null)
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboardOverview = async () => {
+      try {
+        setLoading(true);
+        const res = await getDashboardOverview();
+        setDashboardOverview(res.data)
+      } catch (error) {
+        console.error("Failed to fetch dashboard overview: ", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchDashboardOverview();
+  }, [])
 
   return (
     <div className="bg-base-100 flex">
@@ -209,17 +229,17 @@ export default function DashboardPage() {
           </div>
           <Card
             title="API Requests"
-            value={mockApiStats.requests.toLocaleString()}
+            value={dashboardOverview ? dashboardOverview?.apiUsage.requestCount.toLocaleString(): 0}
             icon={<BoltIcon className="w-5 h-5" />}
           />
           <Card
             title="API Keys"
-            value={mockApiStats.keys}
+            value={dashboardOverview ? dashboardOverview?.patCount.toLocaleString(): 0}
             icon={<KeyIcon className="w-5 h-5" />}
           />
           <Card
             title="Avg Latency"
-            value={mockApiStats.latency}
+            value={dashboardOverview ? dashboardOverview?.apiUsage.averageResponseMs.toLocaleString()+ "ms": 0+ "ms"}
             icon={<ChartBarIcon className="w-5 h-5" />}
           />
         </div>

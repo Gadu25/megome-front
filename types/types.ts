@@ -241,3 +241,13 @@ export type ApiUsageLogWithtoken = {
   token: PersonalAccessToken,
   logs: ApiUsageLog[],
 }
+
+export type ApiUsage = {
+  requestCount: number,
+  averageResponseMs: number,
+}
+
+export type DasboardOverview = {
+  apiUsage: ApiUsage,
+  patCount: number,
+}
