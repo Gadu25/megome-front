@@ -7,6 +7,7 @@ import {
   ChartBarIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
+import { FeatureInProgressOverlay } from "@/components/common/FeatureInProgress";
 
 /* ─────────────────────────────
    MOCK DATA
@@ -128,47 +129,50 @@ function ApiPlayground() {
   }
 
   return (
-    <div className="rounded-2xl border border-base-300 p-5 bg-base-100 space-y-4">
+      <div className="relative">
+        <div className="rounded-2xl border border-base-300 p-5 bg-base-100 space-y-4">
 
-      <div className="flex items-center justify-between">
-        <h2 className="font-semibold">API Playground</h2>
-        <span className="text-xs text-base-content/40">Live test environment</span>
-      </div>
+          <div className="flex items-center justify-between">
+            <h2 className="font-semibold">API Playground</h2>
+            <span className="text-xs text-base-content/40">Live test environment</span>
+          </div>
 
-      {/* Endpoint */}
-      <div className="flex flex-col gap-2">
-        <label className="text-xs text-base-content/60">Endpoint</label>
-        <div className="flex items-center gap-2">
-          <select className="select select-sm select-bordered w-32">
-            <option>GET</option>
-          </select>
+          {/* Endpoint */}
+          <div className="flex flex-col gap-2">
+            <label className="text-xs text-base-content/60">Endpoint</label>
+            <div className="flex items-center gap-2">
+              <select className="select select-sm select-bordered w-32">
+                <option>GET</option>
+              </select>
 
-          <input
-            className="input input-sm input-bordered flex-1 font-mono text-xs"
-            value="/public/v1/profile"
-            readOnly
-          />
+              <input
+                className="input input-sm input-bordered flex-1 font-mono text-xs"
+                value="/public/v1/profile"
+                readOnly
+              />
 
-          <button
-            onClick={handleRequest}
-            className="btn btn-primary btn-sm"
-          >
-            {loading ? "Sending..." : "Send"}
-          </button>
+              <button
+                onClick={handleRequest}
+                className="btn btn-primary btn-sm"
+              >
+                {loading ? "Sending..." : "Send"}
+              </button>
+            </div>
+          </div>
+
+          {/* Response */}
+          <div>
+            <label className="text-xs text-base-content/60">Response</label>
+
+            <pre className="mt-2 text-xs bg-base-200 p-3 rounded-xl overflow-auto max-h-60">
+              {response
+                ? JSON.stringify(response, null, 2)
+                : "// No response yet"}
+            </pre>
+          </div>
         </div>
+        <FeatureInProgressOverlay title="API Playground"/>
       </div>
-
-      {/* Response */}
-      <div>
-        <label className="text-xs text-base-content/60">Response</label>
-
-        <pre className="mt-2 text-xs bg-base-200 p-3 rounded-xl overflow-auto max-h-60">
-          {response
-            ? JSON.stringify(response, null, 2)
-            : "// No response yet"}
-        </pre>
-      </div>
-    </div>
   );
 }
 
@@ -180,10 +184,10 @@ export default function DashboardPage() {
   const completion = useMemo(() => mockProfileCompletion, []);
 
   return (
-    <div className="min-h-screen bg-base-100 flex">
+    <div className="bg-base-100 flex">
 
       {/* MAIN */}
-      <main className="flex-1 p-6 space-y-6">
+      <main className="flex-1 space-y-6">
 
         {/* HEADER */}
         <div>
@@ -195,11 +199,14 @@ export default function DashboardPage() {
 
         {/* KPI */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card
-            title="Profile Completion"
-            value={`${completion}%`}
-            icon={<UserCircleIcon className="w-5 h-5" />}
-          />
+          <div className="relative">
+            <Card
+              title="Profile Completion"
+              value={`${completion}%`}
+              icon={<UserCircleIcon className="w-5 h-5" />}
+            />
+            <FeatureInProgressOverlay title="Profile completion" description="under development"/>
+          </div>
           <Card
             title="API Requests"
             value={mockApiStats.requests.toLocaleString()}
@@ -224,47 +231,56 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
           {/* Progress */}
-          <div className="rounded-2xl border border-base-300 p-5">
-            <h2 className="font-semibold mb-4">Completion Breakdown</h2>
-            <div className="space-y-4">
-              {mockSections.map((s) => (
-                <ProgressRow key={s.name} {...s} />
-              ))}
+          <div className="relative">
+            <div className="rounded-2xl border border-base-300 p-5">
+              <h2 className="font-semibold mb-4">Completion Breakdown</h2>
+              <div className="space-y-4">
+                {mockSections.map((s) => (
+                  <ProgressRow key={s.name} {...s} />
+                ))}
+              </div>
             </div>
+            <FeatureInProgressOverlay title="Completion Breakdown"/>
           </div>
 
           {/* Activity */}
-          <div className="rounded-2xl border border-base-300 p-5">
-            <h2 className="font-semibold mb-4">Recent Activity</h2>
-            <div className="space-y-3">
-              {mockActivity.map((a, i) => (
-                <div key={i} className="text-sm">
-                  <div>{a.action}</div>
-                  <div className="text-xs text-base-content/40">{a.time}</div>
-                </div>
-              ))}
+          <div className="relative">
+            <div className="rounded-2xl border border-base-300 p-5">
+              <h2 className="font-semibold mb-4">Recent Activity</h2>
+              <div className="space-y-3">
+                {mockActivity.map((a, i) => (
+                  <div key={i} className="text-sm">
+                    <div>{a.action}</div>
+                    <div className="text-xs text-base-content/40">{a.time}</div>
+                  </div>
+                ))}
+              </div>
             </div>
+            <FeatureInProgressOverlay title="Recent Activity"/>
           </div>
 
           {/* Quick Actions */}
-          <div className="rounded-2xl border border-base-300 p-5">
-            <h2 className="font-semibold mb-4">Quick Actions</h2>
-            <div className="flex flex-col gap-2">
-              <button className="btn btn-primary btn-sm">
-                Update Profile
-              </button>
-              <button className="btn btn-ghost btn-sm">
-                Generate API Key
-              </button>
-              <button className="btn btn-ghost btn-sm">
-                View API Docs
-              </button>
+          <div className="relative">
+            <div className="rounded-2xl border border-base-300 p-5">
+              <h2 className="font-semibold mb-4">Quick Actions</h2>
+              <div className="flex flex-col gap-2">
+                <button className="btn btn-primary btn-sm">
+                  Update Profile
+                </button>
+                <button className="btn btn-ghost btn-sm">
+                  Generate API Key
+                </button>
+                <button className="btn btn-ghost btn-sm">
+                  View API Docs
+                </button>
+              </div>
             </div>
+            <FeatureInProgressOverlay title="Quick Actions"/>
           </div>
         </div>
 
         {/* PROJECTS */}
-        <div className="rounded-2xl border border-base-300 p-5">
+        {/* <div className="rounded-2xl border border-base-300 p-5">
           <div className="flex justify-between items-center mb-4">
             <h2 className="font-semibold">Projects</h2>
             <button className="btn btn-ghost btn-sm">+ Add</button>
@@ -288,7 +304,7 @@ export default function DashboardPage() {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
       </main>
     </div>
