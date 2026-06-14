@@ -10,6 +10,7 @@ import {
 import { FeatureInProgressOverlay } from "@/components/common/FeatureInProgress";
 import { getDashboardOverview } from "@/lib/api/client/dashboard";
 import { DasboardOverview } from "@/types/types";
+import Link from "next/link";
 
 /* ─────────────────────────────
    MOCK DATA
@@ -403,22 +404,19 @@ export default function DashboardPage() {
           </div>
 
           {/* Quick Actions */}
-          <div className="relative">
-            <div className="rounded-2xl border border-base-300 p-5">
-              <h2 className="font-semibold mb-4">Quick Actions</h2>
-              <div className="flex flex-col gap-2">
-                <button className="btn btn-primary btn-sm">
-                  Update Profile
-                </button>
-                <button className="btn btn-ghost btn-sm">
-                  Generate API Key
-                </button>
-                <button className="btn btn-ghost btn-sm">
-                  View API Docs
-                </button>
-              </div>
+          <div className="rounded-2xl border border-base-300 p-5">
+            <h2 className="font-semibold mb-4">Quick Actions</h2>
+            <div className="flex flex-col gap-2">
+              <Link href="/profile?tab=profile-setup" className="btn btn-primary btn-sm">
+                Update Profile
+              </Link>
+              <Link href="/api/tokens" className="btn btn-ghost btn-sm">
+                Generate API Key
+              </Link>
+              <Link href="/api/intro" className="btn btn-ghost btn-sm">
+                View API Docs
+              </Link>
             </div>
-            <FeatureInProgressOverlay title="Quick Actions"/>
           </div>
         </div>
 

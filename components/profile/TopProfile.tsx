@@ -18,7 +18,11 @@ import { getProfileClient } from "@/lib/api/client/profile";
 
 import type { Profile } from "@/types/types";
 
-export default function TopProfile() {
+interface props {
+  isProfileSetup: boolean;
+}
+
+export default function TopProfile({ isProfileSetup }: props) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -36,6 +40,7 @@ export default function TopProfile() {
     };
 
     fetchProfile();
+    setIsEditOpen(isProfileSetup)
   }, []);
 
   if (loading) {
