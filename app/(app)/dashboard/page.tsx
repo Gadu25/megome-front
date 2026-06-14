@@ -109,72 +109,195 @@ function ProgressRow({
 ───────────────────────────── */
 
 function ApiPlayground() {
+  const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL!;
+
+  type PlaygroundResponse = {
+    status?: number;
+    body?: unknown;
+    error?: string;
+    duration?: number;
+  };
+
+  type HttpMethod =
+  | "GET"
+  | "POST"
+  | "PUT"
+  | "PATCH"
+  | "DELETE";
+
   const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState<any>(null);
+  const [response, setResponse] = useState<PlaygroundResponse | null>(null);
+  const [accessToken, setAccessToken] = useState("");
+  const [showToken, setShowToken] = useState(false);
+  const [url, setUrl] = useState("/public/v1/profile");
+  const [method, setMethod] = useState<HttpMethod>("GET");
 
   async function handleRequest() {
     setLoading(true);
 
-    // MOCK API CALL
-    setTimeout(() => {
-      setResponse({
-        message: "profile retrieved successfully",
-        data: {
-          id: 12,
-          firstName: "Juan",
-          lastName: "Dela Cruz",
-          role: "Full Stack Engineer",
+    try {
+      const start = performance.now();
+
+      console.log(`${BACKEND_URL}${url}`)
+
+      const res = await fetch(`${BACKEND_URL}${url}`, {
+        method,
+        headers: {
+          ...(accessToken && {
+            Authorization: `Bearer ${accessToken}`,
+          }),
+          "Content-Type": "application/json",
         },
       });
+
+      const duration = Math.round(
+        performance.now() - start
+      );
+
+      const body = await res.json();
+
+      setResponse({
+        status: res.status,
+        duration,
+        body,
+      });
+    } catch (error) {
+      setResponse({
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unknown error",
+      });
+    } finally {
       setLoading(false);
-    }, 900);
+    }
   }
 
   return (
-      <div className="relative">
-        <div className="rounded-2xl border border-base-300 p-5 bg-base-100 space-y-4">
+    <div className="rounded-2xl border border-base-300 bg-base-100 p-5 space-y-5">
 
-          <div className="flex items-center justify-between">
-            <h2 className="font-semibold">API Playground</h2>
-            <span className="text-xs text-base-content/40">Live test environment</span>
-          </div>
-
-          {/* Endpoint */}
-          <div className="flex flex-col gap-2">
-            <label className="text-xs text-base-content/60">Endpoint</label>
-            <div className="flex items-center gap-2">
-              <select className="select select-sm select-bordered w-32">
-                <option>GET</option>
-              </select>
-
-              <input
-                className="input input-sm input-bordered flex-1 font-mono text-xs"
-                value="/public/v1/profile"
-                readOnly
-              />
-
-              <button
-                onClick={handleRequest}
-                className="btn btn-primary btn-sm"
-              >
-                {loading ? "Sending..." : "Send"}
-              </button>
-            </div>
-          </div>
-
-          {/* Response */}
-          <div>
-            <label className="text-xs text-base-content/60">Response</label>
-
-            <pre className="mt-2 text-xs bg-base-200 p-3 rounded-xl overflow-auto max-h-60">
-              {response
-                ? JSON.stringify(response, null, 2)
-                : "// No response yet"}
-            </pre>
-          </div>
-        </div>
-        <FeatureInProgressOverlay title="API Playground"/>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h2 className="font-semibold">API Playground</h2>
+        <span className="text-xs text-base-content/40">
+          Live test environment
+        </span>
       </div>
+
+      {/* Authentication */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-xs text-base-content/60">
+            Authentication
+          </label>
+
+          <span
+            className={`badge badge-xs ${
+              accessToken
+                ? "badge-success badge-outline"
+                : "badge-ghost"
+            }`}
+          >
+            {accessToken ? "Token configured" : "No token"}
+          </span>
+        </div>
+
+        <label className="input input-bordered flex items-center gap-2">
+          <span className="text-xs text-base-content/50 font-mono">
+            Bearer
+          </span>
+
+          <input
+            type={showToken ? "text" : "password"}
+            placeholder="Paste access token..."
+            value={accessToken}
+            onChange={(e) => setAccessToken(e.target.value)}
+            className="grow font-mono text-xs"
+          />
+
+          <button
+            type="button"
+            onClick={() => setShowToken(!showToken)}
+            className="btn btn-ghost btn-xs"
+          >
+            {showToken ? "Hide" : "Show"}
+          </button>
+        </label>
+      </div>
+
+      {/* Endpoint */}
+      <div className="space-y-2">
+        <label className="text-xs text-base-content/60">
+          Endpoint
+        </label>
+
+        <div className="flex items-center gap-2">
+          <select value={method} onChange={(e) => setMethod(e.target.value as HttpMethod)}
+            className="select select-sm select-bordered w-28"
+          >
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+            <option value="PUT">PUT</option>
+            <option value="PATCH">PATCH</option>
+            <option value="DELETE">DELETE</option>
+          </select>
+
+          <input
+            className="input input-sm input-bordered flex-1 font-mono text-xs"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+          />
+
+          <button
+            onClick={handleRequest}
+            disabled={loading}
+            className="btn btn-primary btn-sm min-w-24"
+          >
+            {loading ? (
+              <span className="loading loading-spinner loading-xs" />
+            ) : (
+              "Send"
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Response */}
+      <div>
+        <div className="flex items-center justify-between">
+          <label className="text-xs text-base-content/60">
+            Response
+          </label>
+
+          {response?.status && !loading && (
+            <span className="badge badge-outline badge-sm">
+              {response.status}
+              {response.duration ? ` • ${response.duration}ms` : ""}
+            </span>
+          )}
+        </div>
+
+        {/* Loading state */}
+        {loading && (
+          <div className="mt-2 bg-base-200 rounded-xl p-4 text-xs font-mono animate-pulse">
+            sending request...
+          </div>
+        )}
+
+        {/* Response / Error */}
+        {!loading && (
+          <pre className="mt-2 bg-base-200 rounded-xl p-4 text-xs font-mono overflow-auto max-h-80">
+            {response
+              ? JSON.stringify(
+                  response.error ?? response.body,
+                  null,
+                  2
+                )
+              : "// No response yet"}
+          </pre>
+        )}
+      </div>
+    </div>
   );
 }
 
