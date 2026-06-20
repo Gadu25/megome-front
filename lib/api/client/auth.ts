@@ -28,7 +28,7 @@ export const registerClient = async (username: string, email: string, password: 
 }
 
 export const logoutClient = async () => {
-  const res = await fetch(
+    return await fetch(
     "/api/auth/logout",
     {
       method: "POST",
