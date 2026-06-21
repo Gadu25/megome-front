@@ -2,6 +2,9 @@
 
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { resetPassClient } from "@/lib/api/client/forgotpass";
+import { withRequest } from "@/functions/withRequest";
+import { useToast } from "@/components/toast/useToast";
 import Link from "next/link";
 import { ArrowRightIcon } from "@heroicons/react/16/solid";
 import { Card } from "@/components/common/Card";
@@ -14,12 +17,14 @@ export default function ResetPasswordPage() {
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
+  const { showToast } = useToast();
+
   const isTokenValid = useMemo(() => {
+    console.log("TOKEN IS", token)
     return !!token && token.length > 10;
   }, [token]);
 
@@ -39,10 +44,12 @@ export default function ResetPasswordPage() {
 
     try {
       setLoading(true);
-
-      // TODO: call backend later
-      // await resetPassword(token, password);
-
+      
+      await withRequest(
+        () => resetPassClient(password),
+        showToast
+      )
+      
       setSuccess(true);
 
       setTimeout(() => {
