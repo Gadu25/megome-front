@@ -24,7 +24,6 @@ export default function ResetPasswordPage() {
   const { showToast } = useToast();
 
   const isTokenValid = useMemo(() => {
-    console.log("TOKEN IS", token)
     return !!token && token.length > 10;
   }, [token]);
 
@@ -45,16 +44,15 @@ export default function ResetPasswordPage() {
     try {
       setLoading(true);
       
-      await withRequest(
-        () => resetPassClient(password),
+      const res = await withRequest(
+        () => resetPassClient(password, token),
         showToast
       )
-      
-      setSuccess(true);
 
-      setTimeout(() => {
-        router.push("/auth");
-      }, 2000);
+      if (res.success) {
+        setSuccess(true);
+      }
+
     } catch (err: any) {
       setError(err.message || "Something went wrong");
     } finally {
@@ -68,15 +66,17 @@ export default function ResetPasswordPage() {
         <Card className="p-6 sm:p-8 shadow-lg">
 
           {/* Header */}
-          <div className="text-center space-y-2 mb-6">
-            <h2 className="text-2xl sm:text-3xl font-bold text-primary">
-              Reset Password
-            </h2>
+          {!success && (
+            <div className="text-center space-y-2 mb-6">
+              <h2 className="text-2xl sm:text-3xl font-bold text-primary">
+                Reset Password
+              </h2>
 
-            <p className="text-sm sm:text-base text-base-content/70">
-              Enter your new password below.
-            </p>
-          </div>
+              <p className="text-sm sm:text-base text-base-content/70">
+                Enter your new password below.
+              </p>
+            </div>
+          )}
 
           {/* Invalid token state */}
           {!isTokenValid && (
@@ -86,11 +86,11 @@ export default function ResetPasswordPage() {
           )}
 
           {/* Success state */}
-          {success && (
-            <div className="mb-4 text-sm text-success bg-success/10 px-3 py-2 rounded-md">
-              Password updated successfully. Redirecting...
-            </div>
-          )}
+          {/* {success && ( */}
+          {/*   <div className="mb-4 text-sm text-success bg-success/10 px-3 py-2 rounded-md"> */}
+          {/*     Password updated successfully. Redirecting... */}
+          {/*   </div> */}
+          {/* )} */}
 
           {/* Error */}
           {error && (
@@ -98,65 +98,72 @@ export default function ResetPasswordPage() {
               {error}
             </div>
           )}
+          
+          {!success ? (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <fieldset className="fieldset">
+                <legend className="fieldset-legend">New Password</legend>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="input w-full"
+                  required
+                  disabled={!isTokenValid}
+                />
+              </fieldset>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+              <fieldset className="fieldset">
+                <legend className="fieldset-legend">
+                  Confirm Password
+                </legend>
 
-            <fieldset className="fieldset">
-              <legend className="fieldset-legend">
-                New Password
-              </legend>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="input w-full"
+                  required
+                  disabled={!isTokenValid}
+                />
+              </fieldset>
 
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="input w-full"
-                required
-                disabled={!isTokenValid}
-              />
-            </fieldset>
+              <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
 
-            <fieldset className="fieldset">
-              <legend className="fieldset-legend">
-                Confirm Password
-              </legend>
+                <Link
+                  href="/auth"
+                  className="text-sm text-accent hover:opacity-80 transition"
+                >
+                  Back to Sign In
+                </Link>
 
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="input w-full"
-                required
-                disabled={!isTokenValid}
-              />
-            </fieldset>
-
-            <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
-
-              <Link
-                href="/auth"
-                className="text-sm text-accent hover:opacity-80 transition"
-              >
-                Back to Sign In
-              </Link>
-
-              <button
-                type="submit"
-                disabled={loading || !isTokenValid}
-                className="
-                  flex items-center justify-center gap-2
-                  bg-primary text-primary-content
-                  px-4 py-2 rounded-md font-bold
-                  w-full sm:w-auto
-                  disabled:opacity-60
-                "
-              >
-                {loading ? "Updating..." : "Update Password"}
-                <ArrowRightIcon className="h-5 w-5" />
-              </button>
+                <button
+                  type="submit"
+                  disabled={loading || !isTokenValid}
+                  className="
+                    flex items-center justify-center gap-2
+                    bg-primary text-primary-content
+                    px-4 py-2 rounded-md font-bold
+                    w-full sm:w-auto
+                    disabled:opacity-60
+                  "
+                >
+                  {loading ? "Updating..." : "Update Password"}
+                  <ArrowRightIcon className="h-5 w-5" />
+                </button>
+              </div>
+            </form>
+          ):
+          (
+            <div className="flex flex-col items-center text-center gap-4">
+              <h2 className="text-2xl font-semibold">Password Reset Successful</h2>
+              <p className="text-muted-foreground max-w-md">
+                Your password has been successfully updated. You can now sign in
+                using your new password.
+              </p>
+              <Link href="/auth" className="text-accent">Sign In</Link>
             </div>
-
-          </form>
+          )}
         </Card>
       </div>
     </main>

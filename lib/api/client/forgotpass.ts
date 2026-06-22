@@ -1,6 +1,7 @@
 import { handleResponse } from "@/functions/handleResponse";
 
 interface Response {
+  success: boolean;
   message: string;
 }
 
@@ -15,12 +16,12 @@ export const forgotPassClient = async (email: string) => {
   return handleResponse<Response>(res)
 }
 
-export const resetPassClient = async (newPass: string) => {
+export const resetPassClient = async (password: string, token: string) => {
   const res = await fetch(
     "/api/auth/forgot-pass/reset",
     {
       method: "POST", 
-      body: JSON.stringify({ newPass }),
+      body: JSON.stringify({ password, token }),
     },
   )
   return handleResponse<Response>(res)
