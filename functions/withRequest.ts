@@ -10,7 +10,10 @@ export async function withRequest<TResponse>(
     return res;
   } catch (err: any) {
     showToast(
-      err?.message || "Unexpected error",
+      err?.data.error || 
+      err?.data.message ||
+      err?.message || 
+      "Unexpected error",
       "error"
     );
     return null;
