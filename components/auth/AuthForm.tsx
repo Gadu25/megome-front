@@ -9,6 +9,7 @@ import { useToast } from "../toast/useToast";
 import { getInitClient } from "@/lib/api/client/init";
 import { loginClient, registerClient } from "@/lib/api/client/auth";
 import { GoogleLoginButton } from "./GoogleLoginButton";
+import Link from "next/link";
 
 const SIGNUP = "signup";
 const SIGNIN = "signin";
@@ -198,9 +199,9 @@ export default function AuthForm({ mode }: { mode: MODE }) {
 
         <div className="flex justify-between items-center mt-10">
           {mode === SIGNIN ?
-            <a href="#" className="text-sm text-accent">
+            <Link href="/auth/forgot-password" className="text-sm text-accent">
               Forgot password?
-            </a>
+            </Link>
           : <div></div> }
 
           <button
