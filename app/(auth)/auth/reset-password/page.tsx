@@ -45,11 +45,11 @@ export default function ResetPasswordPage() {
       setLoading(true);
       
       const res = await withRequest(
-        () => resetPassClient(password, token),
+        () => resetPassClient(password, token!),
         showToast
       )
-
-      if (res.success) {
+     
+      if (res && res.success) {
         setSuccess(true);
       }
 
