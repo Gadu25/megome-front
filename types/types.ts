@@ -20,6 +20,7 @@ export type Profile = {
   firstName: string;
   lastName: string;
   title: string;
+  tagline: string;
   birthday: string;
   bio: string;
   phone: string;

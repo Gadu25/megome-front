@@ -44,6 +44,7 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
       firstName: profile.firstName ?? "",
       lastName: profile.lastName ?? "",
       title: profile.title ?? "",
+      tagline: profile.tagline ?? "",
       birthday: profile.birthday ? profile.birthday.split("T")[0] : "",
       bio: profile.bio ?? "",
       phone: profile.phone ?? "",
@@ -210,7 +211,7 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
                 <label className="label">Tagline</label>
                 <input 
                   type="text"
-                  name="location"
+                  name="tagline"
                   value={form.tagline || ""}
                   onChange={handleChange}
                   className={`input input-bordered w-full ${errors.tagline ? "input-error" : ""}`}

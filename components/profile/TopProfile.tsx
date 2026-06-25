@@ -157,11 +157,6 @@ export default function TopProfile({ isProfileSetup }: props) {
                   </span>
                 )
                 : null}
-                {profile.location && (
-                  <span className="badge badge-ghost">
-                    {profile.location}
-                  </span>
-                )}
               </div>
             </div>
 
