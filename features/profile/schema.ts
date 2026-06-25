@@ -4,6 +4,7 @@ export const profileSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   title: z.string().min(1, "Title is required"),
+  tagline: z.string().max(600, "Tagline must be at most 600 characters").optional(),
   bio: z.string().max(600, "Bio must be at most 600 characters").optional(),
   phone: z.string().max(20, "Phone number must be at most 20 characters").optional(),
   website: z.preprocess(

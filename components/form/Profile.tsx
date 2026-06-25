@@ -28,6 +28,7 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
     firstName: "",
     lastName: "",
     title: "",
+    tagline: "",
     birthday: "",
     bio: "",
     phone: "",
@@ -202,6 +203,20 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
                 />
                 {errors.location && (
                   <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.location }</span>
+                )}
+              </fieldset>
+
+              <fieldset className="fieldset md:col-span-2 relative">
+                <label className="label">Tagline</label>
+                <input 
+                  type="text"
+                  name="location"
+                  value={form.tagline || ""}
+                  onChange={handleChange}
+                  className={`input input-bordered w-full ${errors.tagline ? "input-error" : ""}`}
+                />
+                {errors.tagline && (
+                  <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.tagline }</span>
                 )}
               </fieldset>
 

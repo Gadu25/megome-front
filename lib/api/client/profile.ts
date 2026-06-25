@@ -14,6 +14,7 @@ export const updateProfileClient = async (profile: ProfilePayload) => {
   formData.append("lastName", profile.lastName);
   formData.append("title", profile.title);
   formData.append("birthday", profile.birthday);
+  formData.append("tagline", profile.tagline);
   formData.append("bio", profile.bio);
   formData.append("phone", profile.phone);
   formData.append("website", profile.website);
