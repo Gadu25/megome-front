@@ -75,6 +75,7 @@ export type Experience = {
   userId: number;
   title: string;
   company: string;
+  logo: string | null;
   startDate: string;
   endDate: string;
   isPresent: boolean;

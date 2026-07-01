@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { XMarkIcon } from "@heroicons/react/24/outline"
+import { XMarkIcon, PhotoIcon } from "@heroicons/react/24/outline"
 import { addExperienceClient, updateExperienceClient, deleteExperienceClient } from "@/lib/api/client/experience"
 import { formatDate } from "@/functions/formatDate"
 import { useToast } from "../toast/useToast";
@@ -23,17 +23,18 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
   const [newExp, setNewExp] = useState<ExperienceForm>({
     title: "",
     company: "",
+    logo: null,
     startDate: "",
     endDate: "",
     isPresent: false,
     description: "",
-    logo: null,
   })
 
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [addLoading, setAddLoading] = useState(false);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
   const handleUpdate = ( id: number, field: keyof Experience, value: Experience[keyof Experience]) => {
     let updatedItem: Experience | undefined
@@ -123,11 +124,13 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
       setNewExp({
         title: "",
         company: "",
+        logo: null,
         startDate: "",
         endDate: "",
         isPresent: false,
         description: "",
       })
+      setLogoPreview(null)
     } catch (err: any) {
       showToast(err.response?.data?.error, "error")
     } finally {
@@ -219,7 +222,7 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
                   </button>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-3">
+              <div className="grid md:grid-cols-2 gap-3">
                   <input type="date" className="input input-bordered w-full" value={formatDate(exp.startDate)}
                     onChange={(e) =>
                       handleUpdate(exp.id, "startDate", e.target.value)
@@ -307,6 +310,28 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
                 {errors.company && (
                   <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.company }</span>
                 )}
+              </fieldset>
+
+              <fieldset className="fieldset relative">
+                <label className="label">Company Logo</label>
+                <div className="flex items-center gap-4">
+                  <div className="size-16 rounded-xl bg-base-100 border-2 border-base-300 overflow-hidden flex items-center justify-center shrink-0">
+                    {logoPreview ? (
+                      <img src={logoPreview} alt="Logo preview" className="w-full h-full object-contain p-1" />
+                    ) : (
+                      <PhotoIcon className="size-6 opacity-40" />
+                    )}
+                  </div>
+                  <input type="file" accept="image/*" className="file-input file-input-sm file-input-bordered w-full"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] || null
+                      setNewExp((prev) => ({ ...prev, logo: file }))
+                      if (file) {
+                        setLogoPreview(URL.createObjectURL(file))
+                      }
+                    }}
+                  />
+                </div>
               </fieldset>
               
               <div className="grid md:grid-cols-2 gap-3">

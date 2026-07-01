@@ -88,7 +88,10 @@ export default function ProfileExperience() {
                     <div className="skeleton h-5 w-48"></div>
 
                     {/* Company */}
-                    <div className="skeleton h-4 w-36"></div>
+                    <div className="flex items-center gap-2">
+                      <div className="skeleton size-5 rounded shrink-0"></div>
+                      <div className="skeleton h-4 w-36"></div>
+                    </div>
 
                     {/* Date */}
                     <div className="skeleton h-3 w-40"></div>
@@ -165,7 +168,14 @@ export default function ProfileExperience() {
                         {exp.title || "Untitled Role"}
                       </h3>
 
-                      <p className="text-sm text-base-content/70">
+                      <p className="flex items-center gap-2 text-sm text-base-content/70">
+                        {exp.logo && (
+                          <img
+                            src={exp.logo}
+                            alt={`${exp.company} logo`}
+                            className="size-6 rounded object-contain bg-base-200"
+                          />
+                        )}
                         {exp.company || "Unknown Company"}
                       </p>
 
