@@ -25,15 +25,27 @@ export const getExperienceClient = async () => {
 }
 
 export const addExperienceClient = async (form: ExperienceForm) => {
+  const formData = new FormData();
+
+  formData.append("title", form.title);
+  formData.append("company", form.company);
+  formData.append("startDate", form.startDate);
+  formData.append("isPresent", form.isPresent);
+  
+  if (form.endDate) {
+    formData.append("endDate", form.endDate);
+  }
+
+  if (form.logo) {
+    formData.append("logo", form.logo);
+  }
+
   const res = await fetchClient(
     "/api/experience",
     {
       method: "POST",
       credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
+      body: formData,
     },
   )
 
@@ -41,15 +53,27 @@ export const addExperienceClient = async (form: ExperienceForm) => {
 }
 
 export const updateExperienceClient = async (id: number, form: ExperienceForm) => {
+  const formData = new FormData();
+
+  formData.append("title", form.title);
+  formData.append("company", form.company);
+  formData.append("startDate", form.startDate);
+  formData.append("isPresent", form.isPresent);
+
+  if (form.endDate) {
+    formData.append("endDate", form.endDate);
+  }
+
+  if (form.logo) {
+    formData.append("logo", form.logo);
+  }
+
   const res = await fetchClient(
     `/api/experience/${id}`,
     {
       method: "PUT",
       credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
+      body: formData,
     },
   )
 

@@ -90,6 +90,7 @@ export type ExperienceForm = {
   endDate: string;
   isPresent: boolean;
   description: string;
+  logo: File | null;
 }
 
 export type Education = {

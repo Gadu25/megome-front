@@ -27,6 +27,7 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
     endDate: "",
     isPresent: false,
     description: "",
+    logo: null,
   })
 
   const [modalOpen, setModalOpen] = useState(false)
