@@ -46,6 +46,7 @@ export const educationSchema = z.object({
 export const experienceSchema = z.object({
     title: z.string().min(1, "Job title is required"),
     company: z.string().min(1, "Company name is required"),
+    logo: z.instanceof(File).nullable(),
     startDate: z.string().min(1, "Start date is required"),
     endDate: z.string().optional(),
     isPresent: z.boolean(),
