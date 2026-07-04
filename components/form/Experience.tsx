@@ -35,6 +35,48 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [addLoading, setAddLoading] = useState(false);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [editLogoPreviews, setEditLogoPreviews] = useState<Record<number, string>>({});
+
+  const handleLogoUpdate = async (id: number, file: File | null) => {
+    if (!file) return
+
+    const previewUrl = URL.createObjectURL(file)
+    setEditLogoPreviews((prev) => ({ ...prev, [id]: previewUrl }))
+
+    try {
+      const current = initialExperiences.find((e) => e.id === id)
+      if (!current) return
+
+      const payload = {
+        title: current.title,
+        company: current.company,
+        startDate: formatDate(current.startDate),
+        endDate: current.endDate ? formatDate(current.endDate) : null,
+        isPresent: current.isPresent,
+        description: current.description,
+        logo: file,
+      }
+
+      const data = await withRequest(
+        () => updateExperienceClient(id, payload as ExperienceForm),
+        showToast
+      )
+
+      if (!data) return
+      setEditLogoPreviews((prev) => {
+        const next = { ...prev }
+        delete next[id]
+        return next
+      })
+      setExperiences((prev) =>
+        prev.map((item) =>
+          item.id === id ? { ...item, ...data.experience } : item
+        )
+      )
+    } catch (err) {
+      console.error("Failed to update logo", err)
+    }
+  }
 
   const handleUpdate = ( id: number, field: keyof Experience, value: Experience[keyof Experience]) => {
     let updatedItem: Experience | undefined
@@ -210,6 +252,26 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
                         handleUpdate(exp.id, "company", e.target.value)
                       }
                     />
+
+                    <div className="flex items-center gap-4">
+                      <div className="size-16 rounded-xl bg-base-100 border-2 border-base-300 overflow-hidden flex items-center justify-center shrink-0">
+                        {editLogoPreviews[exp.id] ? (
+                          <img src={editLogoPreviews[exp.id]} alt="Logo" className="w-full h-full object-contain p-1" />
+                        ) : exp.logo ? (
+                          <img src={exp.logo} alt="Logo" className="w-full h-full object-contain p-1" />
+                        ) : (
+                          <PhotoIcon className="size-6 opacity-40" />
+                        )}
+                      </div>
+                      <input type="file" accept="image/*" className="file-input file-input-sm file-input-bordered w-full"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0] || null
+                          if (file) {
+                            handleLogoUpdate(exp.id, file)
+                          }
+                        }}
+                      />
+                    </div>
                   </div>
 
                   <button className="btn btn-ghost btn-sm text-error"
