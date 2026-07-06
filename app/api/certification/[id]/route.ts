@@ -7,15 +7,14 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
   try {
     const { id } = await params;
     const accessToken = await getAccessToken();
-    const body = await req.json();
+    const formData = await req.formData();
 
     return await fetch(`${BACKEND_URL}/api/v1/certification/${id}`, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify(body),
+      body: formData,
     });
   } catch (err) {
     return NextResponse.json(

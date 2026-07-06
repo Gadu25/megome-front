@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef } from "react"
-import { XMarkIcon } from "@heroicons/react/24/outline"
+import { XMarkIcon, PhotoIcon } from "@heroicons/react/24/outline"
 import { addCertificateClient, updateCertificateClient, deleteCertificateClient } from "@/lib/api/client/certificate"
 import { formatDate } from "@/functions/formatDate"
 import { certificateSchema } from "@/features/profile/schema";
@@ -28,12 +28,15 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
     expirationDate: "",
     credentialId: "",
     credentialUrl: "",
+    certificateImage: null,
   })
 
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [addLoading, setAddLoading] = useState(false);
+  const [certImagePreview, setCertImagePreview] = useState<string | null>(null);
+  const [editImagePreviews, setEditImagePreviews] = useState<Record<number, string>>({});
 
   const handleUpdate = (id: number, field: keyof Certificate, value: Certificate[keyof Certificate]) => {
     let updatedItem: Certificate | undefined
@@ -91,6 +94,47 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
     }, 500)
   }
 
+  const handleCertificateImageUpdate = async (id: number, file: File | null) => {
+    if (!file) return
+
+    const previewUrl = URL.createObjectURL(file)
+    setEditImagePreviews((prev) => ({ ...prev, [id]: previewUrl }))
+
+    try {
+      const current = initialCertificates.find((c) => c.id === id)
+      if (!current) return
+
+      const payload = {
+        title: current.title,
+        issuer: current.issuer,
+        issueDate: formatDate(current.issueDate),
+        expirationDate: current.expirationDate ? formatDate(current.expirationDate) : null,
+        credentialId: current.credentialId || null,
+        credentialUrl: current.credentialUrl || null,
+        certificateImage: file,
+      }
+
+      const data = await withRequest(
+        () => updateCertificateClient(id, payload as CertificateForm),
+        showToast
+      )
+
+      if (!data) return
+      setEditImagePreviews((prev) => {
+        const next = { ...prev }
+        delete next[id]
+        return next
+      })
+      setCertificates((prev) =>
+        prev.map((item) =>
+          item.id === id ? { ...item, ...data.certificate } : item
+        )
+      )
+    } catch (err) {
+      console.error("Failed to update certificate image", err)
+    }
+  }
+
   const handleAdd = async () => {
     setErrors({});
     setAddLoading(true);
@@ -104,11 +148,11 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
       }
 
       const payload = {
-        ...newCert,
-        issueDate: formatDate(newCert.issueDate),
-        expirationDate: newCert.expirationDate ? formatDate(newCert.expirationDate) : null,
-        credentialId: newCert.credentialId || null,
-        credentialUrl: newCert.credentialUrl || null,
+        ...result.data,
+        issueDate: formatDate(result.data.issueDate),
+        expirationDate: result.data.expirationDate ? formatDate(result.data.expirationDate) : null,
+        credentialId: result.data.credentialId || null,
+        credentialUrl: result.data.credentialUrl || null,
       }
 
       const data = await withRequest(
@@ -127,7 +171,9 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
         expirationDate: "",
         credentialId: "",
         credentialUrl: "",
+        certificateImage: null,
       })
+      setCertImagePreview(null)
 
     } catch(err: any) {
       showToast(err.response?.data?.error, "error")
@@ -251,6 +297,26 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
                   }
                 />
 
+                <div className="flex items-center gap-4">
+                  <div className="size-16 rounded-xl bg-base-100 border-2 border-base-300 overflow-hidden flex items-center justify-center shrink-0">
+                    {editImagePreviews[cert.id] ? (
+                      <img src={editImagePreviews[cert.id]} alt="Certificate" className="w-full h-full object-contain p-1" />
+                    ) : cert.certificateImage ? (
+                      <img src={cert.certificateImage} alt="Certificate" className="w-full h-full object-contain p-1" />
+                    ) : (
+                      <PhotoIcon className="size-6 opacity-40" />
+                    )}
+                  </div>
+                  <input type="file" accept="image/*" className="file-input file-input-sm file-input-bordered w-full"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0] || null
+                      if (file) {
+                        handleCertificateImageUpdate(cert.id, file)
+                      }
+                    }}
+                  />
+                </div>
+
                 <div className="grid md:grid-cols-2 gap-3">
                   <input type="date" className="input input-bordered w-full" value={ formatDate(cert.issueDate) }
                     onChange={(e) =>
@@ -316,6 +382,28 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
               {errors.issuer && (
                 <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.issuer }</span>
               )}
+            </fieldset>
+
+            <fieldset className="fieldset relative">
+              <label className="label">Certificate Image</label>
+              <div className="flex items-center gap-4">
+                <div className="size-16 rounded-xl bg-base-100 border-2 border-base-300 overflow-hidden flex items-center justify-center shrink-0">
+                  {certImagePreview ? (
+                    <img src={certImagePreview} alt="Certificate preview" className="w-full h-full object-contain p-1" />
+                  ) : (
+                    <PhotoIcon className="size-6 opacity-40" />
+                  )}
+                </div>
+                <input type="file" accept="image/*" className="file-input file-input-sm file-input-bordered w-full"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] || null
+                    setNewCert((prev) => ({ ...prev, certificateImage: file }))
+                    if (file) {
+                      setCertImagePreview(URL.createObjectURL(file))
+                    }
+                  }}
+                />
+              </div>
             </fieldset>
 
             <div className="grid md:grid-cols-2 gap-3">

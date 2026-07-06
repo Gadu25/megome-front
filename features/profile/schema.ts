@@ -81,6 +81,8 @@ export const certificateSchema = z.object({
     (val) => (val === "" ? undefined : val),
     z.string().url("Invalid credential URL").optional()
   ),
+
+  certificateImage: z.instanceof(File).nullable(),
 })
 .refine(
   (data) => {

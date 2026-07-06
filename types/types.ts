@@ -181,6 +181,7 @@ export type Certificate = {
   expirationDate: string | null;
   credentialId: string | null;
   credentialUrl: string | null;
+  certificateImage: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -189,6 +190,7 @@ export type CertificateForm = {
   title: string;
   issuer: string;
   issueDate: string;
+  certificateImage: File | null;
   expirationDate: string;
   credentialId: string;
   credentialUrl: string;

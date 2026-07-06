@@ -29,15 +29,14 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const accessToken = await getAccessToken();
-    const body = await req.json();
+    const formData = await req.formData();
 
     return await fetch(`${BACKEND_URL}/api/v1/certification`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify(body),
+      body: formData,
     });
   } catch (_) {
     return NextResponse.json(
