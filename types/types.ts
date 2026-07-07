@@ -20,6 +20,7 @@ export type Profile = {
   firstName: string;
   lastName: string;
   title: string;
+  tagline: string;
   birthday: string;
   bio: string;
   phone: string;
@@ -34,6 +35,7 @@ export type ProfileForm = {
   firstName: string;
   lastName: string;
   title: string;
+  tagline: string;
   birthday: string;
   bio: string;
   phone: string;
@@ -73,10 +75,12 @@ export type Experience = {
   userId: number;
   title: string;
   company: string;
+  logo: string | null;
   startDate: string;
   endDate: string;
   isPresent: boolean;
   description: string;
+  technologies: Technology[];
   createdAt: string;
   updatedAt: string;
 }
@@ -88,6 +92,7 @@ export type ExperienceForm = {
   endDate: string;
   isPresent: boolean;
   description: string;
+  logo: File | null;
 }
 
 export type Education = {
@@ -177,6 +182,7 @@ export type Certificate = {
   expirationDate: string | null;
   credentialId: string | null;
   credentialUrl: string | null;
+  certificateImage: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -185,6 +191,7 @@ export type CertificateForm = {
   title: string;
   issuer: string;
   issueDate: string;
+  certificateImage: File | null;
   expirationDate: string;
   credentialId: string;
   credentialUrl: string;
@@ -207,6 +214,10 @@ export type TechnologyForm = {
 }
 
 export type ProjectTechnologyForm = {
+  techIds: number[];
+}
+
+export type ExperienceTechnologyForm = {
   techIds: number[];
 }
 

@@ -128,13 +128,20 @@ export default function ProfileCertificates() {
               >
                 <div className="card-body space-y-3 p-5">
                   <header className="space-y-1">
-                    <h3 className="text-base font-semibold leading-tight">
-                      {cert.title || "Untitled Certificate"}
-                    </h3>
+                    <div className="flex items-start gap-3">
+                      {cert.certificateImage && (
+                        <img src={cert.certificateImage} alt={cert.title} className="size-12 rounded-xl object-contain bg-base-200 p-1 shrink-0" />
+                      )}
+                      <div>
+                        <h3 className="text-base font-semibold leading-tight">
+                          {cert.title || "Untitled Certificate"}
+                        </h3>
 
-                    <p className="text-sm text-base-content/70">
-                      {cert.issuer || "Unknown issuer"}
-                    </p>
+                        <p className="text-sm text-base-content/70">
+                          {cert.issuer || "Unknown issuer"}
+                        </p>
+                      </div>
+                    </div>
 
                     <p className="text-xs text-base-content/50">
                       Issued {humanizeDate(cert.issueDate)}

@@ -26,15 +26,34 @@ export const getCertificateClient = async () => {
 }
 
 export const addCertificateClient = async (form: CertificateForm) => {
+  const formData = new FormData();
+
+  formData.append("title", form.title);
+  formData.append("issuer", form.issuer);
+  formData.append("issueDate", form.issueDate);
+
+  if (form.expirationDate) {
+    formData.append("expirationDate", form.expirationDate);
+  }
+
+  if (form.credentialId) {
+    formData.append("credentialId", form.credentialId);
+  }
+
+  if (form.credentialUrl) {
+    formData.append("credentialUrl", form.credentialUrl);
+  }
+
+  if (form.certificateImage) {
+    formData.append("certificateImage", form.certificateImage);
+  }
+
   const res = await fetchClient(
     "/api/certification",
     {
       method: "POST",
       credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
+      body: formData,
     },
   )
 
@@ -42,15 +61,34 @@ export const addCertificateClient = async (form: CertificateForm) => {
 }
 
 export const updateCertificateClient = async (id: number, form: CertificateForm) => {
+  const formData = new FormData();
+
+  formData.append("title", form.title);
+  formData.append("issuer", form.issuer);
+  formData.append("issueDate", form.issueDate);
+
+  if (form.expirationDate) {
+    formData.append("expirationDate", form.expirationDate);
+  }
+
+  if (form.credentialId) {
+    formData.append("credentialId", form.credentialId);
+  }
+
+  if (form.credentialUrl) {
+    formData.append("credentialUrl", form.credentialUrl);
+  }
+
+  if (form.certificateImage) {
+    formData.append("certificateImage", form.certificateImage);
+  }
+
   const res = await fetchClient(
     `/api/certification/${id}`,
     {
       method: "PUT",
       credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
+      body: formData,
     },
   )
 

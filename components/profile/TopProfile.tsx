@@ -142,6 +142,12 @@ export default function TopProfile({ isProfileSetup }: props) {
                 <p className="mt-1 text-base text-base-content/70">
                   {profile.title}
                 </p>
+
+                {profile.tagline && (
+                  <p className="mt-2 text-sm font-medium italic text-primary">
+                    "{profile.tagline}"
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
@@ -151,11 +157,6 @@ export default function TopProfile({ isProfileSetup }: props) {
                   </span>
                 )
                 : null}
-                {profile.location && (
-                  <span className="badge badge-ghost">
-                    {profile.location}
-                  </span>
-                )}
               </div>
             </div>
 

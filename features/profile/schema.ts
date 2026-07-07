@@ -4,6 +4,7 @@ export const profileSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   title: z.string().min(1, "Title is required"),
+  tagline: z.string().max(600, "Tagline must be at most 600 characters").optional(),
   bio: z.string().max(600, "Bio must be at most 600 characters").optional(),
   phone: z.string().max(20, "Phone number must be at most 20 characters").optional(),
   website: z.preprocess(
@@ -45,6 +46,7 @@ export const educationSchema = z.object({
 export const experienceSchema = z.object({
     title: z.string().min(1, "Job title is required"),
     company: z.string().min(1, "Company name is required"),
+    logo: z.instanceof(File).nullable(),
     startDate: z.string().min(1, "Start date is required"),
     endDate: z.string().optional(),
     isPresent: z.boolean(),
@@ -79,6 +81,8 @@ export const certificateSchema = z.object({
     (val) => (val === "" ? undefined : val),
     z.string().url("Invalid credential URL").optional()
   ),
+
+  certificateImage: z.instanceof(File).nullable(),
 })
 .refine(
   (data) => {
