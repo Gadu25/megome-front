@@ -19,6 +19,22 @@ export const getTechnologiesClient = async () => {
   return handleResponse<Response>(res)
 }
 
+export const linkExperienceTechnologiesClient = async (id: number, techIds: number[]) => {
+  const res = await fetchClient(
+    `/api/experienceTech/${id}`,
+    {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ techIds }),
+    },
+  )
+
+  return handleResponse<Response>(res);
+}
+
 export const linkProjectTechnologiesClient = async (id: number, techIds: number[]) => {
   const res = await fetchClient(
     `/api/technology/${id}`,

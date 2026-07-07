@@ -80,6 +80,7 @@ export type Experience = {
   endDate: string;
   isPresent: boolean;
   description: string;
+  technologies: Technology[];
   createdAt: string;
   updatedAt: string;
 }
@@ -213,6 +214,10 @@ export type TechnologyForm = {
 }
 
 export type ProjectTechnologyForm = {
+  techIds: number[];
+}
+
+export type ExperienceTechnologyForm = {
   techIds: number[];
 }
 

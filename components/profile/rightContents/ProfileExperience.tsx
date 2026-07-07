@@ -192,6 +192,16 @@ export default function ProfileExperience() {
                         {exp.description}
                       </p>
                     )}
+
+                    {exp.technologies && exp.technologies.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 pt-1">
+                        {exp.technologies.map(tech => (
+                          <span key={tech.id} className="badge badge-ghost badge-sm">
+                            {tech.name}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </article>
               );
