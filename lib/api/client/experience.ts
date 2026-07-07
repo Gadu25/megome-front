@@ -30,8 +30,8 @@ export const addExperienceClient = async (form: ExperienceForm) => {
   formData.append("title", form.title);
   formData.append("company", form.company);
   formData.append("startDate", form.startDate);
-  formData.append("isPresent", form.isPresent);
-  
+  formData.append("isPresent", String(form.isPresent));
+
   if (form.endDate) {
     formData.append("endDate", form.endDate);
   }
@@ -58,7 +58,7 @@ export const updateExperienceClient = async (id: number, form: ExperienceForm) =
   formData.append("title", form.title);
   formData.append("company", form.company);
   formData.append("startDate", form.startDate);
-  formData.append("isPresent", form.isPresent);
+  formData.append("isPresent", String(form.isPresent));
 
   if (form.endDate) {
     formData.append("endDate", form.endDate);

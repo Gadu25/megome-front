@@ -47,6 +47,7 @@ export type ProfileForm = {
 export type ProfilePayload = {
   firstName: string;
   lastName: string;
+  tagline: string;
   title: string;
   birthday: string;
   bio: string;
