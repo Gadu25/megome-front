@@ -115,8 +115,8 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
         showToast
       )
       
-      if (!data) return;
-  
+      if (!data?.education) return;
+
       setEducation((prev) => [...prev, data.education]);
 
       setNewEducation({

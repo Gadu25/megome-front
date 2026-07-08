@@ -27,7 +27,7 @@ export default function ProfileSkill() {
     const fetchSkills = async () => {
       try {
         const res = await getSkillClient();
-        setSkills(res.skills);
+        setSkills(res.skills ?? []);
       } finally {
         setLoading(false);
       }

@@ -120,7 +120,7 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
         showToast
       )
 
-      if (!data) return
+      if (!data?.certificate) return
       setEditImagePreviews((prev) => {
         const next = { ...prev }
         delete next[id]
@@ -161,7 +161,7 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
         showToast
       )
 
-      if (!data) return;
+      if (!data?.certificate) return;
 
       setCertificates((prev) => [...prev, data.certificate]);
 

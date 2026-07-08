@@ -99,7 +99,7 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
         showToast
       )
 
-      if (!data) return;
+      if (!data?.skill) return;
 
       setSkills((prev) => [...prev, data.skill]);
 

@@ -105,7 +105,7 @@ export default function ProjectWizard({
       showToast
     )
 
-    if (!data) return false;
+    if (!data?.project) return false;
 
     setProjectId(data.project.id);
     setIsDirty(false);

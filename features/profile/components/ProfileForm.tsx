@@ -85,7 +85,7 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
 
       if (!data) return;
 
-      setProfile?.(data.profile);
+      setProfile?.(data.profile ?? null);
 
       if (isOnboarding) {
         router.push("/dashboard");

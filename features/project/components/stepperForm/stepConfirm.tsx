@@ -91,9 +91,9 @@ export default function StepConfirm({
           {/* Chips */}
           {tech.length > 0 ? (
             <div className="flex flex-wrap gap-2">
-              {tech.map((t) => (
+              {tech.filter(Boolean).map((t, idx) => (
                 <div
-                  key={t.id}
+                  key={`${t.id}-${idx}`}
                   className={`badge gap-1 px-3 py-2 ${
                     t.isVerified
                       ? "badge-primary"

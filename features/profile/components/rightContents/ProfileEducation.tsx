@@ -22,7 +22,7 @@ export default function ProfileEducation() {
     const fetchEducation = async () => {
       try {
         const res = await getEducationClient();
-        setEducation(res.educations);
+        setEducation(res.educations ?? []);
       } catch (error) {
         console.error("Error fetching education:", error);
       } finally {

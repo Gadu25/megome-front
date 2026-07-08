@@ -91,7 +91,7 @@ export default function ApiTokensPage() {
 
       if (!data) return;
 
-      setGeneratedToken(data.pat);
+      setGeneratedToken(data.pat ?? null);
       setForm({ name: "" });
       setActiveModal("token");
 

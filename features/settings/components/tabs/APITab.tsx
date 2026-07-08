@@ -97,7 +97,7 @@ export default function ApiTab() {
 
       if (!data) return;
 
-      setGeneratedToken(data.pat);
+      setGeneratedToken(data.pat ?? null);
       setActiveModal("token");
       setForm({
         name: "",

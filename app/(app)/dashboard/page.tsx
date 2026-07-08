@@ -316,7 +316,7 @@ export default function DashboardPage() {
       try {
         setLoading(true);
         const res = await getDashboardOverview();
-        setDashboardOverview(res.data)
+        setDashboardOverview(res.data ?? null)
       } catch (error) {
         console.error("Failed to fetch dashboard overview: ", error)
       } finally {

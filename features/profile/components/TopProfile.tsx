@@ -31,7 +31,7 @@ export default function TopProfile({ isProfileSetup }: props) {
     const fetchProfile = async () => {
       try {
         const res = await getProfileClient();
-        setProfile(res.profile);
+        setProfile(res.profile ?? null);
       } catch (err) {
         console.error("Failed to fetch profile", err);
       } finally {

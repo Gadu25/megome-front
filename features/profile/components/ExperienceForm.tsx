@@ -278,7 +278,7 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
         showToast
       )
   
-      if (!data) return;
+      if (!data?.experience) return;
 
       if (newExpTechs.length > 0) {
         await linkExperienceTechnologiesClient(data.experience.id, newExpTechs.map(t => t.id))

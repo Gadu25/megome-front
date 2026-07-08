@@ -106,9 +106,9 @@ export default function ProjectCard({
 
           {/* Technologies */}
           <div className="flex flex-wrap gap-1.5">
-            {techs.slice(0, 3).map((tech) => (
+            {techs.filter(Boolean).slice(0, 3).map((tech, idx) => (
               <span
-                key={tech.id}
+                key={`${tech.id}-${idx}`}
                 className="badge badge-outline badge-xs"
               >
                 {tech.name}

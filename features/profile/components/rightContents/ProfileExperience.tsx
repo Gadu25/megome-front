@@ -22,7 +22,7 @@ export default function ProfileExperience() {
     const fetchExperience = async () => {
       try {
         const res = await getExperienceClient();
-        setExperiences(res.experiences);
+        setExperiences(res.experiences ?? []);
       } catch (error) {
         console.error("Error fetching experience:", error);
       } finally {

@@ -146,9 +146,9 @@ export default function StepTech({
       {/* Selected technologies */}
       {selectedTech.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {selectedTech.map((tech) => (
+          {selectedTech.filter(Boolean).map((tech, idx) => (
             <div
-              key={tech.id}
+              key={`${tech.id}-${tech.name}-${idx}`}
               className="badge badge-primary gap-1 px-3 py-3"
             >
               <span>{tech.name}</span>
