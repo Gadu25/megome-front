@@ -1,6 +1,6 @@
 import React from "react";
-import Navbar from "@/components/app/Navbar";
-import Sidebar from "@/components/app/Sidebar";
+import Navbar from "@/components/ui/Navbar";
+import Sidebar from "@/components/ui/Sidebar";
 import { getInitServer } from "@/lib/api/server/init";
 import { redirect } from "next/navigation";
 

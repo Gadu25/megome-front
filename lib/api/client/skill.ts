@@ -1,5 +1,6 @@
-import type { Skill, SkillForm } from "@/types/types";
-import { handleResponse } from "@/functions/handleResponse";
+import type { Skill } from "@/types/domain";
+import type { SkillForm } from "@/types/form";
+import { handleResponse } from "@/utils/api/handleResponse";
 import { fetchClient } from "./fetchClient";
 
 interface Response {

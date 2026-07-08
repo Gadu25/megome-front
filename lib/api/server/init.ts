@@ -1,6 +1,6 @@
-import type { Profile } from "@/types/types";
+import type { Profile } from "@/types/domain";
 import { fetchWithAuth } from "./fetchWithAuth";
-import { handleResponse } from "@/functions/handleResponse";
+import { handleResponse } from "@/utils/api/handleResponse";
 
 interface Response {
   success: boolean;

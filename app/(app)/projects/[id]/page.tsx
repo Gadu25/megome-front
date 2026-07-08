@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { getProjectServer } from "@/lib/api/server/project";
-import type { ProjectFull } from "@/types/types";
-import { ProjectHeader } from "@/components/projects/ProjectHeader";
-import { ScreenshotsSection } from "@/components/projects/Screenshots";
+import type { ProjectFull } from "@/types/domain";
+import { ProjectHeader, ScreenshotsSection } from "@/features/project";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
-import { humanizeDate } from "@/functions/humanitizeDate";
+import { humanizeDate } from "@/utils/date/humanizeDate";
 
 export default async function ProjectDetailPage({
   params,

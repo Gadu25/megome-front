@@ -7,9 +7,9 @@ import {
   ChartBarIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
-import { FeatureInProgressOverlay } from "@/components/common/FeatureInProgress";
+import { FeatureInProgressOverlay } from "@/components/ui/FeatureInProgress";
 import { getDashboardOverview } from "@/lib/api/client/dashboard";
-import { DasboardOverview } from "@/types/types";
+import { DashboardOverview } from "@/types/api";
 import Link from "next/link";
 
 /* ─────────────────────────────
@@ -308,7 +308,7 @@ function ApiPlayground() {
 
 export default function DashboardPage() {
   const completion = useMemo(() => mockProfileCompletion, []);
-  const [dashboardOverview, setDashboardOverview] = useState<DasboardOverview | null>(null)
+  const [dashboardOverview, setDashboardOverview] = useState<DashboardOverview | null>(null)
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

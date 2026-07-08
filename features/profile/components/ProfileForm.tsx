@@ -1,0 +1,304 @@
+"use client"
+
+import React, { useEffect, useState } from "react"
+import { useRouter } from "next/navigation";
+import { UserIcon } from "@heroicons/react/24/outline";
+import { updateProfileClient } from "@/lib/api/client/profile";
+import { logoutClient } from "@/lib/api/client/auth";
+import { profileSchema } from "@/features/profile/schema";
+import { useToast } from "@/components/ui/toast/useToast";
+import { withRequest } from "@/utils/api/withRequest";
+import type { Profile } from "@/types/domain"
+import type { ProfileForm } from "@/types/form"
+import Modal from "@/components/ui/modal/Modal";
+
+type Props = {
+  profile?: Profile | null;
+  setProfile?: React.Dispatch<React.SetStateAction<Profile | null>>;
+  isOnboarding?: boolean;
+}
+
+export default function ProfileForm({ profile = null, isOnboarding = false, setProfile }: Props) {
+  const { showToast } = useToast();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const [preview, setPreview] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState<ProfileForm>({
+    firstName: "",
+    lastName: "",
+    title: "",
+    tagline: "",
+    birthday: "",
+    bio: "",
+    phone: "",
+    website: "",
+    location: "",
+    profileImage: null,
+  })
+
+  useEffect(()=> {
+    if (!profile) return
+
+    setForm({
+      firstName: profile.firstName ?? "",
+      lastName: profile.lastName ?? "",
+      title: profile.title ?? "",
+      tagline: profile.tagline ?? "",
+      birthday: profile.birthday ? profile.birthday.split("T")[0] : "",
+      bio: profile.bio ?? "",
+      phone: profile.phone ?? "",
+      website: profile.website ?? "",
+      location: profile.location ?? "",
+      profileImage: null,
+    });
+
+    // set preview if you have existing image
+    if (profile.profileImage) {
+      setPreview(profile.profileImage);
+    }
+  }, [profile])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setForm((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setErrors({});
+    setLoading(true)
+
+    try {
+      const result = profileSchema.safeParse(form);
+
+      if (!result.success) {
+        setErrors(result.error.flatten().fieldErrors);
+        return;
+      }
+
+      const data = await withRequest(
+        () => updateProfileClient(form),
+        showToast
+      )
+
+      if (!data) return;
+
+      setProfile?.(data.profile);
+
+      if (isOnboarding) {
+        router.push("/dashboard");
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const proceedCancel = async () => {
+    await logoutClient();
+    router.push("/auth");
+  }
+
+  return (
+    <>
+      <form onSubmit={handleSubmit} className="w-full space-y-6 text-textPrimary">
+        <div className="space-y-6">
+          <div className="flex gap-2 items-center">
+            <span>
+              <UserIcon className="size-6" />
+            </span>
+            <h3 className="text-lg font-semibold">Basic Information</h3>
+          </div>
+
+          <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex flex-col items-center gap-4 p-2">
+              <div className="size-40 rounded-full bg-base-300 overflow-hidden flex items-center justify-center border-2 border-neutral">
+                {preview ? (
+                  <img src={preview} alt="Profile preview" className="w-full h-full object-cover"/>
+                ) : (
+                  <span className="text-lg">profile</span>
+                )}
+              </div>
+              <input type="file" accept="image/*" className="file-input file-input-sm"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  setForm((prev) => ({ ...prev, profileImage: file }));
+
+                  if (file) {
+                    const url = URL.createObjectURL(file)
+                    setPreview(url)
+                  }
+                }}
+              />
+            </div>
+
+            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3">
+              <fieldset className="fieldset relative">
+                <label className="label"><span className="text-error">*</span>First Name</label>
+                <input 
+                  type="text"
+                  name="firstName"
+                  value={form.firstName || ""}
+                  onChange={handleChange}
+                  className={`input input-bordered w-full ${errors.firstName ? "input-error" : ""}`}
+                />
+                {errors.firstName && (
+                  <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.firstName }</span>
+                )}
+              </fieldset>
+
+              <fieldset className="fieldset relative">
+                <label className="label"><span className="text-error">*</span>Last Name</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={form.lastName || ""}
+                  onChange={handleChange}
+                  className={`input input-bordered w-full ${errors.lastName ? "input-error" : ""}`}
+                />
+                {errors.lastName && (
+                  <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.lastName }</span>
+                )}
+              </fieldset>
+
+              <fieldset className="fieldset relative">
+                <label className="label"><span className="text-error">*</span>Title</label>
+                <input 
+                  type="text"
+                  name="title"
+                  value={form.title || ""}
+                  onChange={handleChange}
+                  placeholder="ex. Software Developer"
+                  className={`input input-bordered w-full ${errors.title ? "input-error" : ""}`}
+                />
+                {errors.title && (
+                  <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.title }</span>
+                )}
+              </fieldset>
+              
+              <fieldset className="fieldset relative">
+                <label className="label"><span className="text-error">*</span>Birthday</label>
+                <input 
+                  type="date"
+                  name="birthday"
+                  value={form.birthday || ""}
+                  onChange={handleChange}
+                  className={`input input-bordered w-full ${errors.birthday ? "input-error" : ""}`}
+                />
+                {errors.birthday && (
+                  <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.birthday }</span>
+                )}
+              </fieldset>
+
+              <fieldset className="fieldset md:col-span-2 relative">
+                <label className="label">Location</label>
+                <input 
+                  type="text"
+                  name="location"
+                  value={form.location || ""}
+                  onChange={handleChange}
+                  className={`input input-bordered w-full ${errors.location ? "input-error" : ""}`}
+                />
+                {errors.location && (
+                  <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.location }</span>
+                )}
+              </fieldset>
+
+              <fieldset className="fieldset md:col-span-2 relative">
+                <label className="label">Tagline</label>
+                <input 
+                  type="text"
+                  name="tagline"
+                  value={form.tagline || ""}
+                  onChange={handleChange}
+                  className={`input input-bordered w-full ${errors.tagline ? "input-error" : ""}`}
+                />
+                {errors.tagline && (
+                  <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.tagline }</span>
+                )}
+              </fieldset>
+
+              <fieldset className="fieldset md:col-span-2 relative">
+                <label className="label">Phone</label>
+                <input 
+                  type="tel"
+                  name="phone"
+                  value={form.phone || ""}
+                  onChange={handleChange}
+                  className={`input input-bordered w-full ${errors.phone ? "input-error" : ""}`}
+                />
+                {errors.phone && (
+                  <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.phone }</span>
+                )}
+              </fieldset>
+
+              <fieldset className="fieldset md:col-span-2 relative">
+                <label className="label">Website</label>
+                <input 
+                  type="url"
+                  name="website"
+                  value={form.website || ""}
+                  onChange={handleChange}
+                  className={`input input-bordered w-full ${errors.website ? "input-error" : ""}`}
+                />
+                {errors.website && (
+                  <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.website }</span>
+                )}
+              </fieldset>
+            </div>
+          </div>
+        </div>
+        
+        <div className="space-y-4">
+          <fieldset className="fieldset relative">
+            <legend className="fieldset-legend">Your bio</legend>
+            <textarea
+              name="bio"
+              value={form.bio || ""}
+              onChange={handleChange}
+              rows={4}
+              className={`textarea textarea-bordered w-full ${errors.bio ? "textarea-error" : ""}`}
+              placeholder="Write something about yourself..."
+            />
+            <div className="label">You can edit bio later on from settings</div>
+            {errors.bio && (
+              <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.bio }</span>
+            )}
+          </fieldset>
+        </div>
+
+        <div className="flex justify-end gap-4">
+          {isOnboarding && (
+            <button
+              type="button"
+              className="px-4 py-2 border border-border rounded-md text-textSecondary cursor-pointer"
+              onClick={() => setOpen(true)}
+            >
+              Cancel
+            </button>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-primary text-primary-content px-6 py-2 rounded-md font-semibold disabled:opacity-50 cursor-pointer"
+          >
+            {loading ? "Saving..." : "Save Profile"}
+          </button>
+        </div>
+      </form>
+      
+      <Modal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        title="Confirm Action"
+        onAccept={() => proceedCancel()}
+        onCancel={() => setOpen(false)}
+        acceptText="Logout"
+      >
+        <p>Are you sure you want to proceed? This will logout your current session.</p>
+      </Modal>
+    </>
+  )
+}

@@ -1,7 +1,5 @@
-import TopProfile from "@/components/profile/TopProfile";
-import ProfileSkill from "@/components/profile/ProfileSkill";
-import RightContent from "@/components/profile/RightContent";
-import { Card } from "@/components/common/Card";
+import { TopProfile, ProfileSkill, RightContent } from "@/features/profile";
+import { Card } from "@/components/ui/Card";
 
 export default async function ProfilePage({ searchParams }: { searchParams: { tab?: string }}) {
 

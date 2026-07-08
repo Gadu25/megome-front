@@ -1,5 +1,6 @@
-import type { Experience, ExperienceForm } from "@/types/types";
-import { handleResponse } from "@/functions/handleResponse";
+import type { Experience } from "@/types/domain";
+import type { ExperienceForm } from "@/types/form";
+import { handleResponse } from "@/utils/api/handleResponse";
 import { fetchClient } from "./fetchClient";
 
 interface Response {

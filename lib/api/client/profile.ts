@@ -1,5 +1,6 @@
-import type { Profile, ProfilePayload } from "@/types/types";
-import { handleResponse } from "@/functions/handleResponse";
+import type { Profile } from "@/types/domain";
+import type { ProfilePayload } from "@/types/form";
+import { handleResponse } from "@/utils/api/handleResponse";
 import { fetchClient } from "./fetchClient";
 
 interface Response {

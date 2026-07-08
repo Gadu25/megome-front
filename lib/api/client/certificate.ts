@@ -1,5 +1,6 @@
-import type { Certificate, CertificateForm } from "@/types/types";
-import { handleResponse } from "@/functions/handleResponse";
+import type { Certificate } from "@/types/domain";
+import type { CertificateForm } from "@/types/form";
+import { handleResponse } from "@/utils/api/handleResponse";
 import { fetchClient } from "./fetchClient";
 import { handler } from "next/dist/build/templates/app-route";
 

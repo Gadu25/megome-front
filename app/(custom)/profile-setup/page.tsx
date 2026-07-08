@@ -1,4 +1,4 @@
-import ProfileForm from "@/components/form/Profile";
+import { ProfileForm } from "@/features/profile";
 
 export default function ProfilePage() {
   return (

@@ -3,11 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRightIcon } from "@heroicons/react/16/solid";
-import { Card } from "@/components/common/Card";
-import { useToast } from "@/components/toast/useToast";
+import { Card } from "@/components/ui/Card";
+import { useToast } from "@/components/ui/toast/useToast";
 import { forgotPassClient } from "@/lib/api/client/forgotpass";
 
-import { withRequest } from "@/functions/withRequest";
+import { withRequest } from "@/utils/api/withRequest";
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState("");

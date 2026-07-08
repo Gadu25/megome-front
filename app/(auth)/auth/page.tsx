@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { BoltIcon, PuzzlePieceIcon, ShieldCheckIcon } from "@heroicons/react/24/outline";
-import { LogoFull } from "@/components/common/Logo";
-import ThemeToggle from "@/components/common/ThemeToggle";
-import AuthForm from "@/components/auth/AuthForm";
+import { LogoFull } from "@/components/ui/Logo";
+import ThemeToggle from "@/components/ui/ThemeToggle";
+import { AuthForm } from "@/features/auth";
 import Link from "next/link";
 
 type FeatureProps = {

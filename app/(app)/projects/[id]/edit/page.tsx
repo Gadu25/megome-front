@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { getProjectServer } from "@/lib/api/server/project";
 
-import ProjectWizard from "@/components/projects/ProjectWizard";
+import { ProjectWizard } from "@/features/project";
 import Link from "next/link";
 
 export default async function EditProjectPage({

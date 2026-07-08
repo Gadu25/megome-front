@@ -1,5 +1,6 @@
-import type { PersonalAccessToken, PersonalAccessTokenForm } from "@/types/types";
-import { handleResponse } from "@/functions/handleResponse";
+import type { PersonalAccessToken } from "@/types/domain";
+import type { PersonalAccessTokenForm } from "@/types/form";
+import { handleResponse } from "@/utils/api/handleResponse";
 import { fetchClient } from "./fetchClient";
 
 interface Response {

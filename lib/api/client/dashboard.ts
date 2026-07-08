@@ -1,10 +1,10 @@
-import type { DasboardOverview } from "@/types/types";
-import { handleResponse } from "@/functions/handleResponse";
+import type { DashboardOverview } from "@/types/api";
+import { handleResponse } from "@/utils/api/handleResponse";
 import { fetchClient } from "./fetchClient";
 
 interface Response {
   message: string;
-  data: DasboardOverview
+  data: DashboardOverview
 }
 
 export const getDashboardOverview = async () => {

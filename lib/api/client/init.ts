@@ -1,5 +1,5 @@
-import type { Profile } from "@/types/types";
-import { handleResponse } from "@/functions/handleResponse";
+import type { Profile } from "@/types/domain";
+import { handleResponse } from "@/utils/api/handleResponse";
 
 interface Response {
   success: boolean;

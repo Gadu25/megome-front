@@ -1,5 +1,6 @@
-import type { Education, EducationForm } from "@/types/types";
-import { handleResponse } from "@/functions/handleResponse";
+import type { Education } from "@/types/domain";
+import type { EducationForm } from "@/types/form";
+import { handleResponse } from "@/utils/api/handleResponse";
 import { fetchClient } from "./fetchClient";
 
 interface Response {
