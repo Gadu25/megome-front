@@ -68,13 +68,12 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
     e.preventDefault()
     setErrors({});
     setLoading(true)
-    
+
     try {
       const result = profileSchema.safeParse(form);
 
       if (!result.success) {
         setErrors(result.error.flatten().fieldErrors);
-        setLoading(false);
         return;
       }
 
@@ -90,8 +89,6 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
       if (isOnboarding) {
         router.push("/dashboard");
       }
-    } catch (err: any) {
-      showToast(err.response?.data?.error, "error")
     } finally {
       setLoading(false)
     }

@@ -175,8 +175,6 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
       })
       setCertImagePreview(null)
 
-    } catch(err: any) {
-      showToast(err.response?.data?.error, "error")
     } finally {
       setAddLoading(false);
     }

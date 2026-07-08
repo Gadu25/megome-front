@@ -127,8 +127,6 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
         endDate: "",
         isPresent: false,
       })
-    } catch (err: any) {
-      showToast(err.response?.data?.error, "error")
     } finally {
       setAddLoading(false)
     }

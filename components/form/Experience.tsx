@@ -213,10 +213,12 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
       )
     )
 
-    await withRequest(
+    const res = await withRequest(
       () => linkExperienceTechnologiesClient(expId, updated.map(t => t.id)),
       showToast
     )
+
+    if (!res) return;
   }
 
   const removeTechFromExp = async (expId: number, techId: number) => {
@@ -229,10 +231,12 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
       )
     )
 
-    await withRequest(
+    const res = await withRequest(
       () => linkExperienceTechnologiesClient(expId, updated.map(t => t.id)),
       showToast
     )
+
+    if (!res) return;
   }
 
   const addTechToNew = (tech: Technology) => {
@@ -294,8 +298,6 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
       setLogoPreview(null)
       setNewExpTechs([])
       setNewTechSearch("")
-    } catch (err: any) {
-      showToast(err.response?.data?.error, "error")
     } finally {
       setAddLoading(false);
     }

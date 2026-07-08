@@ -152,8 +152,8 @@ export default function ProjectWizard({
           ...img,
           status: "failed" as const,
           error:
-            err?.response?.data?.error ||
-            err?.response?.data?.message ||
+            err?.data?.error ||
+            err?.data?.message ||
             err?.message ||
             "Upload failed",
         };
@@ -188,8 +188,8 @@ export default function ProjectWizard({
         ...currentImages.cover,
         status: "failed" as const,
         error:
-          err?.response?.data?.error ||
-          err?.response?.data?.message ||
+          err?.data?.error ||
+          err?.data?.message ||
           err?.message ||
           "Upload failed",
       };
@@ -215,19 +215,14 @@ export default function ProjectWizard({
 
     const techIds = [...new Set(selectedTech.map(t => t.id))];
 
-    try {
-      const data = await withRequest(
-        () => linkProjectTechnologiesClient(projectId, techIds),
-        showToast
-      )
-      
-      if (!data) return false;
+    const data = await withRequest(
+      () => linkProjectTechnologiesClient(projectId, techIds),
+      showToast
+    )
 
-      return true;
-    } catch (err) {
-      console.error("Failed to link technologies:", err);
-      return false;
-    }
+    if (!data) return false;
+
+    return true;
   };
 
   // ---------- STEP 4 ----------

@@ -106,8 +106,6 @@ export default function ApiTab() {
       });
 
       await fetchTokens();
-    } catch (error) {
-      console.error(error);
     } finally {
       setGenerating(false);
     }
@@ -115,52 +113,45 @@ export default function ApiTab() {
 
   const handleRevoke = async () => {
     if(!selectedToken) return
-    try {
-      const data = await withRequest(
-        () => revokePatClient(selectedToken.id),
-        showToast,
+
+    const data = await withRequest(
+      () => revokePatClient(selectedToken.id),
+      showToast,
+    )
+
+    if (!data) return;
+    
+    setTokens((prevTokens) =>
+      prevTokens.map((token) =>
+        token.id === selectedToken.id
+          ? {
+              ...token,
+              revokedAt: new Date().toISOString(),
+            }
+          : token
       )
+    );
 
-      if (!data) return;
-      
-      setTokens((prevTokens) =>
-        prevTokens.map((token) =>
-          token.id === selectedToken.id
-            ? {
-                ...token,
-                revokedAt: new Date().toISOString(),
-              }
-            : token
-        )
-      );
-
-      closeModal();
-    } catch (error) {
-      console.error(error);
-    }
+    closeModal();
   }
 
   const handleDelete = async () => {
     if (!selectedToken) return
 
-    try {
-      const data = await withRequest(
-        () => deletePatClient(selectedToken.id),
-        showToast,
+    const data = await withRequest(
+      () => deletePatClient(selectedToken.id),
+      showToast,
+    )
+
+    if (!data) return
+
+    setTokens((prevTokens) =>
+      prevTokens.filter(
+        (token) => token.id !== selectedToken.id
       )
+    );
 
-      if (!data) return
-
-      setTokens((prevTokens) =>
-        prevTokens.filter(
-          (token) => token.id !== selectedToken.id
-        )
-      );
-
-      closeModal();
-    } catch (error) {
-      console.log(error)
-    }
+    closeModal();
   }
 
   const handleCopyToken = async () => {

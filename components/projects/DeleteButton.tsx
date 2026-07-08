@@ -21,19 +21,15 @@ export default function ProjectDeleteButton({ projectId, isDraft = false, projec
   const { showToast } = useToast();
 
   async function handleDelete() {
-    try {
-      const data = await withRequest(
-        () => deleteProjectClient(projectId),
-        showToast
-      )
-      if (!data) return;
-      if (isDraft) {
-        router.refresh();
-      }
-      router.push("/projects");
-    } catch (error) {
-      console.error(error);
+    const data = await withRequest(
+      () => deleteProjectClient(projectId),
+      showToast
+    )
+    if (!data) return;
+    if (isDraft) {
+      router.refresh();
     }
+    router.push("/projects");
   }
 
   return (

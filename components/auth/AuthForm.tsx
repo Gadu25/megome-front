@@ -94,7 +94,7 @@ export default function AuthForm({ mode }: { mode: MODE }) {
 
       await action();
     } catch (err: any) {
-      setError(err.message || "An error occurred");
+      setError(err?.data?.error || err?.message || "An error occurred");
     } finally {
       setLoading(false);
     }

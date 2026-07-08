@@ -104,8 +104,6 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
         skillName: '',
         proficiency: 'Beginner',
       })
-    } catch (err: any) {
-      showToast(err.response?.data?.error, "error")
     } finally {
       setAddLoading(false)
     }
