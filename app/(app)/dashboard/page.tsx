@@ -1,60 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BoltIcon,
   KeyIcon,
   ChartBarIcon,
   UserCircleIcon,
+  CheckCircleIcon,
 } from "@heroicons/react/24/outline";
-import { FeatureInProgressOverlay } from "@/components/ui/FeatureInProgress";
-import { getDashboardOverview } from "@/lib/api/client/dashboard";
-import { DashboardOverview } from "@/types/api";
+import { getCompletion, getDashboardOverview } from "@/lib/api/client/dashboard";
+import { CompletionStatus, DashboardOverview } from "@/types/api";
 import Link from "next/link";
-
-/* ─────────────────────────────
-   MOCK DATA
-───────────────────────────── */
-
-const mockProfileCompletion = 72;
-
-const mockSections = [
-  { name: "Profile", value: 90 },
-  { name: "Experience", value: 60 },
-  { name: "Projects", value: 80 },
-  { name: "Skills", value: 50 },
-  { name: "API Setup", value: 100 },
-];
-
-const mockApiStats = {
-  requests: 12458,
-  keys: 2,
-  latency: "120ms",
-};
-
-const mockActivity = [
-  { action: "Profile updated", time: "2h ago" },
-  { action: "New API key generated", time: "1d ago" },
-  { action: "Project added: CLI Toolkit", time: "2d ago" },
-];
-
-const mockProjects = [
-  {
-    title: "Portfolio API",
-    stack: "Go · PostgreSQL",
-    status: "active",
-  },
-  {
-    title: "Distributed Cache Layer",
-    stack: "Go · Redis · gRPC",
-    status: "maintenance",
-  },
-  {
-    title: "CLI Toolkit",
-    stack: "Go · Cobra",
-    status: "active",
-  },
-];
 
 /* ─────────────────────────────
    UI COMPONENTS
@@ -101,6 +57,33 @@ function ProgressRow({
       <div className="h-2 bg-base-300 rounded-full overflow-hidden">
         <div className="h-full bg-primary" style={{ width: `${value}%` }} />
       </div>
+    </div>
+  );
+}
+
+const sectionLinks: Record<string, string> = {
+  skills: "/profile",
+  education: "/profile",
+  experience: "/profile",
+  certification: "/profile",
+  projects: "/projects",
+};
+
+function SectionRow({ name, filled }: { name: string; filled: boolean }) {
+  const href = sectionLinks[name] ?? "/profile";
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <span className="text-sm capitalize">{name}</span>
+        {filled && <CheckCircleIcon className="w-4 h-4 text-success" />}
+      </div>
+      {filled ? (
+        <span className="text-xs text-success">Completed</span>
+      ) : (
+        <Link href={href} className="btn btn-ghost btn-xs">
+          Add
+        </Link>
+      )}
     </div>
   );
 }
@@ -287,7 +270,7 @@ function ApiPlayground() {
 
         {/* Response / Error */}
         {!loading && (
-          <pre className="mt-2 bg-base-200 rounded-xl p-4 text-xs font-mono overflow-auto max-h-80">
+          <pre className="mt-2 bg-base-200 rounded-xl p-4 text-xs font-mono overflow-auto max-h-80 whitespace-pre-wrap break-all">
             {response
               ? JSON.stringify(
                   response.error ?? response.body,
@@ -307,24 +290,28 @@ function ApiPlayground() {
 ───────────────────────────── */
 
 export default function DashboardPage() {
-  const completion = useMemo(() => mockProfileCompletion, []);
   const [dashboardOverview, setDashboardOverview] = useState<DashboardOverview | null>(null)
+  const [completion, setCompletion] = useState<CompletionStatus | null>(null)
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchDashboardOverview = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const res = await getDashboardOverview();
-        setDashboardOverview(res.data ?? null)
+        const [overviewRes, completionRes] = await Promise.all([
+          getDashboardOverview(),
+          getCompletion(),
+        ]);
+        setDashboardOverview(overviewRes.data ?? null);
+        setCompletion(completionRes.data ?? null);
       } catch (error) {
-        console.error("Failed to fetch dashboard overview: ", error)
+        console.error("Failed to fetch dashboard data: ", error)
       } finally {
         setLoading(false)
       }
     }
 
-    fetchDashboardOverview();
+    fetchData();
   }, [])
 
   return (
@@ -342,15 +329,14 @@ export default function DashboardPage() {
         </div>
 
         {/* KPI */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="relative">
+        <div className={`grid gap-4 ${completion?.overall === 100 ? "grid-cols-1 md:grid-cols-3" : "grid-cols-1 md:grid-cols-4"}`}>
+          {completion?.overall !== 100 && (
             <Card
               title="Profile Completion"
-              value={`${completion}%`}
+              value={`${completion?.overall ?? 0}%`}
               icon={<UserCircleIcon className="w-5 h-5" />}
             />
-            <FeatureInProgressOverlay title="Profile completion" description="under development"/>
-          </div>
+          )}
           <Card
             title="API Requests"
             value={dashboardOverview ? dashboardOverview?.apiUsage.requestCount.toLocaleString(): 0}
@@ -372,36 +358,28 @@ export default function DashboardPage() {
         <ApiPlayground />
 
         {/* LOWER GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className={`grid gap-6 ${completion?.overall === 100 ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-3"}`}>
 
-          {/* Progress */}
-          <div className="relative">
-            <div className="rounded-2xl border border-base-300 p-5">
+          {/* Completion Breakdown */}
+          {completion?.overall !== 100 && (
+            <div className="rounded-2xl border border-base-300 p-5 lg:col-span-2">
               <h2 className="font-semibold mb-4">Completion Breakdown</h2>
               <div className="space-y-4">
-                {mockSections.map((s) => (
-                  <ProgressRow key={s.name} {...s} />
+                {completion && (
+                  <ProgressRow
+                    name="Profile"
+                    value={Math.round((completion.profile.filter(p => p.filled).length / completion.profile.length) * 100)}
+                  />
+                )}
+                {completion && completion.sections.length > 0 && (
+                  <div className="border-t border-base-300 pt-4" />
+                )}
+                {completion?.sections.map((item) => (
+                  <SectionRow key={item.name} name={item.name} filled={item.filled} />
                 ))}
               </div>
             </div>
-            <FeatureInProgressOverlay title="Completion Breakdown"/>
-          </div>
-
-          {/* Activity */}
-          <div className="relative">
-            <div className="rounded-2xl border border-base-300 p-5">
-              <h2 className="font-semibold mb-4">Recent Activity</h2>
-              <div className="space-y-3">
-                {mockActivity.map((a, i) => (
-                  <div key={i} className="text-sm">
-                    <div>{a.action}</div>
-                    <div className="text-xs text-base-content/40">{a.time}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <FeatureInProgressOverlay title="Recent Activity"/>
-          </div>
+          )}
 
           {/* Quick Actions */}
           <div className="rounded-2xl border border-base-300 p-5">

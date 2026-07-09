@@ -23,3 +23,14 @@ export type DashboardOverview = {
   apiUsage: ApiUsage,
   patCount: number,
 }
+
+export type CompletionItem = {
+  name: string;
+  filled: boolean;
+}
+
+export type CompletionStatus = {
+  overall: number;
+  profile: CompletionItem[];
+  sections: CompletionItem[];
+}
