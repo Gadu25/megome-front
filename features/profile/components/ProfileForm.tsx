@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation";
+import RichEditor from "@/components/ui/rich-editor/RichEditor";
 import { UserIcon } from "@heroicons/react/24/outline";
 import { updateProfileClient } from "@/lib/api/client/profile";
 import { logoutClient } from "@/lib/api/client/auth";
@@ -65,12 +66,24 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
     setForm((prev) => ({ ...prev, [name]: value }))
   }
 
+  const handleBioChange = (html: string) => {
+    const plainText = html.replace(/<[^>]*>/g, "").trim()
+    if (plainText.length > 600) return
+    setForm((prev) => ({ ...prev, bio: html }))
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setErrors({});
     setLoading(true)
 
     try {
+      const plainBio = (form.bio || "").replace(/<[^>]*>/g, "").trim()
+      if (plainBio.length > 600) {
+        setErrors({ bio: [`Bio must be at most 600 characters (currently ${plainBio.length})`] })
+        return
+      }
+
       const result = profileSchema.safeParse(form);
 
       if (!result.success) {
@@ -251,19 +264,18 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
         </div>
         
         <div className="space-y-4">
-          <fieldset className="fieldset relative">
+          <fieldset className="fieldset">
             <legend className="fieldset-legend">Your bio</legend>
-            <textarea
-              name="bio"
-              value={form.bio || ""}
-              onChange={handleChange}
-              rows={4}
-              className={`textarea textarea-bordered w-full ${errors.bio ? "textarea-error" : ""}`}
-              placeholder="Write something about yourself..."
+            <RichEditor
+              content={form.bio || ""}
+              onChange={handleBioChange}
             />
-            <div className="label">You can edit bio later on from settings</div>
+            <div className="label text-xs flex justify-between">
+              <span>You can edit bio later on from settings</span>
+              <span>{(form.bio || "").replace(/<[^>]*>/g, "").length}/600</span>
+            </div>
             {errors.bio && (
-              <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.bio }</span>
+              <span className="text-error text-sm">{ errors.bio }</span>
             )}
           </fieldset>
         </div>

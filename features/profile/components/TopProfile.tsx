@@ -172,9 +172,23 @@ export default function TopProfile({ isProfileSetup }: props) {
 
           {/* Bio */}
           {profile.bio && (
-            <p className="max-w-3xl text-sm leading-7 text-base-content/75">
-              {profile.bio}
-            </p>
+            <div
+              className="prose-sm max-w-3xl text-sm leading-7 text-base-content/75
+                [&>*:first-child]:mt-0 [&>*:last-child]:mb-0
+                [&_p]:mb-2 [&_p:empty]:hidden
+                [&_strong]:font-semibold [&_em]:italic
+                [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:mt-5 [&_h2]:mb-2
+                [&_h3]:text-base [&_h3]:font-semibold [&_h3]:mt-4 [&_h3]:mb-1
+                [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5
+                [&_li]:mb-1
+                [&_blockquote]:border-l-4 [&_blockquote]:border-base-300
+                [&_blockquote]:pl-4 [&_blockquote]:italic
+                [&_blockquote]:text-base-content/60
+                [&_code]:bg-base-200 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded
+                [&_pre]:bg-base-200 [&_pre]:p-3 [&_pre]:rounded-lg [&_pre]:overflow-x-auto
+                [&_pre_code]:bg-transparent [&_pre_code]:p-0"
+              dangerouslySetInnerHTML={{ __html: profile.bio }}
+            />
           )}
 
           {/* Metadata */}
