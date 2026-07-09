@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react"
 import { XMarkIcon, PhotoIcon } from "@heroicons/react/24/outline"
+import RichEditor from "@/components/ui/rich-editor/RichEditor"
 import { addExperienceClient, updateExperienceClient, deleteExperienceClient } from "@/lib/api/client/experience"
 import { getTechnologiesClient, linkExperienceTechnologiesClient } from "@/lib/api/client/technology"
 import { formatDate } from "@/utils/date/formatDate"
@@ -258,6 +259,12 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
     setAddLoading(true);
 
     try {
+      const plainDesc = (newExp.description || "").replace(/<[^>]*>/g, "").trim()
+      if (plainDesc.length > 1000) {
+        setErrors({ description: [`Description must be at most 1000 characters (currently ${plainDesc.length})`] })
+        return
+      }
+
       const result = experienceSchema.safeParse(newExp);
 
       if (!result.success) {
@@ -501,12 +508,9 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
                     />
                   </fieldset>
 
-                  <textarea placeholder="Describe your responsibilities, impact, and technologies..."
-                    className="textarea textarea-bordered w-full min-h-[100px]"
-                    value={exp.description}
-                    onChange={(e) =>
-                      handleUpdate(exp.id, "description", e.target.value)
-                    }
+                  <RichEditor
+                    content={exp.description}
+                    onChange={(html) => handleUpdate(exp.id, "description", html)}
                   />
 
                   {exp.isPresent && (
@@ -687,16 +691,16 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
               
               <fieldset className="fieldset relative">
                 <legend className="label">Description</legend>
-                <textarea
-                  placeholder="Describe your responsibilities, impact, and technologies..."
-                  className="textarea textarea-bordered w-full min-h-[100px]"
-                  value={newExp.description}
-                  onChange={(e) =>
+                <RichEditor
+                  content={newExp.description}
+                  onChange={(html) => {
+                    const plainText = html.replace(/<[^>]*>/g, "").trim()
+                    if (plainText.length > 1000) return
                     setNewExp((prev) => ({
                       ...prev,
-                      description: e.target.value,
+                      description: html,
                     }))
-                  }
+                  }}
                 />
                 {errors.description && (
                   <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.description }</span>

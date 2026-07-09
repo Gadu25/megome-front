@@ -52,8 +52,7 @@ export const experienceSchema = z.object({
     isPresent: z.boolean(),
     description: z
       .string()
-      .min(1, "Description is required")
-      .max(1000, "Description is too long"),
+      .min(1, "Description is required"),
   })
   .refine(
     (data) => {

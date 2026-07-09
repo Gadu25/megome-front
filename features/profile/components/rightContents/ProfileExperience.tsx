@@ -190,9 +190,18 @@ export default function ProfileExperience() {
                     </header>
 
                     {exp.description && (
-                      <p className="line-clamp-3 text-sm leading-relaxed text-base-content/70">
-                        {exp.description}
-                      </p>
+                      <div
+                        className="line-clamp-3 text-sm leading-relaxed text-base-content/70
+                          [&>*:first-child]:mt-0 [&>*:last-child]:mb-0
+                          [&_p]:mb-2 [&_p:empty]:hidden
+                          [&_strong]:font-semibold [&_em]:italic
+                          [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5
+                          [&_li]:mb-1
+                          [&_code]:bg-base-200 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded
+                          [&_pre]:bg-base-200 [&_pre]:p-3 [&_pre]:rounded-lg [&_pre]:overflow-x-auto
+                          [&_pre_code]:bg-transparent [&_pre_code]:p-0"
+                        dangerouslySetInnerHTML={{ __html: exp.description }}
+                      />
                     )}
 
                     {exp.technologies && exp.technologies.length > 0 && (
