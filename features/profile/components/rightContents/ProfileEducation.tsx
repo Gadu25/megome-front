@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 
 import { Education } from "@/types/domain";
 import { getEducationClient } from "@/lib/api/client/education";
@@ -134,8 +135,9 @@ export default function ProfileEducation() {
                 index === sortedEducation.length - 1;
 
               return (
-                <article
+                <Link
                   key={edu.id}
+                  href={`/education/${edu.id}`}
                   className="flex gap-4 rounded-xl border border-base-300 bg-base-100 p-4 transition hover:shadow-sm"
                 >
                   {/* TIMELINE */}
@@ -181,7 +183,7 @@ export default function ProfileEducation() {
                       </p>
                     )}
                   </div>
-                </article>
+                </Link>
               );
             })}
           </div>

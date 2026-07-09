@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 
 import { Experience } from "@/types/domain";
 import { getExperienceClient } from "@/lib/api/client/experience";
@@ -147,8 +148,9 @@ export default function ProfileExperience() {
                 index === sortedExperiences.length - 1;
 
               return (
-                <article
+                <Link
                   key={exp.id}
+                  href={`/experience/${exp.id}`}
                   className="flex gap-4 rounded-xl border border-base-300 bg-base-100 p-4 transition hover:shadow-sm"
                 >
                   {/* TIMELINE */}
@@ -214,7 +216,7 @@ export default function ProfileExperience() {
                       </div>
                     )}
                   </div>
-                </article>
+                </Link>
               );
             })}
           </div>

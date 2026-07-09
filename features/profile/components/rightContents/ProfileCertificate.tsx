@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 
 import { Certificate } from "@/types/domain";
 import { getCertificateClient } from "@/lib/api/client/certificate";
@@ -124,9 +125,10 @@ export default function ProfileCertificates() {
         ) : (
           <div className="space-y-3">
             {sortedCertificates.map((cert) => (
-              <article
+              <Link
                 key={cert.id}
-                className="card border border-base-300 bg-base-100 transition hover:shadow-md"
+                href={`/certificates/${cert.id}`}
+                className="card border border-base-300 bg-base-100 transition hover:shadow-md block"
               >
                 <div className="card-body space-y-3 p-5">
                   <header className="space-y-1">
@@ -162,14 +164,9 @@ export default function ProfileCertificates() {
                     cert.credentialUrl) && (
                     <div className="flex flex-wrap gap-2 pt-1">
                       {cert.credentialUrl && (
-                        <a
-                          href={cert.credentialUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-xs btn-primary"
-                        >
+                        <span className="btn btn-xs btn-primary cursor-default">
                           View Credential
-                        </a>
+                        </span>
                       )}
 
                       {cert.credentialId && (
@@ -180,7 +177,7 @@ export default function ProfileCertificates() {
                     </div>
                   )}
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
         )}

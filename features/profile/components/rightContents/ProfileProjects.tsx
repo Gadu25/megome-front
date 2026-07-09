@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { Project } from "@/types/domain";
@@ -115,9 +116,10 @@ export default function ProfileProjects() {
         <>
           <div className="grid gap-4 md:grid-cols-2">
             {displayProjects.map((project) => (
-              <article
+              <Link
                 key={project.id}
-                className="card bg-base-100 border border-base-300 transition hover:shadow-md"
+                href={`/projects/${project.id}`}
+                className="card bg-base-100 border border-base-300 transition hover:shadow-md block"
               >
                 <div className="card-body space-y-3 p-5">
                   {/* TITLE */}
@@ -135,29 +137,19 @@ export default function ProfileProjects() {
                   {/* LINKS */}
                   <div className="flex flex-wrap gap-2 pt-2">
                     {project.link && (
-                      <a
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn-xs btn-primary"
-                      >
+                      <span className="btn btn-xs btn-primary cursor-default">
                         Live
-                      </a>
+                      </span>
                     )}
 
                     {project.githubLink && (
-                      <a
-                        href={project.githubLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn-xs btn-ghost"
-                      >
+                      <span className="btn btn-xs btn-ghost cursor-default">
                         GitHub
-                      </a>
+                      </span>
                     )}
                   </div>
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
 
