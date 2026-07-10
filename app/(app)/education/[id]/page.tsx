@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
-import { AcademicCapIcon, ArrowLeftIcon } from "@heroicons/react/24/outline"
+import { AcademicCapIcon, ArrowLeftIcon, EllipsisVerticalIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline"
 import { getEducationClient } from "@/lib/api/client/education"
 import { humanizeDate } from "@/utils/date/humanizeDate"
+import EducationDeleteButton from "@/features/education/components/DeleteButton"
 import type { Education } from "@/types/domain"
 
 function Skeleton() {
@@ -88,28 +89,61 @@ export default function EducationDetailPage() {
       </div>
 
       <header className="space-y-4">
-        <div className="flex items-start gap-4">
-          <div className="p-3 rounded-xl bg-primary/10 shrink-0">
-            <AcademicCapIcon className="size-8 text-primary" />
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start gap-4 min-w-0">
+            <div className="p-3 rounded-xl bg-primary/10 shrink-0">
+              <AcademicCapIcon className="size-8 text-primary" />
+            </div>
+
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">
+                {education.degree || "Untitled Degree"}
+              </h1>
+
+              {education.fieldOfStudy && (
+                <p className="text-lg text-base-content/70 mt-1">
+                  {education.fieldOfStudy}
+                </p>
+              )}
+
+              <p className="text-base text-base-content/60 mt-2">{education.school}</p>
+
+              <p className="text-sm text-base-content/50 mt-1">
+                {humanizeDate(education.startDate)} —{" "}
+                {education.endDate ? humanizeDate(education.endDate) : "Present"}
+              </p>
+            </div>
           </div>
 
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">
-              {education.degree || "Untitled Degree"}
-            </h1>
+          <div className="dropdown dropdown-end">
+            <button
+              tabIndex={0}
+              className="btn btn-ghost btn-sm btn-circle"
+              aria-label="Education actions"
+            >
+              <EllipsisVerticalIcon className="size-5" />
+            </button>
 
-            {education.fieldOfStudy && (
-              <p className="text-lg text-base-content/70 mt-1">
-                {education.fieldOfStudy}
-              </p>
-            )}
+            <ul
+              tabIndex={0}
+              className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-200"
+            >
+              <li>
+                <Link href={`/education/${id}/edit`}>
+                  <PencilIcon className="size-4" />
+                  Edit Education
+                </Link>
+              </li>
 
-            <p className="text-base text-base-content/60 mt-2">{education.school}</p>
-
-            <p className="text-sm text-base-content/50 mt-1">
-              {humanizeDate(education.startDate)} —{" "}
-              {education.endDate ? humanizeDate(education.endDate) : "Present"}
-            </p>
+              <li className="mt-1 border-t border-base-200 pt-1">
+                <EducationDeleteButton educationId={id} educationTitle={education.degree}>
+                  <div className="flex justify-start gap-2 w-full items-center text-error">
+                    <TrashIcon className="size-4" />
+                    Delete Education
+                  </div>
+                </EducationDeleteButton>
+              </li>
+            </ul>
           </div>
         </div>
       </header>

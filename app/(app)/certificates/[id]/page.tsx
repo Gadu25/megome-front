@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
-import { ArrowLeftIcon } from "@heroicons/react/24/outline"
+import { ArrowLeftIcon, EllipsisVerticalIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline"
 import { getCertificateClient } from "@/lib/api/client/certificate"
 import { humanizeDate } from "@/utils/date/humanizeDate"
+import CertificateDeleteButton from "@/features/certificate/components/DeleteButton"
 import type { Certificate } from "@/types/domain"
 
 function Skeleton() {
@@ -87,20 +88,55 @@ export default function CertificateDetailPage() {
       </div>
 
       <header className="space-y-3">
-        <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">
-          {certificate.title || "Untitled Certificate"}
-        </h1>
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">
+              {certificate.title || "Untitled Certificate"}
+            </h1>
 
-        <p className="text-base text-base-content/70">
-          {certificate.issuer || "Unknown issuer"}
-        </p>
+            <p className="text-base text-base-content/70">
+              {certificate.issuer || "Unknown issuer"}
+            </p>
 
-        <p className="text-sm text-base-content/50">
-          Issued {humanizeDate(certificate.issueDate)}
-          {certificate.expirationDate && (
-            <> • Expires {humanizeDate(certificate.expirationDate)}</>
-          )}
-        </p>
+            <p className="text-sm text-base-content/50">
+              Issued {humanizeDate(certificate.issueDate)}
+              {certificate.expirationDate && (
+                <> • Expires {humanizeDate(certificate.expirationDate)}</>
+              )}
+            </p>
+          </div>
+
+          <div className="dropdown dropdown-end">
+            <button
+              tabIndex={0}
+              className="btn btn-ghost btn-sm btn-circle"
+              aria-label="Certificate actions"
+            >
+              <EllipsisVerticalIcon className="size-5" />
+            </button>
+
+            <ul
+              tabIndex={0}
+              className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-200"
+            >
+              <li>
+                <Link href={`/certificates/${id}/edit`}>
+                  <PencilIcon className="size-4" />
+                  Edit Certificate
+                </Link>
+              </li>
+
+              <li className="mt-1 border-t border-base-200 pt-1">
+                <CertificateDeleteButton certificateId={id} certificateTitle={certificate.title}>
+                  <div className="flex justify-start gap-2 w-full items-center text-error">
+                    <TrashIcon className="size-4" />
+                    Delete Certificate
+                  </div>
+                </CertificateDeleteButton>
+              </li>
+            </ul>
+          </div>
+        </div>
       </header>
 
       {/* CERTIFICATE IMAGE — full-width preview */}

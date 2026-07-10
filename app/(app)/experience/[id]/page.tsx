@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
-import { BriefcaseIcon, ArrowLeftIcon } from "@heroicons/react/24/outline"
+import { BriefcaseIcon, ArrowLeftIcon, EllipsisVerticalIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline"
 import { getExperienceClient } from "@/lib/api/client/experience"
 import { humanizeDate } from "@/utils/date/humanizeDate"
+import ExperienceDeleteButton from "@/features/experience/components/DeleteButton"
 import type { Experience } from "@/types/domain"
 
 function Skeleton() {
@@ -98,33 +99,67 @@ export default function ExperienceDetailPage() {
       </div>
 
       <header className="space-y-4">
-        <div className="flex items-start gap-4">
-          <div className="p-3 rounded-xl bg-primary/10 shrink-0">
-            <BriefcaseIcon className="size-8 text-primary" />
-          </div>
-
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">
-              {experience.title || "Untitled Role"}
-            </h1>
-
-            <p className="flex items-center gap-2 text-base text-base-content/70 mt-1">
-              {experience.logo && (
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start gap-4 min-w-0">
+            <div className="p-3 rounded-xl bg-primary/10 shrink-0 overflow-hidden flex items-center justify-center">
+              {experience.logo ? (
                 <img
                   src={experience.logo}
                   alt={`${experience.company} logo`}
-                  className="size-5 rounded object-contain bg-base-200"
+                  className="size-8 object-contain"
                 />
+              ) : (
+                <BriefcaseIcon className="size-8 text-primary" />
               )}
-              {experience.company || "Unknown Company"}
-            </p>
+            </div>
 
-            <p className="text-sm text-base-content/50 mt-1">
-              {humanizeDate(experience.startDate)} —{" "}
-              {experience.endDate
-                ? humanizeDate(experience.endDate)
-                : "Present"}
-            </p>
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight lg:text-3xl">
+                {experience.title || "Untitled Role"}
+              </h1>
+
+              <p className="flex items-center gap-2 text-base text-base-content/70 mt-1">
+                {experience.company || "Unknown Company"}
+              </p>
+
+              <p className="text-sm text-base-content/50 mt-1">
+                {humanizeDate(experience.startDate)} —{" "}
+                {experience.endDate
+                  ? humanizeDate(experience.endDate)
+                  : "Present"}
+              </p>
+            </div>
+          </div>
+
+          <div className="dropdown dropdown-end">
+            <button
+              tabIndex={0}
+              className="btn btn-ghost btn-sm btn-circle"
+              aria-label="Experience actions"
+            >
+              <EllipsisVerticalIcon className="size-5" />
+            </button>
+
+            <ul
+              tabIndex={0}
+              className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-200"
+            >
+              <li>
+                <Link href={`/experience/${id}/edit`}>
+                  <PencilIcon className="size-4" />
+                  Edit Experience
+                </Link>
+              </li>
+
+              <li className="mt-1 border-t border-base-200 pt-1">
+                <ExperienceDeleteButton experienceId={id} experienceTitle={experience.title}>
+                  <div className="flex justify-start gap-2 w-full items-center text-error">
+                    <TrashIcon className="size-4" />
+                    Delete Experience
+                  </div>
+                </ExperienceDeleteButton>
+              </li>
+            </ul>
           </div>
         </div>
       </header>
