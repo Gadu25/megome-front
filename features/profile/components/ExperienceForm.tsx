@@ -170,11 +170,12 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
       if (!updatedItem) return
 
       try {
+        const { logo: _logo, ...rest } = updatedItem
         const payload = {
-          ...updatedItem,
-          startDate: formatDate(updatedItem.startDate),
-          endDate: updatedItem.endDate
-            ? formatDate(updatedItem.endDate)
+          ...rest,
+          startDate: formatDate(rest.startDate),
+          endDate: rest.endDate
+            ? formatDate(rest.endDate)
             : null,
         }
 

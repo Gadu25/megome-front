@@ -62,11 +62,12 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
       if (!updatedItem) return
 
       try {
+        const { certificateImage: _image, ...rest } = updatedItem
         const payload = {
-          ...updatedItem,
-          issueDate: formatDate(updatedItem.issueDate),
-          expirationDate: updatedItem.expirationDate
-            ? formatDate(updatedItem.expirationDate)
+          ...rest,
+          issueDate: formatDate(rest.issueDate),
+          expirationDate: rest.expirationDate
+            ? formatDate(rest.expirationDate)
             : null,
         }
 
