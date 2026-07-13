@@ -1,11 +1,12 @@
-import { Card } from "@/components/common/Card";
-import { SettingsTabs } from "@/components/settings/SettingsTab";
-
-import AccountTab from "@/components/settings/tabs/AccountTab";
-import ApiTab from "@/components/settings/tabs/APITab";
-import IntegrationsTab from "@/components/settings/tabs/IntegrationsTab";
-import OutputTab from "@/components/settings/tabs/OutputTab";
-import SecurityTab from "@/components/settings/tabs/SecurityTab";
+import { Card } from "@/components/ui/Card";
+import {
+  SettingsTabs,
+  AccountTab,
+  ApiTab,
+  IntegrationsTab,
+  OutputTab,
+  SecurityTab,
+} from "@/features/settings";
 
 type SettingsTab =
   | "account"

@@ -1,0 +1,8 @@
+export { default as TopProfile } from "./components/TopProfile"
+export { default as ProfileSkill } from "./components/ProfileSkill"
+export { default as RightContent } from "./components/RightContent"
+export { default as ProfileForm } from "./components/ProfileForm"
+export { default as SkillForm } from "./components/SkillForm"
+export { default as EducationForm } from "./components/EducationForm"
+export { default as ExperienceForm } from "./components/ExperienceForm"
+export { default as CertificateForm } from "./components/CertificateForm"

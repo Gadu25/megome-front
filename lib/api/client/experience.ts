@@ -1,5 +1,6 @@
-import type { Experience, ExperienceForm } from "@/types/types";
-import { handleResponse } from "@/functions/handleResponse";
+import type { Experience } from "@/types/domain";
+import type { ExperienceForm } from "@/types/form";
+import { handleResponse } from "@/utils/api/handleResponse";
 import { fetchClient } from "./fetchClient";
 
 interface Response {
@@ -36,6 +37,10 @@ export const addExperienceClient = async (form: ExperienceForm) => {
     formData.append("endDate", form.endDate);
   }
 
+  if (form.description) {
+    formData.append("description", form.description);
+  }
+
   if (form.logo) {
     formData.append("logo", form.logo);
   }
@@ -62,6 +67,10 @@ export const updateExperienceClient = async (id: number, form: ExperienceForm) =
 
   if (form.endDate) {
     formData.append("endDate", form.endDate);
+  }
+
+  if (form.description) {
+    formData.append("description", form.description);
   }
 
   if (form.logo) {

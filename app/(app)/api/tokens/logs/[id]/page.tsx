@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getTokenLogsServer } from "@/lib/api/server/apiLog";
-import { humanizeDate } from "@/functions/humanitizeDate";
+import { humanizeDate } from "@/utils/date/humanizeDate";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 export default async function ApiUsageLogsPage({ params }: { params: { id: string }}) {

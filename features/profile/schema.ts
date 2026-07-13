@@ -5,7 +5,7 @@ export const profileSchema = z.object({
   lastName: z.string().min(1, "Last name is required"),
   title: z.string().min(1, "Title is required"),
   tagline: z.string().max(600, "Tagline must be at most 600 characters").optional(),
-  bio: z.string().max(600, "Bio must be at most 600 characters").optional(),
+  bio: z.string().max(3000, "Bio must be at most 3000 characters").optional(),
   phone: z.string().max(20, "Phone number must be at most 20 characters").optional(),
   website: z.preprocess(
     (val) => (val === "" ? undefined : val),
@@ -52,8 +52,7 @@ export const experienceSchema = z.object({
     isPresent: z.boolean(),
     description: z
       .string()
-      .min(1, "Description is required")
-      .max(1000, "Description is too long"),
+      .min(1, "Description is required"),
   })
   .refine(
     (data) => {

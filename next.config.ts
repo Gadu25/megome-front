@@ -1,12 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   experimental: {
     staleTimes: {
       dynamic: 0,
-      static: 0,
+      static: 30,
     }
+  },
+  turbopack: {
+    root: process.cwd(),
   }
 };
 

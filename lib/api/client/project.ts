@@ -1,5 +1,7 @@
-import type { Project, ProjectForm, ProjectImage, ProjectFull } from "@/types/types";
-import { handleResponse } from "@/functions/handleResponse";
+import type { Project, ProjectFull } from "@/types/domain";
+import type { ProjectForm } from "@/types/form";
+import type { ProjectImage } from "@/types/ui";
+import { handleResponse } from "@/utils/api/handleResponse";
 import { fetchClient } from "./fetchClient";
 
 interface Response {

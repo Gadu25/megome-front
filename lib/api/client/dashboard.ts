@@ -1,10 +1,10 @@
-import type { DasboardOverview } from "@/types/types";
-import { handleResponse } from "@/functions/handleResponse";
+import type { CompletionStatus, DashboardOverview } from "@/types/api";
+import { handleResponse } from "@/utils/api/handleResponse";
 import { fetchClient } from "./fetchClient";
 
 interface Response {
   message: string;
-  data: DasboardOverview
+  data: DashboardOverview
 }
 
 export const getDashboardOverview = async () => {
@@ -17,4 +17,21 @@ export const getDashboardOverview = async () => {
   )
 
   return handleResponse<Response>(res)
+}
+
+interface CompletionResponse {
+  message: string;
+  data: CompletionStatus
+}
+
+export const getCompletion = async () => {
+  const res = await fetchClient(
+    "/api/v1/completion",
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  )
+
+  return handleResponse<CompletionResponse>(res)
 }

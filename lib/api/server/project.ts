@@ -1,6 +1,6 @@
-import { ProjectFull } from "@/types/types";
+import { ProjectFull } from "@/types/domain";
 import { fetchWithAuth } from "./fetchWithAuth";
-import { handleResponse } from "@/functions/handleResponse";
+import { handleResponse } from "@/utils/api/handleResponse";
 
 interface Response {
   message: string;

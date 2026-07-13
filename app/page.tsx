@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { BoltIcon, CircleStackIcon, KeyIcon, ArrowPathIcon } from "@heroicons/react/24/outline";
-import { LogoFull } from "@/components/common/Logo";
-import ThemeToggle from "@/components/common/ThemeToggle";
+import { LogoFull } from "@/components/ui/Logo";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 import Link from "next/link";
 
 // ─── Types ────────────────────────────────────────────────────────────────────

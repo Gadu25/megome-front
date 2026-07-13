@@ -1,9 +1,9 @@
 import Link from "next/link";
-import SearchBar from "@/components/common/SearchBar";
-import ProjectCard from "@/components/projects/ProjectCard";
+import SearchBar from "@/components/ui/SearchBar";
+import { ProjectCard } from "@/features/project";
 import { getProjectsServer } from "@/lib/api/server/project";
 import { AdjustmentsHorizontalIcon, PlusIcon } from "@heroicons/react/24/outline";
-import type { ProjectFull } from "@/types/types";
+import type { ProjectFull } from "@/types/domain";
 
 type ProjectTab = "published" | "drafts";
 

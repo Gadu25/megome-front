@@ -1,6 +1,6 @@
-import { ApiUsageLogWithtoken } from "@/types/types";
+import { ApiUsageLogWithtoken } from "@/types/api";
 import { fetchWithAuth } from "./fetchWithAuth";
-import { handleResponse } from "@/functions/handleResponse";
+import { handleResponse } from "@/utils/api/handleResponse";
 
 interface Response {
   message: string;

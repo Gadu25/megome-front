@@ -3,11 +3,11 @@
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { resetPassClient } from "@/lib/api/client/forgotpass";
-import { withRequest } from "@/functions/withRequest";
-import { useToast } from "@/components/toast/useToast";
+import { withRequest } from "@/utils/api/withRequest";
+import { useToast } from "@/components/ui/toast/useToast";
 import Link from "next/link";
 import { ArrowRightIcon } from "@heroicons/react/16/solid";
-import { Card } from "@/components/common/Card";
+import { Card } from "@/components/ui/Card";
 
 export default function ResetPasswordPage() {
   const router = useRouter();

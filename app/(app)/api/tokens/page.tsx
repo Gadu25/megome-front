@@ -4,12 +4,12 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ClipboardIcon, KeyIcon } from "@heroicons/react/24/outline";
 
-import Modal from "@/components/modal/Modal";
-import { Card } from "@/components/common/Card";
-import { ApiPageHeader } from "@/components/api/ApiPageHeader";
+import Modal from "@/components/ui/modal/Modal";
+import { Card } from "@/components/ui/Card";
+import { ApiPageHeader } from "@/features/api";
 
-import { useToast } from "@/components/toast/useToast";
-import { withRequest } from "@/functions/withRequest";
+import { useToast } from "@/components/ui/toast/useToast";
+import { withRequest } from "@/utils/api/withRequest";
 
 import {
   addPatClient,
@@ -18,10 +18,8 @@ import {
   revokePatClient,
 } from "@/lib/api/client/pat";
 
-import type {
-  PersonalAccessToken,
-  PersonalAccessTokenForm,
-} from "@/types/types";
+import type { PersonalAccessToken } from "@/types/domain";
+import type { PersonalAccessTokenForm } from "@/types/form";
 
 type ActiveModal = "token" | "revoke" | "delete" | null;
 
@@ -93,7 +91,7 @@ export default function ApiTokensPage() {
 
       if (!data) return;
 
-      setGeneratedToken(data.pat);
+      setGeneratedToken(data.pat ?? null);
       setForm({ name: "" });
       setActiveModal("token");
 
