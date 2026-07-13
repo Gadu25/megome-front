@@ -170,13 +170,16 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
       if (!updatedItem) return
 
       try {
-        const { logo: _logo, ...rest } = updatedItem
         const payload = {
-          ...rest,
-          startDate: formatDate(rest.startDate),
-          endDate: rest.endDate
-            ? formatDate(rest.endDate)
+          title: updatedItem.title,
+          company: updatedItem.company,
+          startDate: formatDate(updatedItem.startDate),
+          endDate: updatedItem.endDate
+            ? formatDate(updatedItem.endDate)
             : null,
+          isPresent: updatedItem.isPresent,
+          description: updatedItem.description,
+          logo: null,
         }
 
         const data = await withRequest(
