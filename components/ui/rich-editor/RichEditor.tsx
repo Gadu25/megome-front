@@ -36,6 +36,8 @@ function ToolbarButton({ onClick, isActive, label, shortcut }: ToolbarButtonProp
 
 export default function RichEditor({ content, onChange }: Props) {
   const isProgrammatic = useRef(false)
+  const onChangeRef = useRef(onChange)
+  onChangeRef.current = onChange
 
   const editor = useEditor({
     extensions: [
@@ -48,7 +50,7 @@ export default function RichEditor({ content, onChange }: Props) {
     content,
     onUpdate: ({ editor }) => {
       if (!isProgrammatic.current) {
-        onChange(editor.getHTML())
+        onChangeRef.current(editor.getHTML())
       }
     },
     editorProps: {

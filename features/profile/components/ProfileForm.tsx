@@ -67,8 +67,6 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
   }
 
   const handleBioChange = (html: string) => {
-    const plainText = html.replace(/<[^>]*>/g, "").trim()
-    if (plainText.length > 600) return
     setForm((prev) => ({ ...prev, bio: html }))
   }
 
