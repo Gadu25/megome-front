@@ -1,42 +1,8 @@
-import Link from "next/link";
-import SearchBar from "@/components/ui/SearchBar";
-import { ProjectCard } from "@/features/project";
 import { getProjectsServer } from "@/lib/api/server/project";
-import { AdjustmentsHorizontalIcon, PlusIcon } from "@heroicons/react/24/outline";
+import ProjectsClient from "@/features/project/components/ProjectsClient";
 import type { ProjectFull } from "@/types/domain";
 
 type ProjectTab = "published" | "drafts";
-
-interface ProjectSectionProps {
-  projects: ProjectFull[];
-  emptyMessage: string;
-}
-
-function ProjectGrid({
-  projects,
-  emptyMessage,
-}: ProjectSectionProps) {
-  if (projects.length === 0) {
-    return (
-      <div className="flex min-h-[240px] items-center justify-center rounded-box border border-dashed border-base-300">
-        <p className="text-sm text-base-content/60">
-          {emptyMessage}
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-      {projects.map((project) => (
-        <ProjectCard
-          key={project.id}
-          project={project}
-        />
-      ))}
-    </div>
-  );
-}
 
 export default async function ProjectPage({
   searchParams,
@@ -48,9 +14,7 @@ export default async function ProjectPage({
   let projects: ProjectFull[] = [];
 
   try {
-
     const res = await getProjectsServer();
-
     projects = res?.projects ?? [];
   } catch (error) {
     console.error("Failed to fetch projects", error);
@@ -63,92 +27,14 @@ export default async function ProjectPage({
       ? "drafts"
       : "published";
 
-  const publishedProjects = projects.filter(
-    (project) => !project.isDraft
-  );
-
-  const draftProjects = projects.filter(
-    (project) => project.isDraft
-  );
-
-  const visibleProjects =
-    activeTab === "drafts"
-      ? draftProjects
-      : publishedProjects;
+  const draftCount = projects.filter((p) => p.isDraft).length;
 
   return (
     <section className="space-y-6">
-
-      {/* Toolbar */}
-      <header
-        className="space-y-4 border-b border-base-200 pb-4"
-        aria-label="Projects toolbar"
-      >
-
-        {/* Top Row */}
-        <div className="flex items-center gap-2">
-          <div className="flex-1">
-            <SearchBar />
-          </div>
-
-          <button
-            className="btn btn-square"
-            aria-label="Filter projects"
-          >
-            <AdjustmentsHorizontalIcon
-              className="size-5"
-              aria-hidden="true"
-            />
-          </button>
-
-          <Link
-            href="/projects/new"
-            className="btn btn-square btn-primary"
-            aria-label="Create new project"
-          >
-            <PlusIcon
-              className="size-5"
-              aria-hidden="true"
-            />
-          </Link>
-        </div>
-
-        {/* Tabs */}
-        <nav
-          className="tabs tabs-bordered"
-          aria-label="Project categories"
-        >
-          <Link
-            href="/projects?tab=published"
-            className={`tab ${
-              activeTab === "published"
-                ? "tab-active"
-                : ""
-            }`}
-          >
-            Projects
-          </Link>
-
-          <Link
-            href="/projects?tab=drafts"
-            className={`tab ${
-              activeTab === "drafts"
-                ? "tab-active"
-                : ""
-            }`}
-          >
-            Drafts ({draftProjects.length})
-          </Link>
-        </nav>
-      </header>
-
-      <ProjectGrid
-        projects={visibleProjects}
-        emptyMessage={
-          activeTab === "drafts"
-            ? "No drafts found."
-            : "No projects found."
-        }
+      <ProjectsClient
+        projects={projects}
+        activeTab={activeTab}
+        draftCount={draftCount}
       />
     </section>
   );
