@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { XMarkIcon, ChevronLeftIcon, ChevronRightIcon, ArrowsPointingOutIcon } from "@heroicons/react/24/outline";
 
 export function ScreenshotsSection({ screenshots, projectTitle }: {
-  screenshots: string[];
+  screenshots: { id: number; url: string }[];
   projectTitle: string;
 }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -65,9 +65,9 @@ export function ScreenshotsSection({ screenshots, projectTitle }: {
         <>
           {/* GRID */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {screenshots.map((src, idx) => (
+            {screenshots.map((s, idx) => (
               <button
-                key={`${src}-${idx}`}
+                key={s.id}
                 onClick={() => open(idx)}
                 aria-label={`Open screenshot ${idx + 1}`}
                 className="group relative overflow-hidden rounded-xl border border-base-300 bg-base-200 shadow-sm
@@ -75,7 +75,7 @@ export function ScreenshotsSection({ screenshots, projectTitle }: {
                 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 <img
-                  src={src}
+                  src={s.url}
                   alt={`${projectTitle} screenshot ${idx + 1}`}
                   className=" h-56 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                 />
@@ -114,7 +114,7 @@ export function ScreenshotsSection({ screenshots, projectTitle }: {
                 {/* IMAGE CONTAINER (stabilizes layout) */}
                 <div className="flex h-[85vh] w-full items-center justify-center">
                   <img
-                    src={screenshots[selectedIndex]}
+                    src={screenshots[selectedIndex].url}
                     alt={`${projectTitle} screenshot ${selectedIndex + 1}`}
                     className="
                       max-h-full max-w-full rounded-xl object-contain shadow-2xl

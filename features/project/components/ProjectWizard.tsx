@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Stepper, { Step } from "@/components/ui/stepper/Stepper";
 
@@ -15,7 +15,7 @@ import type { Image, ProjectImage } from "@/types/ui";
 import { mapProjectImagesToUI } from "@/utils/ui/mapProjectImagesToUI";
 import { useToast } from "@/components/ui/toast/useToast";
 
-import { addProjectClient, updateProjectClient, uploadProjectImageClient, uploadCoverImageClient } from "@/lib/api/client/project";
+import { addProjectClient, updateProjectClient, uploadProjectImageClient, uploadCoverImageClient, deleteProjectImageClient } from "@/lib/api/client/project";
 import { linkProjectTechnologiesClient } from "@/lib/api/client/technology";
 import { withRequest } from "@/utils/api/withRequest";
 
@@ -63,6 +63,10 @@ export default function ProjectWizard({
   const [selectedTech, setSelectedTech] = useState<Technology[]>(
     initialProject?.technologies ?? []
   );
+
+  const initialScreenshotIDs = useRef<Set<number>>(new Set(
+    (initialProject?.images?.screenshots ?? []).map(s => s.id)
+  ));
 
   // ---------- STEP 1 ----------
   const saveInfo = async () => {
@@ -203,6 +207,23 @@ export default function ProjectWizard({
     screenshots: updatedScreenshots,
     cover: updatedCover,
   });
+
+  // delete screenshots that were removed from the UI
+  const keepIDs = new Set(
+    updatedScreenshots.map(s => s.id).filter(Boolean) as number[]
+  );
+
+  await Promise.all(
+    [...initialScreenshotIDs.current].map(async (id) => {
+      if (!keepIDs.has(id)) {
+        try {
+          await deleteProjectImageClient(id);
+        } catch {
+          // already deleted or not found — ignore
+        }
+      }
+    })
+  );
 
   const hasFailed =
     updatedScreenshots.some(i => i.status === "failed") ||

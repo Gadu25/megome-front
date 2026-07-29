@@ -104,6 +104,15 @@ export const uploadProjectImageClient = async (id: number, projectImage : Projec
   return handleResponse<SingleImageResponse>(res);
 }
 
+export const deleteProjectImageClient = async (id: number) => {
+  const res = await fetchClient(`/api/project-images/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+  })
+
+  return handleResponse<{ message: string }>(res);
+}
+
 export const uploadCoverImageClient = async (id: number, projectCover: ProjectImage) => {
   const formData = new FormData();
 

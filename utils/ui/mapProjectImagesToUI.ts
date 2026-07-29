@@ -23,9 +23,10 @@ export function mapProjectImagesToUI(
   return {
     cover,
     screenshots: screenshots.map(
-      (url): ProjectImage => ({
-        url,
-        preview: url,
+      (s): ProjectImage => ({
+        id: s.id,
+        url: s.url,
+        preview: s.url,
         type: "screenshot",
         status: "uploaded",
       })

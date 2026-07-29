@@ -82,7 +82,7 @@ export type ProjectFull = {
   updatedAt: string;
   images: {
     cover?: string | null
-    screenshots: string[]
+    screenshots: { id: number; url: string }[]
   };
   technologies: Technology[]
 }
