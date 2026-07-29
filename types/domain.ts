@@ -35,6 +35,7 @@ export type Experience = {
   isPresent: boolean;
   description: string;
   technologies: Technology[];
+  displayOrder: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -49,6 +50,7 @@ export type Education = {
   startDate: string;
   endDate: string;
   isPresent: boolean;
+  displayOrder: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -61,6 +63,7 @@ export type Project = {
   link: string;
   githubLink: string;
   status: string;
+  displayOrder: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -74,6 +77,7 @@ export type ProjectFull = {
   githubLink: string;
   status: string;
   isDraft: boolean;
+  displayOrder: number;
   createdAt: string;
   updatedAt: string;
   images: {
@@ -93,6 +97,7 @@ export type Certificate = {
   credentialId: string | null;
   credentialUrl: string | null;
   certificateImage: string | null;
+  displayOrder: number;
   createdAt: string;
   updatedAt: string;
 }
