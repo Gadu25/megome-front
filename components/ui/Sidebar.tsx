@@ -12,6 +12,7 @@ import {
   BookOpenIcon,
   KeyIcon,
   InformationCircleIcon,
+  ArrowsRightLeftIcon,
 } from "@heroicons/react/24/outline";
 
 type Item = {
@@ -34,6 +35,11 @@ export default function Sidebar() {
       name: "Projects",
       path: "/projects",
       icon: WindowIcon,
+    },
+    {
+      name: "Reorder",
+      path: "/reorder",
+      icon: ArrowsRightLeftIcon,
     },
     {
       name: "API",
