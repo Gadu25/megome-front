@@ -81,22 +81,28 @@ export function withAuth(middleware: CustomMiddleware) {
         return res;
       }
 
-      // Redirect to the same URL — fresh cookies will be on the next request
-      const destination = NextResponse.redirect(request.nextUrl);
-      destination.cookies.set("access_token", tokens.accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-      });
-      destination.cookies.set("refresh_token", tokens.refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-      });
+  // Rewrite the current response with fresh cookies — no redirect needed
+  const response = NextResponse.next();
+  response.cookies.set("access_token", tokens.accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+  });
+  response.cookies.set("refresh_token", tokens.refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+  });
+  response.cookies.set("token_refreshed_at", String(Date.now()), {
+    httpOnly: false,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+  });
 
-      return destination;
+  return response;
     }
 
     if (!isProtectedRoute && accessToken && !isTokenExpired(accessToken)) {
