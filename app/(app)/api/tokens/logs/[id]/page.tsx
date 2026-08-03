@@ -14,7 +14,7 @@ export default async function ApiUsageLogsPage({ params }: { params: { id: strin
   const token = res?.data.token;
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
+    <div className="space-y-6">
       <div className="mb-4">
         <Link
           href="/api/tokens"

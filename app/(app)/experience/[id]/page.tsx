@@ -11,7 +11,7 @@ import type { Experience } from "@/types/domain"
 
 function Skeleton() {
   return (
-    <div className="max-w-5xl mx-auto pb-8 space-y-10">
+    <div className="space-y-10">
       <div className="skeleton h-5 w-32 rounded" />
       <header className="space-y-4">
         <div className="flex items-start gap-4">
@@ -78,7 +78,7 @@ export default function ExperienceDetailPage() {
 
   if (notFound || !experience) {
     return (
-      <div className="max-w-3xl mx-auto py-16 text-center text-base-content/60">
+      <div className="py-16 text-center text-base-content/60">
         Experience not found
       </div>
     )
@@ -87,7 +87,7 @@ export default function ExperienceDetailPage() {
   const techs = experience.technologies ?? []
 
   return (
-    <div className="max-w-5xl mx-auto pb-8 space-y-10">
+    <div className="space-y-10">
       <div>
         <Link
           href="/profile"

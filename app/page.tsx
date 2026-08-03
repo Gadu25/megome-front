@@ -205,6 +205,9 @@ export default function LandingPage() {
             <Link href="#api" className="hidden sm:block text-sm text-base-content/60 hover:text-base-content transition-colors">
               API
             </Link>
+            <Link href="/docs" className="hidden sm:block text-sm text-base-content/60 hover:text-base-content transition-colors">
+              Docs
+            </Link>
             <Link href="/auth" className="text-sm text-base-content/60 hover:text-base-content transition-colors">
               Sign in
             </Link>
@@ -246,9 +249,9 @@ export default function LandingPage() {
             <Link href="/auth?mode=signup" className="btn btn-primary rounded-xl">
               Start free
             </Link>
-            {/* <Link href="#api" className="btn btn-ghost rounded-xl text-base-content/60">
+            <Link href="/docs" className="btn btn-ghost rounded-xl text-base-content/60">
               View API docs →
-            </Link> */}
+            </Link>
           </div>
         </div>
 
@@ -424,17 +427,11 @@ export default function LandingPage() {
       <footer className="border-t border-base-300 px-4 sm:px-6 py-6 max-w-5xl mx-auto">
         <div className="flex items-center justify-between">
           <span className="text-sm text-base-content/40">© 2026 Megome · Built for developers.</span>
-          {/* <div className="flex gap-6">
-            {(["Docs", "GitHub", "Status"] as const).map((l) => (
-              <a
-                key={l}
-                href="#"
-                className="text-sm text-base-content/40 hover:text-base-content/70 transition-colors"
-              >
-                {l}
-              </a>
-            ))}
-          </div> */}
+          <div className="flex gap-6">
+            <Link href="/docs" className="text-sm text-base-content/40 hover:text-base-content/70 transition-colors">
+              Docs
+            </Link>
+          </div>
         </div>
       </footer>
     </main>

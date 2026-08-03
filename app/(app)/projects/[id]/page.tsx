@@ -24,7 +24,7 @@ export default async function ProjectDetailPage({
 
   if (!project) {
     return (
-      <div className="max-w-3xl mx-auto py-16 text-center text-base-content/60">
+      <div className="py-16 text-center text-base-content/60">
         Project not found
       </div>
     );
@@ -35,7 +35,7 @@ export default async function ProjectDetailPage({
   const screenshots = project.images?.screenshots ?? [];
 
   return (
-    <div className="max-w-5xl mx-auto pb-8 space-y-10">
+    <div className="space-y-10">
       <div className="mb-4">
         <Link
           href="/projects"

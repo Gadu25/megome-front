@@ -310,7 +310,7 @@ export default function ProjectWizard({
   ];
 
   return (
-    <div className="p-6">
+    <div>
       <Stepper steps={steps} />
     </div>
   );

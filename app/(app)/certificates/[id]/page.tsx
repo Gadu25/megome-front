@@ -11,7 +11,7 @@ import type { Certificate } from "@/types/domain"
 
 function Skeleton() {
   return (
-    <div className="max-w-5xl mx-auto pb-8 space-y-10">
+    <div className="space-y-10">
       <div className="skeleton h-5 w-32 rounded" />
       <header className="space-y-4">
         <div className="skeleton h-8 w-64" />
@@ -69,14 +69,14 @@ export default function CertificateDetailPage() {
 
   if (notFound || !certificate) {
     return (
-      <div className="max-w-3xl mx-auto py-16 text-center text-base-content/60">
+      <div className="py-16 text-center text-base-content/60">
         Certificate not found
       </div>
     )
   }
 
   return (
-    <div className="max-w-5xl mx-auto pb-8 space-y-10">
+    <div className="space-y-10">
       <div>
         <Link
           href="/profile"

@@ -95,7 +95,7 @@ export default function ReorderPage() {
   const { items, resource } = getItems();
 
   return (
-    <main className="mx-auto max-w-3xl space-y-6">
+    <main className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Reorder Items</h1>
         <p className="text-sm text-base-content/60">

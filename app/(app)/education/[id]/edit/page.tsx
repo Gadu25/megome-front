@@ -14,7 +14,7 @@ import type { EducationForm } from "@/types/form"
 
 function Skeleton() {
   return (
-    <div className="max-w-3xl mx-auto pb-8 space-y-6">
+    <div className="space-y-6">
       <div className="skeleton h-5 w-32 rounded" />
       <div className="space-y-4">
         <div className="skeleton h-10 w-full rounded-md" />
@@ -114,14 +114,14 @@ export default function EditEducationPage() {
 
   if (notFound || !education) {
     return (
-      <div className="max-w-3xl mx-auto py-16 text-center text-base-content/60">
+      <div className="py-16 text-center text-base-content/60">
         Education not found
       </div>
     )
   }
 
   return (
-    <div className="max-w-3xl mx-auto pb-8 space-y-6">
+    <div className="space-y-6">
       <div>
         <Link
           href={`/education/${id}`}

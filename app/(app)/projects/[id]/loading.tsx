@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <div className="max-w-5xl mx-auto pb-8 space-y-10">
+    <div className="space-y-10">
 
       {/* Back button */}
       <div className="mb-4">

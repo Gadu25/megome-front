@@ -60,7 +60,7 @@ export function withAuth(middleware: CustomMiddleware) {
     const accessToken = request.cookies.get("access_token")?.value;
     const refreshToken = request.cookies.get("refresh_token")?.value;
 
-    const publicRoutes = ["/auth", "/"];
+    const publicRoutes = ["/auth", "/", "/docs"];
     const isProtectedRoute = !publicRoutes.some((r) =>
       r === "/" ? pathname === "/" : pathname.startsWith(r)
     );

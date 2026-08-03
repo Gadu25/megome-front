@@ -7,7 +7,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: { ta
   const isProfileSetup = resolvedParams.tab === 'profile-setup';
 
   return (
-    <main className="mx-auto space-y-6">
+    <main className="space-y-6">
 
       {/* Profile Header */}
       <section>
