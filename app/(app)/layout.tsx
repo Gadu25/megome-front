@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "@/components/ui/Navbar";
 import Sidebar from "@/components/ui/Sidebar";
+import { AiStatusBanner } from "@/features/ai";
 import { getInitServer } from "@/lib/api/server/init";
 import { redirect } from "next/navigation";
 
@@ -21,6 +22,7 @@ export default async function AppLayout({
 
       <div className="drawer-content">
         <Navbar profile={initData.profile} />
+        <AiStatusBanner />
 
         <main className="mx-auto w-full max-w-6xl p-4 sm:p-6">
           {children}
