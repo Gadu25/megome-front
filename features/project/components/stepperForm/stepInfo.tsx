@@ -1,4 +1,5 @@
 import { ProjectForm } from "@/types/form"
+import { AiAssistButton } from "@/features/ai"
 import React from "react"
 
 const PROJECT_STATUSES = [
@@ -103,6 +104,21 @@ export default function StepInfo({ form, setForm, setIsDirty }: Props) {
           }
         />
       </fieldset>
+
+      <AiAssistButton
+        task="generate_project_description"
+        context={{
+          title: form.title,
+          githubLink: form.githubLink,
+        }}
+        placeholder="Add what the project does, the problem it solves, or your role (optional)"
+        onResult={(fields) =>
+          setForm((prev) => {
+            setIsDirty(true);
+            return { ...prev, description: fields.description ?? prev.description };
+          })
+        }
+      />
 
       <div className="grid md:grid-cols-2 gap-3">
         <fieldset className="fieldset relative">
