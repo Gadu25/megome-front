@@ -17,6 +17,7 @@ export default function AccountTab() {
   const [currentEmail, setCurrentEmail] = useState("");
   const [emailPassword, setEmailPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [currentUsername, setCurrentUsername] = useState("");
   const [deletePassword, setDeletePassword] = useState("");
   const [loadingEmail, setLoadingEmail] = useState(false);
   const [loadingUsername, setLoadingUsername] = useState(false);
@@ -29,6 +30,7 @@ export default function AccountTab() {
         setEmail(data.user.email);
         setCurrentEmail(data.user.email);
         setUsername(data.user.username);
+        setCurrentUsername(data.user.username);
       })
       .catch(console.error);
   }, []);
@@ -116,7 +118,7 @@ export default function AccountTab() {
             <button
               className="btn btn-primary btn-sm"
               onClick={handleChangeUsername}
-              disabled={loadingUsername || !username.trim()}
+              disabled={loadingUsername || !username.trim() || username === currentUsername}
             >
               {loadingUsername ? <span className="loading loading-spinner loading-xs" /> : null}
               Change Username

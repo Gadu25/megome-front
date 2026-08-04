@@ -35,7 +35,7 @@ export default function SecurityTab() {
       const res = await getSessionsClient();
       setSessions(res.sessions ?? []);
     } catch (err) {
-      console.error("Failed to fetch sessions:", err);
+      showToast("Failed to load sessions", "error");
       setSessions([]);
     } finally {
       setLoadingSessions(false);

@@ -12,6 +12,11 @@ export async function GET() {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
 
+    if (!response.ok) {
+      const error = await response.json();
+      return NextResponse.json(error, { status: response.status });
+    }
+
     const data = await response.json();
 
     return NextResponse.json(data, {
