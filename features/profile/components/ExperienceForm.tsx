@@ -12,6 +12,7 @@ import type { Experience, Technology } from "@/types/domain"
 import type { ExperienceForm } from "@/types/form"
 import Modal from "@/components/ui/modal/Modal"
 import { experienceSchema } from "@/features/profile/schema"
+import { AiAssistButton } from "@/features/ai";
 
 type Props = {
   initialExperiences: Experience[]
@@ -706,6 +707,24 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
                     }))
                   }}
                 />
+                <div className="mt-2">
+                  <AiAssistButton
+                    task="generate_experience"
+                    context={{
+                      title: newExp.title,
+                      company: newExp.company,
+                      startDate: newExp.startDate,
+                      endDate: newExp.endDate,
+                    }}
+                    placeholder="Add your achievements, metrics, or technologies used (optional)"
+                    onResult={(fields) =>
+                      setNewExp((prev) => ({
+                        ...prev,
+                        description: fields.description ?? prev.description,
+                      }))
+                    }
+                  />
+                </div>
                 {errors.description && (
                   <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.description }</span>
                 )}
