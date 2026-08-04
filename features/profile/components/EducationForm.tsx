@@ -10,6 +10,7 @@ import type { Education } from "@/types/domain"
 import type { EducationForm } from "@/types/form"
 import Modal from "@/components/ui/modal/Modal"
 import { educationSchema } from "@/features/profile/schema"
+import { AiAssistButton } from "@/features/ai";
 
 type Props = {
   initialEducation: Education[]
@@ -304,6 +305,25 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
                     }))
                   }
                 />
+                <div className="mt-2">
+                  <AiAssistButton
+                    task="generate_education"
+                    context={{
+                      school: newEducation.school,
+                      degree: newEducation.degree,
+                      fieldOfStudy: newEducation.fieldOfStudy,
+                      startDate: newEducation.startDate,
+                      endDate: newEducation.endDate,
+                    }}
+                    placeholder="Add relevant coursework, projects, or achievements (optional)"
+                    onResult={(fields) =>
+                      setNewEducation((prev) => ({
+                        ...prev,
+                        description: fields.description ?? prev.description,
+                      }))
+                    }
+                  />
+                </div>
                 {errors.description && (
                   <span className="text-error text-sm absolute bottom-[-1rem] left-0">
                     {errors.description}
