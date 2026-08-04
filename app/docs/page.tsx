@@ -111,7 +111,7 @@ export default function PublicDocsPage() {
 
             <div className="flex flex-col sm:flex-row gap-3">
               <Link href="/auth" className="btn btn-primary">
-                Sign in to your account
+                Sign in
               </Link>
               <Link href="/auth?mode=signup" className="btn btn-outline">
                 Create free account
