@@ -7,6 +7,7 @@ import { UserIcon } from "@heroicons/react/24/outline";
 import { updateProfileClient } from "@/lib/api/client/profile";
 import { logoutClient } from "@/lib/api/client/auth";
 import { profileSchema } from "@/features/profile/schema";
+import { AiAssistButton } from "@/features/ai";
 import { useToast } from "@/components/ui/toast/useToast";
 import { withRequest } from "@/utils/api/withRequest";
 import type { Profile } from "@/types/domain"
@@ -272,6 +273,22 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
               <span>You can edit bio later on from settings</span>
               <span>{(form.bio || "").replace(/<[^>]*>/g, "").length}/600</span>
             </div>
+            <AiAssistButton
+              task="generate_bio"
+              context={{
+                title: form.title,
+                tagline: form.tagline,
+                location: form.location,
+              }}
+              placeholder="Add facts about yourself, your focus, or interests (optional)"
+              onResult={(fields) =>
+                setForm((prev) => ({
+                  ...prev,
+                  bio: fields.bio ?? prev.bio,
+                  tagline: fields.tagline ?? prev.tagline,
+                }))
+              }
+            />
             {errors.bio && (
               <span className="text-error text-sm">{ errors.bio }</span>
             )}
