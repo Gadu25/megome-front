@@ -73,31 +73,37 @@ export default function AccountTab() {
           title="Email"
           description="Change your account email address. Requires current password."
         />
-        <div className="form-control gap-3">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="input input-bordered w-full"
-            placeholder="your@email.com"
-          />
-          <input
-            type="password"
-            value={emailPassword}
-            onChange={(e) => setEmailPassword(e.target.value)}
-            className="input input-bordered w-full"
-            placeholder="Current password"
-          />
-          <div>
-            <button
-              className="btn btn-primary btn-sm"
-              onClick={handleChangeEmail}
-              disabled={loadingEmail || !email.trim() || !emailPassword || email === currentEmail}
-            >
-              {loadingEmail ? <span className="loading loading-spinner loading-xs" /> : null}
-              Change Email
-            </button>
-          </div>
+        <div className="space-y-4">
+          <fieldset className="fieldset">
+            <label className="label">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="input input-bordered w-full"
+              placeholder="your@email.com"
+            />
+          </fieldset>
+
+          <fieldset className="fieldset">
+            <label className="label">Current Password</label>
+            <input
+              type="password"
+              value={emailPassword}
+              onChange={(e) => setEmailPassword(e.target.value)}
+              className="input input-bordered w-full"
+              placeholder="Enter current password to confirm"
+            />
+          </fieldset>
+
+          <button
+            className="btn btn-primary"
+            onClick={handleChangeEmail}
+            disabled={loadingEmail || !email.trim() || !emailPassword || email === currentEmail}
+          >
+            {loadingEmail ? <span className="loading loading-spinner loading-sm" /> : null}
+            Change Email
+          </button>
         </div>
       </SettingsCard>
 
@@ -106,24 +112,26 @@ export default function AccountTab() {
           title="Username"
           description="Change your public username."
         />
-        <div className="form-control gap-3">
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="input input-bordered w-full"
-            placeholder="username"
-          />
-          <div>
-            <button
-              className="btn btn-primary btn-sm"
-              onClick={handleChangeUsername}
-              disabled={loadingUsername || !username.trim() || username === currentUsername}
-            >
-              {loadingUsername ? <span className="loading loading-spinner loading-xs" /> : null}
-              Change Username
-            </button>
-          </div>
+        <div className="space-y-4">
+          <fieldset className="fieldset">
+            <label className="label">Username</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="input input-bordered w-full"
+              placeholder="username"
+            />
+          </fieldset>
+
+          <button
+            className="btn btn-primary"
+            onClick={handleChangeUsername}
+            disabled={loadingUsername || !username.trim() || username === currentUsername}
+          >
+            {loadingUsername ? <span className="loading loading-spinner loading-sm" /> : null}
+            Change Username
+          </button>
         </div>
       </SettingsCard>
 
@@ -132,24 +140,26 @@ export default function AccountTab() {
           title="Danger Zone"
           description="Permanently delete your account and all data. This action cannot be undone."
         />
-        <div className="form-control gap-3">
-          <input
-            type="password"
-            value={deletePassword}
-            onChange={(e) => setDeletePassword(e.target.value)}
-            className="input input-bordered w-full"
-            placeholder="Enter your password to confirm"
-          />
-          <div>
-            <button
-              className="btn btn-error btn-sm"
-              onClick={handleDeleteAccount}
-              disabled={loadingDelete || !deletePassword}
-            >
-              {loadingDelete ? <span className="loading loading-spinner loading-xs" /> : null}
-              Delete Account
-            </button>
-          </div>
+        <div className="space-y-4">
+          <fieldset className="fieldset">
+            <label className="label">Confirm Password</label>
+            <input
+              type="password"
+              value={deletePassword}
+              onChange={(e) => setDeletePassword(e.target.value)}
+              className="input input-bordered w-full input-error"
+              placeholder="Enter your password to confirm"
+            />
+          </fieldset>
+
+          <button
+            className="btn btn-error"
+            onClick={handleDeleteAccount}
+            disabled={loadingDelete || !deletePassword}
+          >
+            {loadingDelete ? <span className="loading loading-spinner loading-sm" /> : null}
+            Delete Account
+          </button>
         </div>
       </SettingsCard>
     </>

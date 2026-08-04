@@ -61,6 +61,13 @@ export default function Navbar({ profile }: Props) {
             </li>
 
             <li>
+              <Link href="/settings">
+                <Cog6ToothIcon className="size-4" />
+                Settings
+              </Link>
+            </li>
+
+            <li>
               <button
                 type="button"
                 className="flex w-full items-center justify-between"

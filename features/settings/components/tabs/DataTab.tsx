@@ -27,28 +27,28 @@ export default function DataTab() {
         title="Export Portfolio Data"
         description="Download all your portfolio data as a JSON file."
       />
-      <div className="space-y-4">
-        <div className="rounded-2xl border border-base-200 bg-base-50 p-4">
-          <p className="text-sm leading-relaxed text-base-content/80">
-            This will export your profile, experiences, skills, education, projects,
-            and certifications into a single downloadable JSON file.
-          </p>
+        <div className="space-y-4">
+          <div className="rounded-xl border border-base-200 bg-base-50 p-4">
+            <p className="text-sm leading-relaxed text-base-content/80">
+              This will export your profile, experiences, skills, education, projects,
+              and certifications into a single downloadable JSON file.
+            </p>
+          </div>
+          <button
+            className="btn btn-primary"
+            onClick={handleExport}
+            disabled={exporting}
+          >
+            {exporting ? (
+              <>
+                <span className="loading loading-spinner loading-sm" />
+                Exporting...
+              </>
+            ) : (
+              "Export as JSON"
+            )}
+          </button>
         </div>
-        <button
-          className="btn btn-primary"
-          onClick={handleExport}
-          disabled={exporting}
-        >
-          {exporting ? (
-            <>
-              <span className="loading loading-spinner loading-xs" />
-              Exporting...
-            </>
-          ) : (
-            "Export as JSON"
-          )}
-        </button>
-      </div>
     </SettingsCard>
   );
 }

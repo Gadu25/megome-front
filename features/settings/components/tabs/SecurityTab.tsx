@@ -80,38 +80,48 @@ export default function SecurityTab() {
           title="Change Password"
           description="Update your account password."
         />
-        <div className="form-control gap-3">
-          <input
-            type="password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            className="input input-bordered w-full"
-            placeholder="Current password"
-          />
-          <input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            className="input input-bordered w-full"
-            placeholder="New password (min 8 characters)"
-          />
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="input input-bordered w-full"
-            placeholder="Confirm new password"
-          />
-          <div>
-            <button
-              className="btn btn-primary btn-sm"
-              onClick={handleChangePassword}
-              disabled={loadingPassword || !currentPassword || !newPassword || newPassword !== confirmPassword}
-            >
-              {loadingPassword ? <span className="loading loading-spinner loading-xs" /> : null}
-              Change Password
-            </button>
-          </div>
+        <div className="space-y-4">
+          <fieldset className="fieldset">
+            <label className="label">Current Password</label>
+            <input
+              type="password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              className="input input-bordered w-full"
+              placeholder="Current password"
+            />
+          </fieldset>
+
+          <fieldset className="fieldset">
+            <label className="label">New Password</label>
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="input input-bordered w-full"
+              placeholder="Min 8 characters"
+            />
+          </fieldset>
+
+          <fieldset className="fieldset">
+            <label className="label">Confirm New Password</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="input input-bordered w-full"
+              placeholder="Confirm new password"
+            />
+          </fieldset>
+
+          <button
+            className="btn btn-primary"
+            onClick={handleChangePassword}
+            disabled={loadingPassword || !currentPassword || !newPassword || newPassword !== confirmPassword}
+          >
+            {loadingPassword ? <span className="loading loading-spinner loading-sm" /> : null}
+            Change Password
+          </button>
         </div>
       </SettingsCard>
 
