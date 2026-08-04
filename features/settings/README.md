@@ -1,16 +1,10 @@
 # features/settings
 
-Settings domain — account, API tokens, security, integrations.
+Settings domain — account, security, API tokens, data export.
 
 | File | Purpose |
 |------|---------|
-| `components/SettingsCard.tsx` | Settings section card wrapper |
-| `components/SettingsInfoBox.tsx` | Info/banner callout |
-| `components/SettingsList.tsx` | Settings list item (title + description + action) |
-| `components/SettingsSectionHeader.tsx` | Section title + description + optional action |
-| `components/SettingsTab.tsx` | Tab navigation (mobile + desktop) |
-| `components/tabs/AccountTab.tsx` | Account identity + danger zone |
+| `components/tabs/AccountTab.tsx` | Email, username, account deletion |
 | `components/tabs/APITab.tsx` | Personal Access Token management |
-| `components/tabs/IntegrationsTab.tsx` | External service connections |
-| `components/tabs/OutputTab.tsx` | API output configuration |
-| `components/tabs/SecurityTab.tsx` | Security controls |
+| `components/tabs/SecurityTab.tsx` | Password change, active sessions |
+| `components/tabs/DataTab.tsx` | Portfolio data export |

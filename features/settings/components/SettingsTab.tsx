@@ -1,12 +1,6 @@
 import Link from "next/link";
 
-type SettingsTab =
-  | "account"
-  | "api"
-  | "data"
-  | "security"
-  | "output"
-  | "integrations";
+type SettingsTab = "account" | "security" | "api" | "data";
 
 type SettingsTabsProps = {
   activeTab: SettingsTab;
@@ -14,11 +8,9 @@ type SettingsTabsProps = {
 
 const tabs = [
   { id: "account", label: "Account" },
-  { id: "api", label: "API Keys" },
-  { id: "data", label: "Portfolio Data" },
-  { id: "output", label: "API Output" },
   { id: "security", label: "Security" },
-  { id: "integrations", label: "Integrations" },
+  { id: "api", label: "API Keys" },
+  { id: "data", label: "Data" },
 ] as const;
 
 export function SettingsTabs({
