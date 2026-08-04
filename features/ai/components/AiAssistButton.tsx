@@ -34,8 +34,8 @@ export default function AiAssistButton({
       showToast(res.message, "success");
       setOpen(false);
     } catch (err: unknown) {
-      const e = err as { status?: number; message?: string };
-      if (e?.status === 429) {
+      const e = err as { status?: number; message?: string; data?: { message?: string } };
+      if (e?.status === 429 && e?.data?.message === "ai_unavailable") {
         markUnavailable();
         showToast("AI assist is temporarily unavailable due to quota", "error");
       } else {
