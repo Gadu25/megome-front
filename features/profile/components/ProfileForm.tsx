@@ -264,31 +264,37 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
         
         <div className="space-y-4">
           <fieldset className="fieldset">
-            <legend className="fieldset-legend">Your bio</legend>
+            <div className="flex items-center justify-between gap-4">
+              <legend className="fieldset-legend">Your bio</legend>
+              <div className="w-auto">
+                <AiAssistButton
+                  task="generate_bio"
+                  context={{
+                    title: form.title,
+                    tagline: form.tagline,
+                    location: form.location,
+                  }}
+                  placeholder="Add facts about yourself, your focus, or interests (optional)"
+                  onResult={(fields) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      bio: fields.bio ?? prev.bio,
+                      tagline: fields.tagline ?? prev.tagline,
+                    }))
+                  }
+                />
+              </div>
+            </div>
             <RichEditor
               content={form.bio || ""}
               onChange={handleBioChange}
             />
-            <div className="label text-xs flex justify-between">
-              <span>You can edit bio later on from settings</span>
-              <span>{(form.bio || "").replace(/<[^>]*>/g, "").length}/600</span>
-            </div>
-            <AiAssistButton
-              task="generate_bio"
-              context={{
-                title: form.title,
-                tagline: form.tagline,
-                location: form.location,
-              }}
-              placeholder="Add facts about yourself, your focus, or interests (optional)"
-              onResult={(fields) =>
-                setForm((prev) => ({
-                  ...prev,
-                  bio: fields.bio ?? prev.bio,
-                  tagline: fields.tagline ?? prev.tagline,
-                }))
-              }
-            />
+            {isOnboarding &&(
+              <div className="label text-xs flex justify-between">
+                <span>You can edit bio later on from settings</span>
+                <span>{(form.bio || "").replace(/<[^>]*>/g, "").length}/600</span>
+              </div>
+            )}
             {errors.bio && (
               <span className="text-error text-sm">{ errors.bio }</span>
             )}

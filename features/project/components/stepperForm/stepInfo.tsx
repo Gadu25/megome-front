@@ -91,7 +91,23 @@ export default function StepInfo({ form, setForm, setIsDirty }: Props) {
         </fieldset>
       </div>
       <fieldset className="fieldset relative">
-        <legend className="label">Project description</legend>
+        <div className="flex items-center justify-between gap-4">
+          <legend className="label">Project description</legend>
+          <AiAssistButton
+            task="generate_project_description"
+            context={{
+              title: form.title,
+              githubLink: form.githubLink,
+            }}
+            placeholder="Add what the project does, the problem it solves, or your role (optional)"
+            onResult={(fields) =>
+              setForm((prev) => {
+                setIsDirty(true);
+                return { ...prev, description: fields.description ?? prev.description };
+              })
+            }
+          />
+        </div>
         <textarea
           placeholder="Project description"
           className="textarea textarea-bordered w-full min-h-[80px]"
@@ -105,21 +121,7 @@ export default function StepInfo({ form, setForm, setIsDirty }: Props) {
         />
       </fieldset>
 
-      <AiAssistButton
-        task="generate_project_description"
-        context={{
-          title: form.title,
-          githubLink: form.githubLink,
-        }}
-        placeholder="Add what the project does, the problem it solves, or your role (optional)"
-        onResult={(fields) =>
-          setForm((prev) => {
-            setIsDirty(true);
-            return { ...prev, description: fields.description ?? prev.description };
-          })
-        }
-      />
-
+      
       <div className="grid md:grid-cols-2 gap-3">
         <fieldset className="fieldset relative">
           <label className="label">Link</label>

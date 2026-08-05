@@ -9,6 +9,7 @@ import { formatDate } from "@/utils/date/formatDate"
 import { useToast } from "@/components/ui/toast/useToast"
 import { withRequest } from "@/utils/api/withRequest"
 import { educationSchema } from "@/features/profile/schema"
+import { AiAssistButton } from "@/features/ai"
 import type { Education } from "@/types/domain"
 import type { EducationForm } from "@/types/form"
 
@@ -231,9 +232,28 @@ export default function EditEducationPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="label">
-                <span className="text-error">*</span> Description
-              </label>
+              <div className="flex items-center justify-between gap-4">
+                <label className="label">
+                  <span className="text-error">*</span> Description
+                </label>
+                <AiAssistButton
+                  task="generate_education"
+                  context={{
+                    school: form.school,
+                    degree: form.degree,
+                    fieldOfStudy: form.fieldOfStudy,
+                    startDate: form.startDate,
+                    endDate: form.endDate,
+                  }}
+                  placeholder="Add relevant coursework, projects, or achievements (optional)"
+                  onResult={(fields) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      description: fields.description ?? prev.description,
+                    }))
+                  }
+                />
+              </div>
               <textarea
                 placeholder="Describe your studies, achievements, activities, and relevant coursework..."
                 className="textarea textarea-bordered w-full min-h-[120px]"

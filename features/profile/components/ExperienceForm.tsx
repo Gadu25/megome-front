@@ -695,7 +695,26 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
               </fieldset>
               
               <fieldset className="fieldset relative">
-                <legend className="label">Description</legend>
+                <div className="flex items-center justify-between gap-4">
+                  <legend className="label">Description</legend>
+                  <AiAssistButton
+                    task="generate_experience"
+                    context={{
+                      title: newExp.title,
+                      company: newExp.company,
+                      startDate: newExp.startDate,
+                      endDate: newExp.endDate,
+                      technologies: newExpTechs.map((t) => t.name).join(", "),
+                    }}
+                    placeholder="Add your achievements, metrics, or technologies used (optional)"
+                    onResult={(fields) =>
+                      setNewExp((prev) => ({
+                        ...prev,
+                        description: fields.description ?? prev.description,
+                      }))
+                    }
+                  />
+                </div>
                 <RichEditor
                   content={newExp.description}
                   onChange={(html) => {
@@ -707,24 +726,6 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
                     }))
                   }}
                 />
-                <div className="mt-2">
-                  <AiAssistButton
-                    task="generate_experience"
-                    context={{
-                      title: newExp.title,
-                      company: newExp.company,
-                      startDate: newExp.startDate,
-                      endDate: newExp.endDate,
-                    }}
-                    placeholder="Add your achievements, metrics, or technologies used (optional)"
-                    onResult={(fields) =>
-                      setNewExp((prev) => ({
-                        ...prev,
-                        description: fields.description ?? prev.description,
-                      }))
-                    }
-                  />
-                </div>
                 {errors.description && (
                   <span className="text-error text-sm absolute bottom-[-1rem] left-0">{ errors.description }</span>
                 )}

@@ -11,6 +11,7 @@ import { useToast } from "@/components/ui/toast/useToast"
 import { withRequest } from "@/utils/api/withRequest"
 import RichEditor from "@/components/ui/rich-editor/RichEditor"
 import { experienceSchema } from "@/features/profile/schema"
+import { AiAssistButton } from "@/features/ai"
 import type { Experience, Technology } from "@/types/domain"
 import type { ExperienceForm } from "@/types/form"
 
@@ -336,9 +337,28 @@ export default function EditExperiencePage() {
             </div>
 
             <div className="space-y-2">
-              <label className="label">
-                <span className="text-error">*</span> Description
-              </label>
+              <div className="flex items-center justify-between gap-4">
+                <label className="label">
+                  <span className="text-error">*</span> Description
+                </label>
+                <AiAssistButton
+                  task="generate_experience"
+                  context={{
+                    title: form.title,
+                    company: form.company,
+                    startDate: form.startDate,
+                    endDate: form.endDate,
+                    technologies: selectedTechs.map((t) => t.name).join(", "),
+                  }}
+                  placeholder="Add your achievements, metrics, or technologies used (optional)"
+                  onResult={(fields) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      description: fields.description ?? prev.description,
+                    }))
+                  }
+                />
+              </div>
               <RichEditor
                 content={form.description}
                 onChange={(html) => {

@@ -5,6 +5,7 @@ import { SparklesIcon } from "@heroicons/react/24/outline";
 import { useToast } from "@/components/ui/toast/useToast";
 import { assistClient, type AssistTask } from "@/lib/api/client/assist";
 import { useAiStatusStore } from "@/lib/store/ai-status-store";
+import AiAssistModal from "./AiAssistModal";
 
 type Props = {
   task: AssistTask;
@@ -23,10 +24,9 @@ export default function AiAssistButton({
   const available = useAiStatusStore((s) => s.available);
   const markUnavailable = useAiStatusStore((s) => s.markUnavailable);
   const [open, setOpen] = useState(false);
-  const [extra, setExtra] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleGenerate = async () => {
+  const handleGenerate = async (extra: string) => {
     setLoading(true);
     try {
       const res = await assistClient(task, context, extra);
@@ -49,34 +49,23 @@ export default function AiAssistButton({
   const disabled = available === false || loading;
 
   return (
-    <div className="flex flex-col items-start gap-2">
+    <>
       <button
         type="button"
         disabled={disabled}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => setOpen(true)}
         className="btn btn-ghost btn-xs rounded-lg border border-base-300 disabled:opacity-50"
       >
         <SparklesIcon className="size-4" />
         Generate with AI
       </button>
-      {open && (
-        <div className="w-full space-y-2">
-          <textarea
-            value={extra}
-            onChange={(e) => setExtra(e.target.value)}
-            placeholder={placeholder}
-            className="textarea textarea-bordered textarea-sm w-full"
-          />
-          <button
-            type="button"
-            disabled={loading}
-            onClick={handleGenerate}
-            className="btn btn-primary btn-sm rounded-lg disabled:opacity-50"
-          >
-            {loading ? "Generating..." : "Generate"}
-          </button>
-        </div>
-      )}
-    </div>
+      <AiAssistModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onGenerate={handleGenerate}
+        loading={loading}
+        placeholder={placeholder}
+      />
+    </>
   );
 }
