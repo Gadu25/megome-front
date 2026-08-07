@@ -61,7 +61,7 @@ export default function ExperienceDetailPage() {
     const fetchExperience = async () => {
       try {
         const res = await getExperienceClient()
-        const found = res.experiences?.find((e) => e.id === id) ?? null
+        const found = res.data?.find((e: Experience) => e.id === id) ?? null
         if (found) setExperience(found)
         else setNotFound(true)
       } catch (err) {

@@ -24,7 +24,7 @@ export default function ProfileProjects() {
     const fetchProjects = async () => {
       try {
         const res = await getProjectsClient();
-        setProjects(res.projects ?? []);
+        setProjects(res.data ?? []);
       } catch (error) {
         console.error("Error fetching projects:", error);
       } finally {

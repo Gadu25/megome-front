@@ -25,7 +25,7 @@ export default function ProfileCertificates() {
     const fetchCertificates = async () => {
       try {
         const res = await getCertificateClient();
-        setCertificates(res.certificates ?? []);
+        setCertificates(res.data ?? []);
       } catch (error) {
         console.error("Error fetching certificates:", error);
       } finally {

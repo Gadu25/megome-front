@@ -64,9 +64,9 @@ export default function ApiTab() {
       const res = await getPatsClient();
 
       const pats = Array.isArray(
-        res.pats
+        res.data
       )
-        ? res.pats
+        ? res.data
         : [];
 
       setTokens(pats);

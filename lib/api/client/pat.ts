@@ -3,9 +3,15 @@ import type { PersonalAccessTokenForm } from "@/types/form";
 import { handleResponse } from "@/utils/api/handleResponse";
 import { fetchClient } from "./fetchClient";
 
+interface Pagination {
+  limit: number;
+  offset: number;
+  total: number;
+}
+
 interface Response {
-  message: string;
-  pats: PersonalAccessToken[];
+  data: PersonalAccessToken[];
+  pagination: Pagination;
 }
 
 interface SingleResponse {

@@ -2,11 +2,16 @@ import type { Certificate } from "@/types/domain";
 import type { CertificateForm } from "@/types/form";
 import { handleResponse } from "@/utils/api/handleResponse";
 import { fetchClient } from "./fetchClient";
-import { handler } from "next/dist/build/templates/app-route";
+
+interface Pagination {
+  limit: number;
+  offset: number;
+  total: number;
+}
 
 interface Response {
-  message: string;
-  certificates: Certificate[];
+  data: Certificate[];
+  pagination: Pagination;
 }
 
 interface SingleResponse {

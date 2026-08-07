@@ -68,7 +68,7 @@ export default function EditExperiencePage() {
     const fetchExperience = async () => {
       try {
         const res = await getExperienceClient()
-        const found = res.experiences?.find((e) => e.id === id) ?? null
+        const found = res.data?.find((e: Experience) => e.id === id) ?? null
         if (found) {
           setExperience(found)
           setForm({
@@ -98,7 +98,7 @@ export default function EditExperiencePage() {
     const fetchTechs = async () => {
       try {
         const res = await getTechnologiesClient()
-        setAllTechnologies(res?.technologies ?? [])
+        setAllTechnologies(res?.data ?? [])
       } catch (err) {
         console.error("Error fetching technologies:", err)
       }

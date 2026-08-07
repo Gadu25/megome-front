@@ -2,9 +2,15 @@ import type { Technology } from "@/types/domain";
 import { handleResponse } from "@/utils/api/handleResponse";
 import { fetchClient } from "./fetchClient";
 
+interface Pagination {
+  limit: number;
+  offset: number;
+  total: number;
+}
+
 interface Response {
-  message: string;
-  technologies: Technology[];
+  data: Technology[];
+  pagination: Pagination;
 }
 
 export const getTechnologiesClient = async () => {

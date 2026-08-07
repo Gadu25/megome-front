@@ -4,9 +4,15 @@ import type { ProjectImage } from "@/types/ui";
 import { handleResponse } from "@/utils/api/handleResponse";
 import { fetchClient } from "./fetchClient";
 
+interface Pagination {
+  limit: number;
+  offset: number;
+  total: number;
+}
+
 interface Response {
-  message: string;
-  projects: ProjectFull[];
+  data: ProjectFull[];
+  pagination: Pagination;
 }
 
 interface SingleResponse {

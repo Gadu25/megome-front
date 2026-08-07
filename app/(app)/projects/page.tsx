@@ -15,7 +15,7 @@ export default async function ProjectPage({
 
   try {
     const res = await getProjectsServer();
-    projects = res?.projects ?? [];
+    projects = res?.data ?? [];
   } catch (error) {
     console.error("Failed to fetch projects", error);
   }
