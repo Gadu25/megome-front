@@ -163,6 +163,18 @@ export default function DashboardPage() {
           />
         </div>
 
+        {/* Activity & Usage */}
+        <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
+          <div className="rounded-2xl border border-base-300 p-5">
+            <h2 className="font-semibold mb-4">Recent Activity</h2>
+            <ActivityTimeline items={activity} />
+          </div>
+          <div className="rounded-2xl border border-base-300 p-5">
+            <h2 className="font-semibold mb-4">API Usage</h2>
+            <UsageChart data={usageStats} />
+          </div>
+        </div>
+
         {/* LOWER GRID */}
         <div className={`grid gap-6 ${completion?.overall === 100 ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-3"}`}>
 
@@ -203,19 +215,6 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-
-        {/* Activity & Usage */}
-        <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
-          <div className="rounded-2xl border border-base-300 p-5">
-            <h2 className="font-semibold mb-4">Recent Activity</h2>
-            <ActivityTimeline items={activity} />
-          </div>
-          <div className="rounded-2xl border border-base-300 p-5">
-            <h2 className="font-semibold mb-4">API Usage</h2>
-            <UsageChart data={usageStats} />
-          </div>
-        </div>
-
       </main>
     </div>
   );

@@ -182,7 +182,7 @@ export default function Sidebar() {
                             key={child.path}
                             href={child.path}
                             className={`
-                              flex items-center gap-3 rounded-xl px-3 py-2 transition-colors
+                              flex items-center gap-3 rounded-xl px-3 py-3 transition-colors
 
                               hidden
                               is-drawer-close:block
