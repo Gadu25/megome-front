@@ -105,16 +105,14 @@ export default function DashboardPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [overviewRes, completionRes, activityRes, usageRes] = await Promise.all([
-          getDashboardOverview(),
-          getCompletion(),
-          getDashboardActivity(),
-          getDashboardUsageStats(),
-        ]);
-        setDashboardOverview(overviewRes.data ?? null);
-        setCompletion(completionRes.data ?? null);
-        setActivity(activityRes.data ?? []);
-        setUsageStats(usageRes.data ?? []);
+        const overviewRes = await getDashboardOverview().catch((err) => { console.error("Overview failed:", err); return null; });
+        const completionRes = await getCompletion().catch((err) => { console.error("Completion failed:", err); return null; });
+        const activityRes = await getDashboardActivity().catch((err) => { console.error("Activity failed:", err); return null; });
+        const usageRes = await getDashboardUsageStats().catch((err) => { console.error("Usage stats failed:", err); return null; });
+        setDashboardOverview(overviewRes?.data ?? null);
+        setCompletion(completionRes?.data ?? null);
+        setActivity(activityRes?.data ?? []);
+        setUsageStats(usageRes?.data ?? []);
       } catch (error) {
         console.error("Failed to fetch dashboard data: ", error)
       } finally {
