@@ -9,6 +9,7 @@ import { skillSchema } from '@/features/profile/schema';
 import type { Skill } from '@/types/domain'
 import type { SkillForm } from '@/types/form'
 import Modal from "@/components/ui/modal/Modal"
+import { EmptyState } from "@/features/profile/components/sections/EmptyState"
 
 const PROFICIENCY_OPTIONS: Skill['proficiency'][] = [
   'Beginner',
@@ -145,6 +146,13 @@ export default function ProfileSkillForm({ initialSkills, setSkills }: Props) {
     <>
       <div className="space-y-6">
         <div className="space-y-4">
+          {initialSkills.length === 0 && (
+            <EmptyState
+              icon={<span className="text-2xl">&#128295;</span>}
+              title="No skills added yet"
+              description="Add your skills to showcase expertise"
+            />
+          )}
           {initialSkills.map((skill) => (
               <div key={skill.id} className="flex gap-2 items-center">
                 <input type="text" className="input input-bordered w-full" value={skill.skillName}

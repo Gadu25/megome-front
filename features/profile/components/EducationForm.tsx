@@ -9,6 +9,7 @@ import { withRequest } from "@/utils/api/withRequest";
 import type { Education } from "@/types/domain"
 import type { EducationForm } from "@/types/form"
 import Modal from "@/components/ui/modal/Modal"
+import { EmptyState } from "@/features/profile/components/sections/EmptyState"
 import { educationSchema } from "@/features/profile/schema"
 import { AiAssistButton } from "@/features/ai";
 
@@ -188,9 +189,11 @@ export default function ProfileEducationForm({ initialEducation, setEducation }:
       <div className="space-y-6">
         <div className="space-y-4">
           {initialEducation.length === 0 && (
-            <div className="text-center text-sm opacity-60 py-10">
-              No education added yet
-            </div>
+            <EmptyState
+              icon={<span className="text-2xl">&#127891;</span>}
+              title="No education added yet"
+              description="Add your academic background"
+            />
           )}
 
           {initialEducation.map((edu) => (

@@ -5,6 +5,7 @@ import SearchBar from "@/components/ui/SearchBar";
 import { ProjectCard } from "@/features/project";
 import { AdjustmentsHorizontalIcon, PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { EmptyState } from "@/features/profile/components/sections/EmptyState";
 
 import ErrorBoundary from "@/components/ui/ErrorBoundary";
 
@@ -27,11 +28,16 @@ function ProjectGrid({
 }) {
   if (projects.length === 0) {
     return (
-      <div className="flex min-h-[240px] items-center justify-center rounded-box border border-dashed border-base-300">
-        <p className="text-sm text-base-content/60">
-          {emptyMessage}
-        </p>
-      </div>
+      <EmptyState
+        icon={<span className="text-2xl">&#128640;</span>}
+        title={emptyMessage}
+        description="Showcase your work by adding your first project"
+        action={
+          <Link href="/projects/new" className="btn btn-primary btn-sm">
+            Add Project
+          </Link>
+        }
+      />
     );
   }
 

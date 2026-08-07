@@ -10,6 +10,7 @@ import { useToast } from "@/components/ui/toast/useToast";
 import type { Certificate } from "@/types/domain"
 import type { CertificateForm } from "@/types/form"
 import Modal from "@/components/ui/modal/Modal"
+import { EmptyState } from "@/features/profile/components/sections/EmptyState"
 
 
 type Props = {
@@ -260,9 +261,11 @@ export default function ProfileCertificateForm({ initialCertificates, setCertifi
       <div className="space-y-6">
         <div className="space-y-4">
           {initialCertificates.length === 0 && (
-            <div className="text-center text-sm opacity-60 py-10">
-              No certificates added yet
-            </div>
+            <EmptyState
+              icon={<span className="text-2xl">&#127942;</span>}
+              title="No certificates added yet"
+              description="Add your certifications"
+            />
           )}
 
           {initialCertificates.map((cert) => (

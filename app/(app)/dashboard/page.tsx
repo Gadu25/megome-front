@@ -8,9 +8,11 @@ import {
   UserCircleIcon,
   CheckCircleIcon,
 } from "@heroicons/react/24/outline";
-import { getCompletion, getDashboardOverview } from "@/lib/api/client/dashboard";
-import { CompletionStatus, DashboardOverview } from "@/types/api";
+import { getCompletion, getDashboardActivity, getDashboardOverview, getDashboardUsageStats } from "@/lib/api/client/dashboard";
+import type { ActivityItem, CompletionStatus, DailyUsage, DashboardOverview } from "@/types/api";
 import Link from "next/link";
+import ActivityTimeline from "@/features/dashboard/components/ActivityTimeline";
+import UsageChart from "@/features/dashboard/components/UsageChart";
 
 /* ─────────────────────────────
    UI COMPONENTS
@@ -89,221 +91,30 @@ function SectionRow({ name, filled }: { name: string; filled: boolean }) {
 }
 
 /* ─────────────────────────────
-   API PLAYGROUND (NEW)
-───────────────────────────── */
-
-function ApiPlayground() {
-  const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL!;
-
-  type PlaygroundResponse = {
-    status?: number;
-    body?: unknown;
-    error?: string;
-    duration?: number;
-  };
-
-  type HttpMethod =
-  | "GET"
-  | "POST"
-  | "PUT"
-  | "PATCH"
-  | "DELETE";
-
-  const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState<PlaygroundResponse | null>(null);
-  const [accessToken, setAccessToken] = useState("");
-  const [showToken, setShowToken] = useState(false);
-  const [url, setUrl] = useState("/public/v1/profile");
-  const [method, setMethod] = useState<HttpMethod>("GET");
-
-  async function handleRequest() {
-    setLoading(true);
-
-    try {
-      const start = performance.now();
-
-      console.log(`${BACKEND_URL}${url}`)
-
-      const res = await fetch(`${BACKEND_URL}${url}`, {
-        method,
-        headers: {
-          ...(accessToken && {
-            Authorization: `Bearer ${accessToken}`,
-          }),
-          "Content-Type": "application/json",
-        },
-      });
-
-      const duration = Math.round(
-        performance.now() - start
-      );
-
-      const body = await res.json();
-
-      setResponse({
-        status: res.status,
-        duration,
-        body,
-      });
-    } catch (error) {
-      setResponse({
-        error:
-          error instanceof Error
-            ? error.message
-            : "Unknown error",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <div className="rounded-2xl border border-base-300 bg-base-100 p-5 space-y-5">
-
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h2 className="font-semibold">API Playground</h2>
-        <span className="text-xs text-base-content/40">
-          Live test environment
-        </span>
-      </div>
-
-      {/* Authentication */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <label className="text-xs text-base-content/60">
-            Authentication
-          </label>
-
-          <span
-            className={`badge badge-xs ${
-              accessToken
-                ? "badge-success badge-outline"
-                : "badge-ghost"
-            }`}
-          >
-            {accessToken ? "Token configured" : "No token"}
-          </span>
-        </div>
-
-        <label className="input input-bordered flex items-center gap-2">
-          <span className="text-xs text-base-content/50 font-mono">
-            Bearer
-          </span>
-
-          <input
-            type={showToken ? "text" : "password"}
-            placeholder="Paste access token..."
-            value={accessToken}
-            onChange={(e) => setAccessToken(e.target.value)}
-            className="grow font-mono text-xs"
-          />
-
-          <button
-            type="button"
-            onClick={() => setShowToken(!showToken)}
-            className="btn btn-ghost btn-xs"
-          >
-            {showToken ? "Hide" : "Show"}
-          </button>
-        </label>
-      </div>
-
-      {/* Endpoint */}
-      <div className="space-y-2">
-        <label className="text-xs text-base-content/60">
-          Endpoint
-        </label>
-
-        <div className="flex items-center gap-2">
-          <select value={method} onChange={(e) => setMethod(e.target.value as HttpMethod)}
-            className="select select-sm select-bordered w-28"
-          >
-            <option value="GET">GET</option>
-            <option value="POST">POST</option>
-            <option value="PUT">PUT</option>
-            <option value="PATCH">PATCH</option>
-            <option value="DELETE">DELETE</option>
-          </select>
-
-          <input
-            className="input input-sm input-bordered flex-1 font-mono text-xs"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-          />
-
-          <button
-            onClick={handleRequest}
-            disabled={loading}
-            className="btn btn-primary btn-sm min-w-24"
-          >
-            {loading ? (
-              <span className="loading loading-spinner loading-xs" />
-            ) : (
-              "Send"
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Response */}
-      <div>
-        <div className="flex items-center justify-between">
-          <label className="text-xs text-base-content/60">
-            Response
-          </label>
-
-          {response?.status && !loading && (
-            <span className="badge badge-outline badge-sm">
-              {response.status}
-              {response.duration ? ` • ${response.duration}ms` : ""}
-            </span>
-          )}
-        </div>
-
-        {/* Loading state */}
-        {loading && (
-          <div className="mt-2 bg-base-200 rounded-xl p-4 text-xs font-mono animate-pulse">
-            sending request...
-          </div>
-        )}
-
-        {/* Response / Error */}
-        {!loading && (
-          <pre className="mt-2 bg-base-200 rounded-xl p-4 text-xs font-mono overflow-auto max-h-80 whitespace-pre-wrap break-all">
-            {response
-              ? JSON.stringify(
-                  response.error ?? response.body,
-                  null,
-                  2
-                )
-              : "// No response yet"}
-          </pre>
-        )}
-      </div>
-    </div>
-  );
-}
-
-/* ─────────────────────────────
    PAGE
 ───────────────────────────── */
 
 export default function DashboardPage() {
   const [dashboardOverview, setDashboardOverview] = useState<DashboardOverview | null>(null)
   const [completion, setCompletion] = useState<CompletionStatus | null>(null)
+  const [activity, setActivity] = useState<ActivityItem[]>([]);
+  const [usageStats, setUsageStats] = useState<DailyUsage[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [overviewRes, completionRes] = await Promise.all([
+        const [overviewRes, completionRes, activityRes, usageRes] = await Promise.all([
           getDashboardOverview(),
           getCompletion(),
+          getDashboardActivity(),
+          getDashboardUsageStats(),
         ]);
         setDashboardOverview(overviewRes.data ?? null);
         setCompletion(completionRes.data ?? null);
+        setActivity(activityRes.data ?? []);
+        setUsageStats(usageRes.data ?? []);
       } catch (error) {
         console.error("Failed to fetch dashboard data: ", error)
       } finally {
@@ -354,9 +165,6 @@ export default function DashboardPage() {
           />
         </div>
 
-        {/* ✅ API PLAYGROUND (BEST POSITION) */}
-        <ApiPlayground />
-
         {/* LOWER GRID */}
         <div className={`grid gap-6 ${completion?.overall === 100 ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-3"}`}>
 
@@ -398,32 +206,17 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* PROJECTS */}
-        {/* <div className="rounded-2xl border border-base-300 p-5">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="font-semibold">Projects</h2>
-            <button className="btn btn-ghost btn-sm">+ Add</button>
+        {/* Activity & Usage */}
+        <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
+          <div className="rounded-2xl border border-base-300 p-5">
+            <h2 className="font-semibold mb-4">Recent Activity</h2>
+            <ActivityTimeline items={activity} />
           </div>
-
-          <div className="grid gap-3">
-            {mockProjects.map((p) => (
-              <div
-                key={p.title}
-                className="flex justify-between items-center border border-base-300 rounded-xl p-4"
-              >
-                <div>
-                  <div className="font-medium">{p.title}</div>
-                  <div className="text-xs text-base-content/50">
-                    {p.stack}
-                  </div>
-                </div>
-                <span className="text-xs px-2 py-1 rounded-full bg-base-200">
-                  {p.status}
-                </span>
-              </div>
-            ))}
+          <div className="rounded-2xl border border-base-300 p-5">
+            <h2 className="font-semibold mb-4">API Usage</h2>
+            <UsageChart data={usageStats} />
           </div>
-        </div> */}
+        </div>
 
       </main>
     </div>

@@ -1,4 +1,4 @@
-import type { CompletionStatus, DashboardOverview } from "@/types/api";
+import type { ActivityItem, CompletionStatus, DailyUsage, DashboardOverview } from "@/types/api";
 import { handleResponse } from "@/utils/api/handleResponse";
 import { fetchClient } from "./fetchClient";
 
@@ -35,3 +35,29 @@ export const getCompletion = async () => {
 
   return handleResponse<CompletionResponse>(res)
 }
+
+interface ActivityResponse {
+  message: string;
+  data: ActivityItem[];
+}
+
+export const getDashboardActivity = async () => {
+  const res = await fetchClient("/api/dashboard/activity", {
+    method: "GET",
+    credentials: "include",
+  });
+  return handleResponse<ActivityResponse>(res);
+};
+
+interface UsageStatsResponse {
+  message: string;
+  data: DailyUsage[];
+}
+
+export const getDashboardUsageStats = async (days: number = 30) => {
+  const res = await fetchClient(`/api/dashboard/usage-stats?days=${days}`, {
+    method: "GET",
+    credentials: "include",
+  });
+  return handleResponse<UsageStatsResponse>(res);
+};

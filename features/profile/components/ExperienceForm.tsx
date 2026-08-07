@@ -11,6 +11,7 @@ import { withRequest } from "@/utils/api/withRequest";
 import type { Experience, Technology } from "@/types/domain"
 import type { ExperienceForm } from "@/types/form"
 import Modal from "@/components/ui/modal/Modal"
+import { EmptyState } from "@/features/profile/components/sections/EmptyState"
 import { experienceSchema } from "@/features/profile/schema"
 import { AiAssistButton } from "@/features/ai";
 
@@ -418,9 +419,11 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
       <div className="space-y-6">
         <div className="space-y-4">
           {initialExperiences.length === 0 && (
-            <div className="text-center text-sm opacity-60 py-10">
-              No experience added yet
-            </div>
+            <EmptyState
+              icon={<span className="text-2xl">&#128188;</span>}
+              title="No experience added yet"
+              description="Add your work experience"
+            />
           )}
 
           {initialExperiences.map((exp) => {
