@@ -32,16 +32,14 @@ export default function ReorderPage() {
   useEffect(() => {
     const fetchAll = async () => {
       try {
-        const [expRes, certRes, eduRes, projRes] = await Promise.all([
-          getExperienceClient(),
-          getCertificateClient(),
-          getEducationClient(),
-          getProjectsClient(),
-        ]);
-        setExperiences(expRes.experiences ?? []);
-        setCertificates(certRes.certificates ?? []);
-        setEducations(eduRes.educations ?? []);
-        setProjects(projRes.projects ?? []);
+        const expRes = await getExperienceClient().catch(() => null);
+        const certRes = await getCertificateClient().catch(() => null);
+        const eduRes = await getEducationClient().catch(() => null);
+        const projRes = await getProjectsClient().catch(() => null);
+        setExperiences(expRes?.data ?? []);
+        setCertificates(certRes?.data ?? []);
+        setEducations(eduRes?.data ?? []);
+        setProjects(projRes?.data ?? []);
       } catch (error) {
         console.error("Error fetching items:", error);
       } finally {

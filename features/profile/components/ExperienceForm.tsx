@@ -60,7 +60,7 @@ export default function ProfileExperienceForm({ initialExperiences, setExperienc
     const fetchTechs = async () => {
       try {
         const res = await getTechnologiesClient()
-        setAllTechnologies(res?.technologies ?? [])
+                setAllTechnologies(res?.data ?? [])
       } catch (err) {
         console.error("Error fetching technologies:", err)
       }

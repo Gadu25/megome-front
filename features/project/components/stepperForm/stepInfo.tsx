@@ -33,7 +33,7 @@ type ProjectStatus = keyof typeof PROJECT_STATUS_CONFIG;
 type Props = {
   form: ProjectForm
   setForm: React.Dispatch<React.SetStateAction<ProjectForm>>
-  setIsDirty: React.Dispatch<React.SetStateAction<Boolean>>
+  setIsDirty: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function StepInfo({ form, setForm, setIsDirty }: Props) {

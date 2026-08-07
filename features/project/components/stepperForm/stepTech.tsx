@@ -35,7 +35,7 @@ export default function StepTech({
     const fetchTechnologies = async () => {
       try {
         const res = await getTechnologiesClient()
-        setTechnologies(res?.technologies ?? [])
+            setTechnologies(res?.data ?? [])
       } catch (error) {
         console.error("Error fetching technologies:", error)
         setTechnologies([])
