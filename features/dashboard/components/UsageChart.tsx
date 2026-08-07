@@ -2,17 +2,28 @@
 
 import type { DailyUsage } from "@/types/api";
 import { useMemo } from "react";
-
-const CHART_HEIGHT = 128;
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 export default function UsageChart({ data }: { data: DailyUsage[] }) {
-  const maxCount = useMemo(
-    () => Math.max(...data.map((d) => d.count), 1),
+  const totalRequests = useMemo(
+    () => data.reduce((sum, d) => sum + d.count, 0),
     [data]
   );
 
-  const totalRequests = useMemo(
-    () => data.reduce((sum, d) => sum + d.count, 0),
+  const chartData = useMemo(
+    () =>
+      data.map((d) => ({
+        date: new Date(d.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+        requests: d.count,
+      })),
     [data]
   );
 
@@ -28,31 +39,47 @@ export default function UsageChart({ data }: { data: DailyUsage[] }) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div className="text-sm text-base-content/50">
         <span className="font-semibold text-base-content">{totalRequests.toLocaleString()}</span> requests in the last {data.length} days
       </div>
-      <div className="flex items-end gap-1" style={{ height: CHART_HEIGHT }}>
-        {data.map((d) => {
-          const barHeight = Math.max((d.count / maxCount) * CHART_HEIGHT, 4);
-          return (
-            <div
-              key={d.date}
-              className="flex-1 flex flex-col items-center min-w-0 group relative"
-              style={{ height: CHART_HEIGHT }}
-            >
-              <span className="text-xs text-base-content/60 opacity-0 group-hover:opacity-100 transition-opacity absolute -top-5">
-                {d.count}
-              </span>
-              <div
-                className="w-full bg-primary rounded-t transition-all hover:opacity-80"
-                style={{ height: barHeight }}
-                title={`${d.date}: ${d.count} requests`}
-              />
-            </div>
-          );
-        })}
-      </div>
+      <ResponsiveContainer width="100%" height={180}>
+        <LineChart data={chartData} margin={{ top: 4, right: 4, bottom: 4, left: -20 }}>
+          <CartesianGrid strokeDasharray="3 3" className="stroke-base-300" />
+          <XAxis
+            dataKey="date"
+            tick={{ fontSize: 10, fill: "oklch(var(--bc) / 0.4)" }}
+            tickLine={false}
+            axisLine={false}
+            interval="preserveStartEnd"
+          />
+          <YAxis
+            tick={{ fontSize: 10, fill: "oklch(var(--bc) / 0.4)" }}
+            tickLine={false}
+            axisLine={false}
+            allowDecimals={false}
+            width={24}
+          />
+          <Tooltip
+            contentStyle={{
+              borderRadius: 8,
+              border: "1px solid oklch(var(--b3))",
+              background: "oklch(var(--b1))",
+              fontSize: 12,
+              color: "oklch(var(--bc))",
+            }}
+            labelStyle={{ fontWeight: 600, marginBottom: 2 }}
+          />
+          <Line
+            type="monotone"
+            dataKey="requests"
+            stroke="oklch(var(--p))"
+            strokeWidth={2}
+            dot={{ r: 0 }}
+            activeDot={{ r: 4, fill: "oklch(var(--p))" }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 }
