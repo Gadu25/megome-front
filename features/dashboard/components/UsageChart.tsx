@@ -3,6 +3,8 @@
 import type { DailyUsage } from "@/types/api";
 import { useMemo } from "react";
 
+const CHART_HEIGHT = 128;
+
 export default function UsageChart({ data }: { data: DailyUsage[] }) {
   const maxCount = useMemo(
     () => Math.max(...data.map((d) => d.count), 1),
@@ -30,20 +32,21 @@ export default function UsageChart({ data }: { data: DailyUsage[] }) {
       <div className="text-sm text-base-content/50">
         <span className="font-semibold text-base-content">{totalRequests.toLocaleString()}</span> requests in the last {data.length} days
       </div>
-      <div className="flex items-end gap-1 h-32">
+      <div className="flex items-end gap-1" style={{ height: CHART_HEIGHT }}>
         {data.map((d) => {
-          const height = Math.max((d.count / maxCount) * 100, 4);
+          const barHeight = Math.max((d.count / maxCount) * CHART_HEIGHT, 4);
           return (
             <div
               key={d.date}
-              className="flex-1 flex flex-col items-center gap-1 min-w-0 group relative"
+              className="flex-1 flex flex-col items-center min-w-0 group relative"
+              style={{ height: CHART_HEIGHT }}
             >
               <span className="text-xs text-base-content/60 opacity-0 group-hover:opacity-100 transition-opacity absolute -top-5">
                 {d.count}
               </span>
               <div
                 className="w-full bg-primary rounded-t transition-all hover:opacity-80"
-                style={{ height: `${height}%` }}
+                style={{ height: barHeight }}
                 title={`${d.date}: ${d.count} requests`}
               />
             </div>
