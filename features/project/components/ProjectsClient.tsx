@@ -5,6 +5,9 @@ import SearchBar from "@/components/ui/SearchBar";
 import { ProjectCard } from "@/features/project";
 import { AdjustmentsHorizontalIcon, PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+
+import ErrorBoundary from "@/components/ui/ErrorBoundary";
+
 import type { ProjectFull } from "@/types/domain";
 
 type ProjectTab = "published" | "drafts";
@@ -145,7 +148,7 @@ export default function ProjectsClient({
   }
 
   return (
-    <>
+    <ErrorBoundary>
       {/* Toolbar */}
       <header
         className="space-y-4 border-b border-base-200 pb-4"
@@ -311,6 +314,6 @@ export default function ProjectsClient({
             : "No projects found."
         }
       />
-    </>
+    </ErrorBoundary>
   );
 }

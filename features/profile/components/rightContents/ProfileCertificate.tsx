@@ -10,6 +10,8 @@ import { humanizeDate } from "@/utils/date/humanizeDate";
 import RightModal from "@/components/ui/modal/RightModal";
 import ProfileCertificateForm from "../CertificateForm";
 
+import ErrorBoundary from "@/components/ui/ErrorBoundary";
+
 import { SectionHeader } from "../sections/SectionHeaders";
 import { EmptyState } from "../sections/EmptyState";
 
@@ -102,7 +104,7 @@ export default function ProfileCertificates() {
   }
 
   return (
-    <>
+    <ErrorBoundary>
       <section className="space-y-4">
         <SectionHeader
           title="Certificates"
@@ -193,6 +195,6 @@ export default function ProfileCertificates() {
           setCertificates={setCertificates}
         />
       </RightModal>
-    </>
+    </ErrorBoundary>
   );
 }

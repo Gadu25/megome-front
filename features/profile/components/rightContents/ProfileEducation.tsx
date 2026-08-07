@@ -13,6 +13,8 @@ import { EmptyState } from "../sections/EmptyState";
 import RightModal from "@/components/ui/modal/RightModal";
 import ProfileEducationForm from "../EducationForm";
 
+import ErrorBoundary from "@/components/ui/ErrorBoundary";
+
 export default function ProfileEducation() {
 
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -108,7 +110,7 @@ export default function ProfileEducation() {
   }
 
   return (
-    <>
+    <ErrorBoundary>
       <section className="space-y-4">
         <SectionHeader
           title="Education"
@@ -200,6 +202,6 @@ export default function ProfileEducation() {
           setEducation={setEducation}
         />
       </RightModal>
-    </>
+    </ErrorBoundary>
   );
 }

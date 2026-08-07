@@ -5,6 +5,8 @@ import { getSkillClient } from "@/lib/api/client/skill";
 import { Skill } from "@/types/domain";
 import RightModal from "@/components/ui/modal/RightModal";
 import ProfileSkillForm from "./SkillForm";
+
+import ErrorBoundary from "@/components/ui/ErrorBoundary";
 import { SectionCard } from "./sections/SectionCard";
 import { SectionHeader } from "./sections/SectionHeaders";
 import { EmptyState } from "./sections/EmptyState";
@@ -65,7 +67,7 @@ export default function ProfileSkill() {
   }
 
   return (
-    <>
+    <ErrorBoundary>
       <Card className="shadow-xs p-6">
         <SectionHeader
           title="Skills"
@@ -117,6 +119,6 @@ export default function ProfileSkill() {
           setSkills={setSkills}
         />
       </RightModal>
-    </>
+    </ErrorBoundary>
   );
 }
