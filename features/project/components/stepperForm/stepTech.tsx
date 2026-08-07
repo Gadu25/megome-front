@@ -15,11 +15,13 @@ type Props = {
   setSelectedTech: React.Dispatch<
     React.SetStateAction<Technology[]>
   >
+  setIsDirty: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function StepTech({
   selectedTech,
   setSelectedTech,
+  setIsDirty,
 }: Props) {
   const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(true)
@@ -80,6 +82,7 @@ export default function StepTech({
     if (selectedTech.some((t) => t.id === tech.id)) return
 
     setSelectedTech((prev) => [...prev, tech])
+    setIsDirty(true)
 
     // UX improvement:
     // clear search and keep focus for rapid selection
@@ -98,6 +101,7 @@ export default function StepTech({
     setSelectedTech((prev) =>
       prev.filter((t) => t.id !== id)
     )
+    setIsDirty(true)
   }
 
   const handleKeyDown = (

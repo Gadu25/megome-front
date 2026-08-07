@@ -18,6 +18,7 @@ import { useToast } from "@/components/ui/toast/useToast";
 import { addProjectClient, updateProjectClient, uploadProjectImageClient, uploadCoverImageClient, deleteProjectImageClient } from "@/lib/api/client/project";
 import { linkProjectTechnologiesClient } from "@/lib/api/client/technology";
 import { withRequest } from "@/utils/api/withRequest";
+import { useDirtyGuard } from "@/lib/hooks/useDirtyGuard";
 
 type Mode = "create" | "edit";
 
@@ -34,7 +35,9 @@ export default function ProjectWizard({
   const { showToast } = useToast();
 
   const isEdit = mode === "edit";
-  const [isDirty, setIsDirty] = useState<Boolean>(false);
+  const [isDirty, setIsDirty] = useState<boolean>(false);
+
+  useDirtyGuard(isDirty);
 
   const [form, setForm] = useState<ProjectForm>({
     title: initialProject?.title ?? "",
@@ -278,7 +281,7 @@ export default function ProjectWizard({
       title: "Media",
       description: "Images",
       render: () => (
-        <StepImages images={images} setImages={setImages} />
+        <StepImages images={images} setImages={setImages} setIsDirty={setIsDirty} />
       ),
       onNext: saveImages,
     },
@@ -290,6 +293,7 @@ export default function ProjectWizard({
         <StepTech
           selectedTech={selectedTech}
           setSelectedTech={setSelectedTech}
+          setIsDirty={setIsDirty}
         />
       ),
       onNext: saveTech,
