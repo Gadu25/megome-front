@@ -34,3 +34,15 @@ export type CompletionStatus = {
   profile: CompletionItem[];
   sections: CompletionItem[];
 }
+
+export type ActivityItem = {
+  type: string;
+  id: number;
+  name: string;
+  createdAt: string;
+};
+
+export type DailyUsage = {
+  date: string;
+  count: number;
+};

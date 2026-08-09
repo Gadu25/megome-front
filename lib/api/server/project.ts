@@ -2,9 +2,15 @@ import { ProjectFull } from "@/types/domain";
 import { fetchWithAuth } from "./fetchWithAuth";
 import { handleResponse } from "@/utils/api/handleResponse";
 
+interface Pagination {
+  limit: number;
+  offset: number;
+  total: number;
+}
+
 interface Response {
-  message: string;
-  projects: ProjectFull[];
+  data: ProjectFull[];
+  pagination: Pagination;
 }
 
 interface SingleResponse {

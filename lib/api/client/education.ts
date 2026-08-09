@@ -3,9 +3,15 @@ import type { EducationForm } from "@/types/form";
 import { handleResponse } from "@/utils/api/handleResponse";
 import { fetchClient } from "./fetchClient";
 
+interface Pagination {
+  limit: number;
+  offset: number;
+  total: number;
+}
+
 interface Response {
-  message: string;
-  educations: Education[];
+  data: Education[];
+  pagination: Pagination;
 }
 
 interface SingleResponse {

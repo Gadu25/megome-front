@@ -16,6 +16,8 @@ import ProfileForm from "./ProfileForm";
 import { calculateAge } from "@/utils/date/calculateAge";
 import { getProfileClient } from "@/lib/api/client/profile";
 
+import ErrorBoundary from "@/components/ui/ErrorBoundary";
+
 import type { Profile } from "@/types/domain";
 
 interface props {
@@ -110,7 +112,7 @@ export default function TopProfile({ isProfileSetup }: props) {
   }
 
   return (
-    <>
+    <ErrorBoundary>
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
 
         {/* Avatar */}
@@ -230,7 +232,7 @@ export default function TopProfile({ isProfileSetup }: props) {
           setProfile={setProfile}
         />
       </RightModal>
-    </>
+    </ErrorBoundary>
   );
 }
 

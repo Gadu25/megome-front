@@ -10,6 +10,8 @@ import { humanizeDate } from "@/utils/date/humanizeDate";
 import RightModal from "@/components/ui/modal/RightModal";
 import ProfileExperienceForm from "../ExperienceForm";
 
+import ErrorBoundary from "@/components/ui/ErrorBoundary";
+
 import { SectionHeader } from "../sections/SectionHeaders";
 import { EmptyState } from "../sections/EmptyState";
 
@@ -23,7 +25,7 @@ export default function ProfileExperience() {
     const fetchExperience = async () => {
       try {
         const res = await getExperienceClient();
-        setExperiences(res.experiences ?? []);
+        setExperiences(res.data ?? []);
       } catch (error) {
         console.error("Error fetching experience:", error);
       } finally {
@@ -121,7 +123,7 @@ export default function ProfileExperience() {
   }
 
   return (
-    <>
+    <ErrorBoundary>
       <section className="space-y-4">
         <SectionHeader
           title="Experiences"
@@ -233,6 +235,6 @@ export default function ProfileExperience() {
           setExperiences={setExperiences}
         />
       </RightModal>
-    </>
+    </ErrorBoundary>
   );
 }

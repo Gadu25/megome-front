@@ -1,16 +1,75 @@
 "use client"
 
-import { PlusIcon, CheckCircleIcon } from "@heroicons/react/24/outline"
+import { PlusIcon } from "@heroicons/react/24/outline"
 import { ProjectImage, Image } from "@/types/ui"
-import React from "react"
+import React, { useState } from "react"
+import { useImageResize } from "@/lib/hooks/useImageResize"
+import { useToast } from "@/components/ui/toast/useToast"
 
 type Props = {
   images: Image
   setImages: React.Dispatch<React.SetStateAction<Props["images"]>>
+  setIsDirty: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 
-export default function StepImages({ images, setImages }: Props) {
+export default function StepImages({ images, setImages, setIsDirty }: Props) {
+  const [coverDragOver, setCoverDragOver] = useState(false);
+  const [screenshotDragOver, setScreenshotDragOver] = useState(false);
+  const { resizeImage } = useImageResize();
+  const { showToast } = useToast();
+
+  function validateFile(file: File): boolean {
+    if (!file.type.startsWith("image/")) {
+      showToast("Only image files are allowed", "error");
+      return false;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      showToast("File must be under 10MB", "error");
+      return false;
+    }
+    return true;
+  }
+
+  async function processCover(file: File) {
+    if (!validateFile(file)) return;
+    const resized = await resizeImage(file, { maxWidth: 1920 });
+    setImages((prev) => ({
+      ...prev,
+      cover: {
+        file: new File([resized], file.name, { type: "image/jpeg" }),
+        preview: URL.createObjectURL(file),
+        type: "cover",
+        status: "idle",
+      },
+    }));
+    setIsDirty(true);
+  }
+
+  async function processScreenshots(files: FileList) {
+    const newImgs: ProjectImage[] = [];
+    for (const file of Array.from(files)) {
+      if (!validateFile(file)) continue;
+      try {
+        const resized = await resizeImage(file, { maxWidth: 1920 });
+        newImgs.push({
+          file: new File([resized], file.name, { type: "image/jpeg" }),
+          preview: URL.createObjectURL(file),
+          type: "screenshot",
+          status: "idle",
+        });
+      } catch {
+        showToast(`Failed to process ${file.name}`, "error");
+      }
+    }
+    if (newImgs.length > 0) {
+      setImages((prev) => ({
+        ...prev,
+        screenshots: [...prev.screenshots, ...newImgs],
+      }));
+      setIsDirty(true);
+    }
+  }
   const statusBadge = {
     uploading: "bg-amber-500/90 text-white",
     uploaded: "bg-success/90 text-white",
@@ -25,29 +84,28 @@ export default function StepImages({ images, setImages }: Props) {
         <legend className="fieldset-legend">Cover Image</legend>
 
         {!images.cover ? (
-          <label className="border border-dashed rounded-lg p-8 text-center cursor-pointer hover:bg-base-200 transition">
+          <label
+            className={`border border-dashed rounded-lg p-8 text-center cursor-pointer hover:bg-base-200 transition ${coverDragOver ? "border-primary bg-primary/5" : ""}`}
+            onDragOver={(e) => { e.preventDefault(); setCoverDragOver(true); }}
+            onDragLeave={() => setCoverDragOver(false)}
+            onDrop={(e) => {
+              e.preventDefault();
+              setCoverDragOver(false);
+              const file = e.dataTransfer.files?.[0];
+              if (file) processCover(file);
+            }}
+          >
             <input
               type="file"
               className="hidden"
               accept="image/*"
               onChange={(e) => {
-                const file = e.target.files?.[0]
-                if (!file) return
-
-                setImages((prev) => ({
-                  ...prev,
-                  cover: {
-                    file,
-                    preview: URL.createObjectURL(file),
-                    type: "cover",
-                    status: "idle",
-                  },
-                }))
+                const file = e.target.files?.[0];
+                if (file) processCover(file);
               }}
             />
-
             <p className="font-medium">Upload cover image</p>
-            <p className="text-sm opacity-60">Recommended: 16:9 ratio</p>
+            <p className="text-sm opacity-60">Recommended: 16:9 ratio. Drag & drop or click</p>
           </label>
         ) : (
           <div className="relative">
@@ -71,9 +129,10 @@ export default function StepImages({ images, setImages }: Props) {
 
             <button
               className="btn btn-sm btn-error absolute top-2 right-2"
-              onClick={() =>
+              onClick={() => {
                 setImages((prev) => ({ ...prev, cover: null }))
-              }
+                setIsDirty(true);
+              }}
             >
               Remove
             </button>
@@ -108,6 +167,7 @@ export default function StepImages({ images, setImages }: Props) {
                     ...prev,
                     screenshots: prev.screenshots.filter(i => i !== img),
                   }))
+                  setIsDirty(true);
                 }}
               >
                 ✕
@@ -116,28 +176,25 @@ export default function StepImages({ images, setImages }: Props) {
           ))}
 
           {/* ADD */}
-          <label className="border border-dashed rounded flex items-center justify-center h-47 cursor-pointer hover:bg-base-200">
+          <label
+            className={`border border-dashed rounded flex items-center justify-center h-47 cursor-pointer hover:bg-base-200 ${screenshotDragOver ? "border-primary bg-primary/5" : ""}`}
+            onDragOver={(e) => { e.preventDefault(); setScreenshotDragOver(true); }}
+            onDragLeave={() => setScreenshotDragOver(false)}
+            onDrop={(e) => {
+              e.preventDefault();
+              setScreenshotDragOver(false);
+              if (e.dataTransfer.files.length) processScreenshots(e.dataTransfer.files);
+            }}
+          >
             <input
               type="file"
               multiple
               className="hidden"
+              accept="image/*"
               onChange={(e) => {
-                const files = Array.from(e.target.files || [])
-
-                const newImgs: ProjectImage[] = files.map((file) => ({
-                  file,
-                  preview: URL.createObjectURL(file),
-                  type: "screenshot",
-                  status: "idle",
-                }))
-
-                setImages((prev) => ({
-                  ...prev,
-                  screenshots: [...prev.screenshots, ...newImgs],
-                }))
+                if (e.target.files?.length) processScreenshots(e.target.files);
               }}
             />
-
             <PlusIcon className="w-6 h-6 opacity-60" />
           </label>
 

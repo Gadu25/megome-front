@@ -49,7 +49,7 @@ export default function ApiTokensPage() {
       setLoading(true);
       const res = await getPatsClient();
 
-      setTokens(Array.isArray(res.pats) ? res.pats : []);
+      setTokens(Array.isArray(res.data) ? res.data : []);
     } catch {
       setTokens([]);
     } finally {

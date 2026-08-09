@@ -13,6 +13,7 @@ import {
   KeyIcon,
   InformationCircleIcon,
   ArrowsRightLeftIcon,
+  BeakerIcon,
 } from "@heroicons/react/24/outline";
 
 type Item = {
@@ -55,6 +56,11 @@ export default function Sidebar() {
           name: "Personal Tokens",
           path: "/api/tokens",
           icon: KeyIcon,
+        },
+        {
+          name: "Playground",
+          path: "/api/playground",
+          icon: BeakerIcon,
         },
       ],
     }
@@ -176,7 +182,7 @@ export default function Sidebar() {
                             key={child.path}
                             href={child.path}
                             className={`
-                              flex items-center gap-3 rounded-xl px-3 py-2 transition-colors
+                              flex items-center gap-3 rounded-xl px-3 py-3 transition-colors
 
                               hidden
                               is-drawer-close:block

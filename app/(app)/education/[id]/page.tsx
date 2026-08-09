@@ -53,7 +53,7 @@ export default function EducationDetailPage() {
     const fetchEducation = async () => {
       try {
         const res = await getEducationClient()
-        const found = res.educations?.find((e) => e.id === id) ?? null
+        const found = res.data?.find((e: Education) => e.id === id) ?? null
         if (found) setEducation(found)
         else setNotFound(true)
       } catch (err) {

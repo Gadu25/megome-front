@@ -10,6 +10,8 @@ import { getProjectsClient } from "@/lib/api/client/project";
 import { SectionHeader } from "../sections/SectionHeaders";
 import { EmptyState } from "../sections/EmptyState";
 
+import ErrorBoundary from "@/components/ui/ErrorBoundary";
+
 const MAX_PREVIEW_PROJECTS = 4;
 
 export default function ProfileProjects() {
@@ -22,7 +24,7 @@ export default function ProfileProjects() {
     const fetchProjects = async () => {
       try {
         const res = await getProjectsClient();
-        setProjects(res.projects ?? []);
+        setProjects(res.data ?? []);
       } catch (error) {
         console.error("Error fetching projects:", error);
       } finally {
@@ -93,6 +95,7 @@ export default function ProfileProjects() {
   }
 
   return (
+    <ErrorBoundary>
     <div className="space-y-4">
       <SectionHeader
         title="Projects"
@@ -166,5 +169,6 @@ export default function ProfileProjects() {
         </>
       )}
     </div>
+    </ErrorBoundary>
   );
 }

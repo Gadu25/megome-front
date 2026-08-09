@@ -55,7 +55,7 @@ export default function EditCertificatePage() {
     const fetchCertificate = async () => {
       try {
         const res = await getCertificateClient()
-        const found = res.certificates?.find((c) => c.id === id) ?? null
+        const found = res.data?.find((c: Certificate) => c.id === id) ?? null
         if (found) {
           setCertificate(found)
           setForm({

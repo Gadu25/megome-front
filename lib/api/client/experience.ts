@@ -3,9 +3,15 @@ import type { ExperienceForm } from "@/types/form";
 import { handleResponse } from "@/utils/api/handleResponse";
 import { fetchClient } from "./fetchClient";
 
+interface Pagination {
+  limit: number;
+  offset: number;
+  total: number;
+}
+
 interface Response {
-  message: string;
-  experiences: Experience[];
+  data: Experience[];
+  pagination: Pagination;
 }
 
 interface SingleResponse {

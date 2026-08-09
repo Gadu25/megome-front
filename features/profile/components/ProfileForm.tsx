@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation";
 import RichEditor from "@/components/ui/rich-editor/RichEditor";
+import RichTextPreview from "@/components/ui/rich-editor/RichTextPreview";
 import { UserIcon } from "@heroicons/react/24/outline";
 import { updateProfileClient } from "@/lib/api/client/profile";
 import { logoutClient } from "@/lib/api/client/auth";
@@ -10,6 +11,8 @@ import { profileSchema } from "@/features/profile/schema";
 import { AiAssistButton } from "@/features/ai";
 import { useToast } from "@/components/ui/toast/useToast";
 import { withRequest } from "@/utils/api/withRequest";
+import { useDirtyGuard } from "@/lib/hooks/useDirtyGuard";
+import AvatarCropModal from "./AvatarCropModal";
 import type { Profile } from "@/types/domain"
 import type { ProfileForm } from "@/types/form"
 import Modal from "@/components/ui/modal/Modal";
@@ -27,6 +30,11 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [preview, setPreview] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [showBioPreview, setShowBioPreview] = useState(false);
+  const [cropOpen, setCropOpen] = useState(false);
+  const [cropFile, setCropFile] = useState<File | null>(null);
   const [form, setForm] = useState<ProfileForm>({
     firstName: "",
     lastName: "",
@@ -39,6 +47,29 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
     location: "",
     profileImage: null,
   })
+
+  useDirtyGuard(isDirty);
+
+  useEffect(() => {
+    if (!isDirty || isOnboarding || !profile) return;
+
+    const timer = setTimeout(async () => {
+      setSaveStatus("saving");
+      try {
+        const data = await updateProfileClient(form);
+        if (data) {
+          setSaveStatus("saved");
+          setIsDirty(false);
+          setProfile?.(data.profile ?? null);
+          setTimeout(() => setSaveStatus("idle"), 2000);
+        }
+      } catch {
+        setSaveStatus("error");
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [form, isDirty, isOnboarding, profile, setProfile]);
 
   useEffect(()=> {
     if (!profile) return
@@ -65,10 +96,12 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setForm((prev) => ({ ...prev, [name]: value }))
+    setIsDirty(true);
   }
 
   const handleBioChange = (html: string) => {
     setForm((prev) => ({ ...prev, bio: html }))
+    setIsDirty(true);
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -96,6 +129,9 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
       )
 
       if (!data) return;
+
+      setIsDirty(false);
+      setSaveStatus("idle");
 
       setProfile?.(data.profile ?? null);
 
@@ -135,11 +171,9 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
               <input type="file" accept="image/*" className="file-input file-input-sm"
                 onChange={(e) => {
                   const file = e.target.files?.[0] || null;
-                  setForm((prev) => ({ ...prev, profileImage: file }));
-
                   if (file) {
-                    const url = URL.createObjectURL(file)
-                    setPreview(url)
+                    setCropFile(file);
+                    setCropOpen(true);
                   }
                 }}
               />
@@ -266,29 +300,42 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
           <fieldset className="fieldset">
             <div className="flex items-center justify-between gap-4">
               <legend className="fieldset-legend">Your bio</legend>
-              <div className="w-auto">
-                <AiAssistButton
-                  task="generate_bio"
-                  context={{
-                    title: form.title,
-                    tagline: form.tagline,
-                    location: form.location,
-                  }}
-                  placeholder="Add facts about yourself, your focus, or interests (optional)"
-                  onResult={(fields) =>
-                    setForm((prev) => ({
-                      ...prev,
-                      bio: fields.bio ?? prev.bio,
-                      tagline: fields.tagline ?? prev.tagline,
-                    }))
-                  }
-                />
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-xs"
+                  onClick={() => setShowBioPreview((p) => !p)}
+                >
+                  {showBioPreview ? "Edit" : "Preview"}
+                </button>
+                <div className="w-auto">
+                  <AiAssistButton
+                    task="generate_bio"
+                    context={{
+                      title: form.title,
+                      tagline: form.tagline,
+                      location: form.location,
+                    }}
+                    placeholder="Add facts about yourself, your focus, or interests (optional)"
+                    onResult={(fields) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        bio: fields.bio ?? prev.bio,
+                        tagline: fields.tagline ?? prev.tagline,
+                      }))
+                    }
+                  />
+                </div>
               </div>
             </div>
-            <RichEditor
-              content={form.bio || ""}
-              onChange={handleBioChange}
-            />
+            {showBioPreview ? (
+              <RichTextPreview html={form.bio || ""} />
+            ) : (
+              <RichEditor
+                content={form.bio || ""}
+                onChange={handleBioChange}
+              />
+            )}
             {isOnboarding &&(
               <div className="label text-xs flex justify-between">
                 <span>You can edit bio later on from settings</span>
@@ -319,8 +366,30 @@ export default function ProfileForm({ profile = null, isOnboarding = false, setP
           >
             {loading ? "Saving..." : "Save Profile"}
           </button>
+          <span className={`text-xs self-center ${
+            saveStatus === "saving" ? "text-base-content/50" :
+            saveStatus === "saved" ? "text-success" :
+            saveStatus === "error" ? "text-error" : "invisible"
+          }`}>
+            {saveStatus === "saving" && "Saving..."}
+            {saveStatus === "saved" && "\u2713 Saved"}
+            {saveStatus === "error" && "Save failed"}
+          </span>
         </div>
       </form>
+      
+      <AvatarCropModal
+        open={cropOpen}
+        file={cropFile}
+        onClose={() => setCropOpen(false)}
+        onCrop={(blob) => {
+          const croppedFile = new File([blob], cropFile?.name || "avatar.jpg", { type: "image/jpeg" });
+          setForm((prev) => ({ ...prev, profileImage: croppedFile }));
+          setPreview(URL.createObjectURL(blob));
+          setCropOpen(false);
+          setIsDirty(true);
+        }}
+      />
       
       <Modal
         isOpen={open}
