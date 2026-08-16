@@ -9,6 +9,12 @@ export default function AiStatusBanner() {
   const available = useAiStatusStore((s) => s.available);
   const setStatus = useAiStatusStore((s) => s.setStatus);
   const [dismissed, setDismissed] = useState(false);
+  const [prevAvailable, setPrevAvailable] = useState(available);
+
+  if (prevAvailable !== available) {
+    setPrevAvailable(available);
+    setDismissed(false);
+  }
 
   useEffect(() => {
     getAiStatusClient()
@@ -17,10 +23,6 @@ export default function AiStatusBanner() {
       )
       .catch(() => {});
   }, [setStatus]);
-
-  useEffect(() => {
-    setDismissed(false);
-  }, [available]);
 
   if (available !== false || dismissed) return null;
 

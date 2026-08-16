@@ -17,7 +17,7 @@ import { useToast } from "@/components/ui/toast/useToast";
 
 import { addProjectClient, updateProjectClient, uploadProjectImageClient, uploadCoverImageClient, deleteProjectImageClient } from "@/lib/api/client/project";
 import { linkProjectTechnologiesClient } from "@/lib/api/client/technology";
-import { withRequest } from "@/utils/api/withRequest";
+import { withRequest, getErrorMessage } from "@/utils/api/withRequest";
 import { useDirtyGuard } from "@/lib/hooks/useDirtyGuard";
 
 type Mode = "create" | "edit";
@@ -156,15 +156,11 @@ export default function ProjectWizard({
           status: "uploaded" as const,
           error: undefined,
         };
-      } catch (err: any) {
+      } catch (err: unknown) {
         return {
           ...img,
           status: "failed" as const,
-          error:
-            err?.data?.error ||
-            err?.data?.message ||
-            err?.message ||
-            "Upload failed",
+          error: getErrorMessage(err, "Upload failed"),
         };
       }
     })
@@ -192,15 +188,11 @@ export default function ProjectWizard({
         status: "uploaded" as const,
         error: undefined,
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       updatedCover = {
         ...currentImages.cover,
         status: "failed" as const,
-        error:
-          err?.data?.error ||
-          err?.data?.message ||
-          err?.message ||
-          "Upload failed",
+        error: getErrorMessage(err, "Upload failed"),
       };
     }
   }

@@ -8,6 +8,7 @@ import { registerSchema, loginSchema } from "@/features/auth/schema";
 import { useToast } from "@/components/ui/toast/useToast";
 import { getInitClient } from "@/lib/api/client/init";
 import { loginClient, registerClient } from "@/lib/api/client/auth";
+import { getErrorMessage } from "@/utils/api/withRequest";
 import { GoogleLoginButton } from "./GoogleLoginButton";
 import Link from "next/link";
 
@@ -97,8 +98,8 @@ export default function AuthForm({ mode }: { mode: MODE }) {
       }
 
       await action();
-    } catch (err: any) {
-      setError(err?.data?.error || err?.message || "An error occurred");
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, "An error occurred"));
     } finally {
       setLoading(false);
     }

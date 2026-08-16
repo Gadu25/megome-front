@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { resetPassClient } from "@/lib/api/client/forgotpass";
-import { withRequest } from "@/utils/api/withRequest";
+import { withRequest, getErrorMessage } from "@/utils/api/withRequest";
 import { useToast } from "@/components/ui/toast/useToast";
 import Link from "next/link";
 import { ArrowRightIcon } from "@heroicons/react/16/solid";
@@ -53,8 +53,8 @@ export default function ResetPasswordPage() {
         setSuccess(true);
       }
 
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
+    } catch (err: unknown) {
+      setError(getErrorMessage(err, "Something went wrong"));
     } finally {
       setLoading(false);
     }

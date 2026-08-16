@@ -27,28 +27,37 @@ export default function Modal({
   acceptText = "Accept",
   cancelText = "Cancel",
 }: ModalProps) {
-  const [mounted, setMounted] = useState(isOpen);
   const [visible, setVisible] = useState(false);
+  const [closing, setClosing] = useState(false);
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+
+  if (prevIsOpen !== isOpen) {
+    setPrevIsOpen(isOpen);
+    if (!isOpen) {
+      setVisible(false);
+      setClosing(true);
+    }
+  }
+
+  const mounted = isOpen || closing;
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
+    if (!isOpen) return;
 
-    if (isOpen) {
-      setMounted(true);
+    requestAnimationFrame(() => {
+      setVisible(true);
+    });
+  }, [isOpen]);
 
-      requestAnimationFrame(() => {
-        setVisible(true);
-      });
-    } else {
-      setVisible(false);
+  useEffect(() => {
+    if (!closing || isOpen) return;
 
-      timeout = setTimeout(() => {
-        setMounted(false);
-      }, 200);
-    }
+    const timeout = setTimeout(() => {
+      setClosing(false);
+    }, 200);
 
     return () => clearTimeout(timeout);
-  }, [isOpen]);
+  }, [closing, isOpen]);
 
   if (!mounted) return null;
 
