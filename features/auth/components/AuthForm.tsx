@@ -31,31 +31,35 @@ export default function AuthForm({ mode }: { mode: MODE }) {
   const [errors, setErrors] = useState<Record<string, string[]>>({});
 
   const handleLogin = async () => {
-    const res = await loginClient(emailOrUsername, password);
+    try {
+      const res = await loginClient(emailOrUsername, password);
 
-    const initData = await getInitClient();
+      const initData = await getInitClient();
 
-    if (!initData.profile) {
-      router.push("/profile-setup");
-      return;
+      if (!initData.profile) {
+        router.push("/profile-setup");
+        return;
+      }
+
+      router.push("/dashboard");
+    } catch (err) {
+      const data = (err as { data?: { email?: string } }).data;
+      if (data?.email) {
+        router.push(
+          `/auth/verify-email?email=${encodeURIComponent(data.email)}`
+        );
+        return;
+      }
+      throw err;
     }
-
-    router.push("/dashboard");
   };
 
   const handleRegister = async () => {
     const res = await registerClient(username, email, password);
 
-    // showToast(res.message, "success");
+    showToast(res.message, "success");
 
-    const initData = await getInitClient();
-
-    if (!initData.profile) {
-      router.push("/profile-setup");
-      return;
-    }
-
-    router.push("/dashboard");
+    router.push(`/auth/verify-email?email=${encodeURIComponent(email)}`);
   };
 
   const handleAction = async (e: React.FormEvent) => {
