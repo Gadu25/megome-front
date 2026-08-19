@@ -147,7 +147,7 @@ export default function TopProfile({ isProfileSetup }: props) {
 
                 {profile.tagline && (
                   <p className="mt-2 text-sm font-medium italic text-primary">
-                    "{profile.tagline}"
+                    &quot;{profile.tagline}&quot;
                   </p>
                 )}
               </div>

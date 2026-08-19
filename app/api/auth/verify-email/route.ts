@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     const response = await fetch(
-      `${BACKEND_URL}/api/v1/auth/login`,
+      `${BACKEND_URL}/api/v1/auth/verify-email`,
       {
         method: "POST",
         headers: {
@@ -24,8 +24,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: data.error || "Login failed",
-          ...(data.email ? { email: data.email } : {}),
+          message: data.error || "Verification failed",
         },
         {
           status: response.status,

@@ -19,22 +19,33 @@ export default function AiAssistModal({
   loading,
   placeholder = "Add extra details for the AI (optional)",
 }: AiAssistModalProps) {
-  const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [closing, setClosing] = useState(false);
   const [extra, setExtra] = useState("");
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
 
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
+  if (prevIsOpen !== isOpen) {
+    setPrevIsOpen(isOpen);
     if (isOpen) {
-      setMounted(true);
       setExtra("");
-      requestAnimationFrame(() => setVisible(true));
     } else {
       setVisible(false);
-      timeout = setTimeout(() => setMounted(false), 200);
+      setClosing(true);
     }
-    return () => clearTimeout(timeout);
+  }
+
+  const mounted = isOpen || closing;
+
+  useEffect(() => {
+    if (!isOpen) return;
+    requestAnimationFrame(() => setVisible(true));
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!closing || isOpen) return;
+    const timeout = setTimeout(() => setClosing(false), 200);
+    return () => clearTimeout(timeout);
+  }, [closing, isOpen]);
 
   useEffect(() => {
     if (isOpen) {

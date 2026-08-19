@@ -11,7 +11,7 @@ export default function ThemeToggle() {
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
-    setTheme(stored ?? LIGHT);
+    requestAnimationFrame(() => setTheme(stored ?? LIGHT));
   }, []);
 
   useEffect(() => {

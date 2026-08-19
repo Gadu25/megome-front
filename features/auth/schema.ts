@@ -10,3 +10,8 @@ export const loginSchema = z.object({
   emailOrUsername: z.string().min(4, "Email or Username is required"),
   password: z.string().min(6, "password must be at least 6 characters"),
 })
+
+export const verifyEmailSchema = z.object({
+  email: z.string().email("invalid email address"),
+  otp: z.string().regex(/^\d{6}$/, "enter the 6-digit code"),
+});

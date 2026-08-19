@@ -1,5 +1,6 @@
 "use client";
 
+import type { ComponentType } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -19,7 +20,7 @@ import {
 type Item = {
   name: string;
   path: string;
-  icon: any;
+  icon: ComponentType<{ className?: string }>;
   children?: Item[];
 };
 
