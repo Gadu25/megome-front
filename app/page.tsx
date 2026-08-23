@@ -202,9 +202,9 @@ export default function LandingPage() {
             <Link href="#how" className="hidden sm:block text-sm text-base-content/60 hover:text-base-content transition-colors">
               How it works
             </Link>
-            <Link href="#api" className="hidden sm:block text-sm text-base-content/60 hover:text-base-content transition-colors">
-              API
-            </Link>
+            {/* <Link href="#api" className="hidden sm:block text-sm text-base-content/60 hover:text-base-content transition-colors"> */}
+            {/*   API */}
+            {/* </Link> */}
             <Link href="/docs" className="hidden sm:block text-sm text-base-content/60 hover:text-base-content transition-colors">
               Docs
             </Link>
