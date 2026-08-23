@@ -12,6 +12,7 @@ export async function POST(req: Request) {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
+    maxAge: 1800, // 30 minutes, matches backend JWT expiration
   });
 
   cookieStore.set("refresh_token", refreshToken, {
@@ -19,6 +20,7 @@ export async function POST(req: Request) {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
+    maxAge: 1209600, // 14 days, matches backend refresh token expiry
   });
 
   return NextResponse.json({
