@@ -99,6 +99,7 @@ export default function DashboardPage() {
   const [completion, setCompletion] = useState<CompletionStatus | null>(null)
   const [activity, setActivity] = useState<ActivityItem[]>([]);
   const [usageStats, setUsageStats] = useState<DailyUsage[]>([]);
+  const [usageRange, setUsageRange] = useState<number>(30);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -108,7 +109,7 @@ export default function DashboardPage() {
         const overviewRes = await getDashboardOverview().catch((err) => { console.error("Overview failed:", err); return null; });
         const completionRes = await getCompletion().catch((err) => { console.error("Completion failed:", err); return null; });
         const activityRes = await getDashboardActivity().catch((err) => { console.error("Activity failed:", err); return null; });
-        const usageRes = await getDashboardUsageStats().catch((err) => { console.error("Usage stats failed:", err); return null; });
+        const usageRes = await getDashboardUsageStats(usageRange).catch((err) => { console.error("Usage stats failed:", err); return null; });
         setDashboardOverview(overviewRes?.data ?? null);
         setCompletion(completionRes?.data ?? null);
         setActivity(activityRes?.data ?? []);
@@ -121,7 +122,7 @@ export default function DashboardPage() {
     }
 
     fetchData();
-  }, [])
+  }, [usageRange])
 
   return (
     <div className="bg-base-100 flex">
@@ -171,7 +172,11 @@ export default function DashboardPage() {
           </div>
           <div className="rounded-2xl border border-base-300 p-5">
             <h2 className="font-semibold mb-4">API Usage</h2>
-            <UsageChart data={usageStats} />
+            <UsageChart
+              data={usageStats}
+              selectedRange={usageRange}
+              onRangeChange={setUsageRange}
+            />
           </div>
         </div>
 
