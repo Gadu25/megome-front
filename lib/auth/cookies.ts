@@ -3,7 +3,16 @@ import { cookies } from "next/headers";
 const ACCESS_TOKEN_KEY = "access_token";
 const REFRESH_TOKEN_KEY = "refresh_token";
 
-export async function setAuthCookies(accessToken: string, refreshToken: string) {
+type AuthCookieOptions = {
+  accessTokenMaxAge?: number;
+  refreshTokenMaxAge?: number;
+};
+
+export async function setAuthCookies(
+  accessToken: string,
+  refreshToken: string,
+  options: AuthCookieOptions = {}
+) {
   const cookieStore = await cookies();
 
   cookieStore.set(ACCESS_TOKEN_KEY, accessToken, {
@@ -11,6 +20,7 @@ export async function setAuthCookies(accessToken: string, refreshToken: string) 
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
+    maxAge: options.accessTokenMaxAge,
   });
 
   cookieStore.set(REFRESH_TOKEN_KEY, refreshToken, {
@@ -18,6 +28,7 @@ export async function setAuthCookies(accessToken: string, refreshToken: string) 
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
+    maxAge: options.refreshTokenMaxAge,
   });
 }
 

@@ -27,6 +27,8 @@ export function GoogleLoginButton() {
       body: JSON.stringify({
         accessToken: event.data.accessToken,
         refreshToken: event.data.refreshToken,
+        accessTokenMaxAge: event.data.accessTokenMaxAge,
+        refreshTokenMaxAge: event.data.refreshTokenMaxAge,
       }),
     });
 

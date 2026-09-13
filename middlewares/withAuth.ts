@@ -82,7 +82,6 @@ export function withAuth(middleware: CustomMiddleware) {
       }
 
   // Rewrite the current response with fresh cookies — no redirect needed
-  const response = NextResponse.next();
   response.cookies.set("access_token", tokens.accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

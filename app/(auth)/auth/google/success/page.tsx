@@ -8,6 +8,8 @@ export default function GoogleSuccessPage() {
 
     const accessToken = params.get("access_token");
     const refreshToken = params.get("refresh_token");
+    const accessTokenMaxAge = params.get("access_token_max_age");
+    const refreshTokenMaxAge = params.get("refresh_token_max_age");
 
     if (!accessToken || !refreshToken) return;
 
@@ -16,6 +18,8 @@ export default function GoogleSuccessPage() {
         type: "GOOGLE_AUTH_SUCCESS",
         accessToken,
         refreshToken,
+        accessTokenMaxAge: accessTokenMaxAge ? Number(accessTokenMaxAge) : undefined,
+        refreshTokenMaxAge: refreshTokenMaxAge ? Number(refreshTokenMaxAge) : undefined,
       },
       window.location.origin
     );

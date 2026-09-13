@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { setAuthCookies } from "@/lib/auth/cookies";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL!;
 
@@ -34,18 +35,9 @@ export async function GET() {
 
     const data = await response.json();
 
-    cookieStore.set("access_token", data.accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-    });
-
-    cookieStore.set("refresh_token", data.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
+    await setAuthCookies(data.accessToken, data.refreshToken, {
+      accessTokenMaxAge: data.accessTokenMaxAge,
+      refreshTokenMaxAge: data.refreshTokenMaxAge,
     });
 
     return NextResponse.json({ success: true });
